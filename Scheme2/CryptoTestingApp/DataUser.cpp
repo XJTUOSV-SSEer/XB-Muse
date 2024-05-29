@@ -173,17 +173,29 @@ vector<int> DataUser::Search_batch(string w){
         BloomFilter<32, GGM_SIZE, HASH_SIZE> d;
         d.bits = getD(*io_service,endpoint_iterator,string((char*)addr,DIGEST_SIZE));
         vector<long> is = d.search();
-        // for(long index : is){
-        //     cout<<index<<endl;
-        // }
-        // cout<<endl;
+        cout<<"已经撤销的索引："<<endl;
+        for(long index : is){
+            cout<<index<<endl;
+        }
+        cout<<endl;
         Ds.emplace_back(d);
     }
     vector<bool> flags(TList.size());
     for(int i = 0 ; i < TList.size() ; i++){
         flags[i] = false;
         string tag = TList[i];
+        cout<<"TList"<<i<<endl;
+        vector<long> is = Ds[0].get_index((uint8_t*)tag.c_str());
+        for(long index : is){
+            cout<<index<<endl;
+        }
         for(BloomFilter<32, GGM_SIZE, HASH_SIZE> d:Ds){
+            // vector<long> is = d.search();
+            // cout<<"已经撤销的索引："<<endl;
+            // for(long index : is){
+            //     cout<<index<<endl;
+            // }
+            cout<<endl;
             vector<long> indexs = d.get_index((uint8_t*)tag.c_str());
             bool flag = false; //标志此tag对应的此布隆过滤器是否有全1的
             for(int index:indexs){

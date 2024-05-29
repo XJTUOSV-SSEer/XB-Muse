@@ -31,66 +31,40 @@ def DeployContract(contract_path='../build/contracts/Storage.json'):
 
 contract_instance, from_account, w3 = DeployContract()
 
-# # 设置一个新的数组
-# user_id = 12345
-# word = "hello"
-# numbers = [115792089237316195423570985008687907853269984665640564039457584007913129639935, 2, 3, 4, 5]
-# tx_hash = contract_instance.functions.set(user_id, word, numbers).transact({
-#             "from": from_account,
-#             "gas": 300000,
-#             "gasPrice": 0,
-# })
-# w3.eth.waitForTransactionReceipt(tx_hash)
-# print(f"Set {numbers} for user {user_id} and word '{word}'")
-
-# # 获取数组
-# retrieved_numbers = contract_instance.functions.get(user_id, word).call()
-# print(f"Retrieved numbers for user {user_id} and word '{word}': {retrieved_numbers}")
-
 app = Flask(__name__)
 
 @app.route('/getD', methods=['GET'])
 def getD():
     # 获取请求中的整数和字符串
     data = request.get_json()
-    userId = (int)(data.get('userId'))
     w = data.get('w')
 
+    retrieved_numbers = contract_instance.functions.get(w).call()
 
-    # print("userId:"+str(userId))
-    # print("user_id:" + userId + "\ntype:" + type(userId)+"\n")
-    # print("w:" + w + "\ntypre: "+type(w))
-
-    retrieved_numbers = contract_instance.functions.get(userId, w).call()
-    # print("retrieved_numbers : " + str(retrieved_numbers))
-    byte_stream = BytesIO()
+    bytes_str = ""
     for num in retrieved_numbers:
-        byte_stream.write(num.to_bytes(256, byteorder='big', signed=True))
-    bytes_arr = byte_stream.getvalue()
-    print("bytes : " + str(bytes_arr))
+        bytes_str += "{0:b}".format(num).zfill(256)
+
+    # print("bytes : " + bytes_str)
     # 将位数组返回为JSON格式
-    return jsonify({'bits_array': (str)(bytes_arr)})
+    return jsonify({'bits_array': bytes_str})
 
 @app.route('/setD', methods=['POST'])
 def setD():
 
     data = request.get_json()
     # print(data)
-    userId = (int)(data.get('userId'))
     w = data.get('w')
     D_bit_array = data.get('bit_array')
 
     D_int_array = []
-    print("userId:"+str(userId))
-    print("w:" + w)
-    print("set : " + str(type(D_bit_array))) 
     
     # 将 bit 数组转换为整数数组
     for i in range(0, len(D_bit_array), 256):
         byte_value = int(D_bit_array[i:i + 256], 2)
         D_int_array.append(byte_value)
-    print(D_int_array)
-    tx_hash = contract_instance.functions.set(userId, w, D_int_array).transact({
+    # print(D_int_array)
+    tx_hash = contract_instance.functions.set( w, D_int_array).transact({
             "from": from_account,
             "gas": 300000,
             "gasPrice": 0,

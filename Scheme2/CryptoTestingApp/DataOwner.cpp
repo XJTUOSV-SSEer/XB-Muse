@@ -211,9 +211,7 @@ void DataOwner::insert(int ind,vector<string> WList){
         vector<string> DelCntDiffs;
         vector<Revoketag> Revoketags;
         for(string w : WList){
-            // cout<<"将关键字"<<w<<"加入到文件"<<ind<<"上"<<endl;
-            // cout<<"update : 3"<<endl;
-            // cout<<w<<endl;
+
             if(FileCnts.find(userId) == FileCnts.end()){
                 FileCnts[userId] = unordered_map<string,int>();
                 D[userId] = unordered_map<string,BloomFilter<32, GGM_SIZE, HASH_SIZE>>();
@@ -245,11 +243,11 @@ void DataOwner::insert(int ind,vector<string> WList){
             // get all offsets in BF
             vector<long> indexes = BloomFilter<32, GGM_SIZE, HASH_SIZE>::get_index(tag);
             sort(indexes.begin(), indexes.end());
-            // cout<<"布隆过滤器上的索引为："<<endl;
-            // for(long index:indexes){
-            //     cout<< index<<" "<<endl;
-            // }
-            // cout<<endl;
+            cout<<"keyword "<<w<<ind<<" 在布隆过滤器上的索引为："<<endl;
+            for(long index:indexes){
+                cout<< index<<" "<<endl;
+            }
+            cout<<endl;
 
             // get SRE ciphertext list
             vector<string> ciphertext_list;
@@ -267,11 +265,7 @@ void DataOwner::insert(int ind,vector<string> WList){
                 // save the encrypted id in the list
                 ciphertext_list.emplace_back(string((char*) encrypted_id, AES_BLOCK_SIZE + sizeof(int)));
             }
-            // Val val;
-            // val.ct = ciphertext_list;
-            // val.tag = tag;
 
-            // uint8_t addr[w.size() + sizeof(int)];
             memcpy(buffer,w.c_str(),w.size());
             memcpy(buffer + w.size(),(uint8_t*)&cnt,sizeof(int));
             uint8_t addr[DIGEST_SIZE];
