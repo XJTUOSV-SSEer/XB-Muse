@@ -115,6 +115,7 @@ void ecall_check_doc(const void *remain_node,const void *D,char *val_tag,char *v
                     size_t val_tag_size,size_t val_ct_size,size_t val_ct_cnt,
                     size_t NewInd_size,size_t DelInd_size,size_t flag_size,int index){
     // printf("enclave : %d",1);
+    // printf("enclave check point 1");
     vector<GGMNode> *remain_node_ptr = (vector<GGMNode> *) remain_node;
     BloomFilter<32, GGM_SIZE, HASH_SIZE> *D_ptr = (BloomFilter<32, GGM_SIZE, HASH_SIZE> *) D;
     // Val *val_ptr = (Val *)val;
@@ -127,7 +128,7 @@ void ecall_check_doc(const void *remain_node,const void *D,char *val_tag,char *v
     vector<int> res_list;
     
     vector<long> search_pos = BloomFilter<32, GGM_SIZE, HASH_SIZE>::get_index((uint8_t*)val_tag);
-
+    // printf("enclave check point 2");
     sort(search_pos.begin(), search_pos.end());
     // derive the key from search position and decrypt the id
     vector<string> ciphertext_list;
@@ -146,16 +147,19 @@ void ecall_check_doc(const void *remain_node,const void *D,char *val_tag,char *v
         }
         break;
     }
-
+    // printf("enclave check point 3");
     // printf("res_list.size : %d",res_list.size());
     if(res_list.size() > 0){
         // printf("NewInd insert");
+        // printf("enclave check point 4");
         char val_tag_1[DIGEST_SIZE];
         memcpy(val_tag_1,val_tag,DIGEST_SIZE);
         ocall_insert_map_str_int(NewInd_ptr,val_tag_1,res_list[0],sizeof(*NewInd_ptr),val_tag_size);
     }else{
+        // printf("enclave check point 5");
         ocall_insert_set_string(DelInd_ptr,val_tag,sizeof(*DelInd_ptr),val_tag_size);
     }
-    (*flag_ptr)[index - 1] = true;
+    // printf("enclave check point 6");
+    // (*flag_ptr)[index - 1] = true;
 }
 

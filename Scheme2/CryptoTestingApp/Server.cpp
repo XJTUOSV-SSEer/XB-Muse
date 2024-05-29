@@ -15,6 +15,10 @@ Server::Server(vector<int> userIds,int eid){
     }
 }
 
+void Server::batch_revoke(string w,int cnt){
+    batchCnt[w] = cnt;
+}
+
 void Server::addFile(int ind,int userId,vector<string> cntEnc,vector<KeyValue> keyValues){
     if(AccessList.find(ind) == AccessList.end()){
         AccessList[ind] = unordered_set<int>();
@@ -43,19 +47,26 @@ void Server::delFile(int userId,vector<Revoketag> Revoketags,vector<string> DelC
     }
 }
 
-unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,BloomFilter<32, GGM_SIZE, HASH_SIZE> D,int userId){
+unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,vector<bool> flags,int userId){
 
     unordered_map<string,int> NewInd;
     unordered_set<string> DelInd;
-    int flag_size = flags[userId][tkn].size();
-    for(int i = flag_size; i < Tlist.size() ; i++){
-        flags[userId][tkn].emplace_back(false);
-    }
-    vector<bool> &flag = flags[userId][tkn];
-
+    // int flag_size = flags[userId][tkn].size();
+    // for(int i = flag_size; i < Tlist.size() ; i++){
+    //     flags[userId][tkn].emplace_back(false);
+    // }
+    // vector<bool> &flag = flags[userId][tkn];
+    BloomFilter<32, GGM_SIZE, HASH_SIZE> D;
+    // cout<<"check point 3"<<endl;
+    // cout<<Tlist.size()<<endl<<flags.size()<<endl;
+    // for(auto &pair:DictW){
+    //     printHexBytes(pair.first);
+    // }
+    // cout<<endl;
     for(int i = 1 ; i <= Tlist.size() ; i++){
-
-        if(true){//!flag[i - 1]){
+        // printHexBytes(Tlist[i - 1]);
+        bool flag;
+        if(!flags[i - 1]){
             Val val = DictW[Tlist[i - 1]];
             int indi;
             char val_tag[DIGEST_SIZE];
@@ -64,15 +75,17 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
             for(int i = 0 ; i < val.ct.size(); i++){
                 memcpy((uint8_t *)val_ct + i * (AES_BLOCK_SIZE + sizeof(int)),val.ct[i].c_str(),AES_BLOCK_SIZE + sizeof(int));
             }
+            // cout<<"check point 4"<<endl;
             ecall_check_doc(eid,&remain_node,&D,(char *)val_tag,(char *)val_ct,&NewInd,&DelInd,&flag,
                 sizeof(remain_node),sizeof(D),
                 DIGEST_SIZE,AES_BLOCK_SIZE + sizeof(int) ,val.ct.size(),
                 sizeof(NewInd),sizeof(DelInd),sizeof(flag),
                 i);
+            // cout<<"check point 5"<<endl;
             free(val_ct);
         }
     }
-
+    // cout<<"check point 6"<<endl;
     unordered_map<string,int> OldInd = EDBcache[userId][tkn];
     
     for(string tag:DelInd){

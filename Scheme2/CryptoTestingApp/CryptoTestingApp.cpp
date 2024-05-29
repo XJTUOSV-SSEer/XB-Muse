@@ -131,9 +131,10 @@ int main()
 	WList.emplace_back("c");
 	WList.emplace_back("d");
 
-	dataOwner->update(21,WList,ADD);	//为21号文件添加WList中的关键字
-	dataOwner->update(21,WList,ADD);	//测试多次添加不会出现问题
-	dataOwner->update(1,WList,ADD);		//为1号文件添加WList中的关键字
+	dataOwner->insert(21,WList);	//为21号文件添加WList中的关键字
+	// dataOwner->insert(21,WList);	//测试多次添加不会出现问题
+	dataOwner->insert(1,WList);		//为1号文件添加WList中的关键字
+
 
 	for (auto it = WList.begin(); it != WList.end();) {
     	if (*it == "b") {
@@ -142,18 +143,22 @@ int main()
     	    ++it;
     	}
 	}
-	dataOwner->update(12,WList,ADD);
-
+	dataOwner->insert(12,WList);
+	// cout << "check point 1"<<endl;
 	//测试用例1----------------------------------------------------------------
-	vector<int> Res = dataUser1->Search("a");
+	vector<int> Res;
+
+
+	// Res = dataUser1->Search_batch("a");
 	cout<<"user1搜索a的结果："<<dec<<endl;
 	for(int i : Res){
 		cout<< i << " ";
 	}
 	cout<<endl;
 
-	//测试用例2----------------------------------------------------------------
-	Res = dataUser1->Search("b");
+
+	// //测试用例2----------------------------------------------------------------
+	Res = dataUser1->Search_batch("b");
 	cout<<"user1搜索b的结果："<<dec<<endl;
 	for(int i : Res){
 		cout<< i << " ";
@@ -161,33 +166,38 @@ int main()
 	cout<<endl;
 
 	// 测试用例3----------------------------------------------------------------
-	Res = dataUser2->Search("a");
-	cout<<"user2搜索a的结果："<<dec<<endl;
+	
+	vector<int> revokeIndList;
+	revokeIndList.emplace_back(1);
+	dataOwner->revoke("a",revokeIndList);
+
+	Res = dataUser1->Search_batch("a");
+	cout<<"撤销a与1的关系后user1搜索a的结果："<<dec<<endl;
 	for(int i : Res){
 		cout<< i << " ";
 	}
 	cout<<endl;
 	
-	//测试用例4----------------------------------------------------------------
-	vector<string> revokeWList;
-	revokeWList.emplace_back("a");
-	dataOwner->update(1,revokeWList,DEL);
-	Res = dataUser1->Search("a");
-	cout<<"撤销1号文件上a关键字后user1搜索a的搜索结果："<<endl;
-	for(int i : Res){
-		cout<< i << " ";
-	}
-	cout<<endl;
+	// //测试用例4----------------------------------------------------------------
+	// vector<string> revokeWList;
+	// revokeWList.emplace_back("a");
+	// dataOwner->update(1,revokeWList,DEL);
+	// Res = dataUser1->Search_batch("a");
+	// cout<<"撤销1号文件上a关键字后user1搜索a的搜索结果："<<endl;
+	// for(int i : Res){
+	// 	cout<< i << " ";
+	// }
+	// cout<<endl;
 
-	//测试用例5----------------------------------------------------------------
-	revokeWList = {"b"};
-	dataOwner->update(21,revokeWList,DEL);
-	Res = dataUser1->Search("b");
-	cout<<"撤销21号文件上b关键字后user1搜索b的搜索结果："<<endl;
-	for(int i : Res){
-		cout<< i << " ";
-	}
-	cout<<endl;
+	// //测试用例5----------------------------------------------------------------
+	// revokeWList = {"b"};
+	// dataOwner->update(21,revokeWList,DEL);
+	// Res = dataUser1->Search_batch("b");
+	// cout<<"撤销21号文件上b关键字后user1搜索b的搜索结果："<<endl;
+	// for(int i : Res){
+	// 	cout<< i << " ";
+	// }
+	// cout<<endl;
 
 	/************************一些用来验证api的代码******************************************/
 

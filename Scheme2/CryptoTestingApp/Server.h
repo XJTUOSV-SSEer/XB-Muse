@@ -26,6 +26,8 @@ public:
     unordered_map<int,unordered_map<string,unordered_map<string,int>>> EDBcache;
     unordered_map<int,unordered_map<string,vector<bool>>> flags;
 
+    unordered_map<string,int> batchCnt;
+
     int eid;
 
 public:
@@ -35,7 +37,9 @@ public:
     void addFile(int ind,int userId,vector<string> cntEnc,vector<KeyValue> keyValues);
     void delFile(int userId,vector<Revoketag> Revoketags,vector<string> DelCntDiffs);
 
-    unordered_map<string,int> search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,BloomFilter<32, GGM_SIZE, HASH_SIZE> D,int userId);
+    void batch_revoke(string w,int cnt);
+
+    unordered_map<string,int> search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,vector<bool> flags,int userId);
 
 };
 
