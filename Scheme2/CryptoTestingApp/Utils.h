@@ -11,11 +11,21 @@
 #include <iostream>
 #include <iomanip>
 
+
+#include <boost/asio.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <string>
+#include <bitset>
+
 #include "../common/data_type.h"
 #include "../common/encrypt_config.h"
 
+#define BLOCKCHAIN_SERVICE_IP "192.168.1.109"
+#define BLOCKCHAIN_SERVICE_PORT "12346"
 // unsigned char *key = (unsigned char*) "0123456789123456";
 // unsigned char *iv = (unsigned char*) "0123456789123456";
+using namespace std;
 
 void printHexBytes(const std::string& str);
 
@@ -37,5 +47,9 @@ unsigned int hmac_digest(unsigned char *plaintext, int plaintext_len,
 unsigned int key_derivation(unsigned char *plaintext, int plaintext_len,
                             unsigned char *key, int key_len,
                             unsigned char *digest);
+
+string send_http(boost::asio::io_service &io_service,
+                 boost::asio::ip::tcp::resolver::iterator endpoint_iterator,
+                string request);
 
 #endif

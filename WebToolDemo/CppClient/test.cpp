@@ -6,8 +6,8 @@
 #include <bitset>
 
 #define BIT_SIZE 1024
-#define SERVICE_IP "192.168.1.109"
-#define SERVICE_PORT "12346"
+#define BLOCKCHAIN_SERVICE_IP "192.168.1.109"
+#define BLOCKCHAIN_SERVICE_PORT "12346"
 
 using namespace std;
 
@@ -58,7 +58,7 @@ void setD(boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::it
     // 构建 HTTP GET 请求报文
     std::string request =
         "POST /setD HTTP/1.1\r\n"
-        "Host: "+ string(SERVICE_IP) +":"+ string(SERVICE_PORT) +"\r\n"
+        "Host: "+ string(BLOCKCHAIN_SERVICE_IP) +":"+ string(BLOCKCHAIN_SERVICE_PORT) +"\r\n"
         "Content-Type: application/json\r\n"
         "Content-Length: " + std::to_string(json_str.length()) + "\r\n"
         "\r\n" +
@@ -84,7 +84,7 @@ std::bitset<BIT_SIZE> getD(boost::asio::io_service &io_service, boost::asio::ip:
     // 构建 HTTP POST 请求报文
     std::string request =
         "GET /getD HTTP/1.1\r\n"
-        "Host: "+ string(SERVICE_IP) +":"+ string(SERVICE_PORT) +"\r\n"
+        "Host: "+ string(BLOCKCHAIN_SERVICE_IP) +":"+ string(BLOCKCHAIN_SERVICE_PORT) +"\r\n"
         "Content-Type: application/json\r\n"
         "Content-Length: " + std::to_string(json_str.length()) + "\r\n"
         "\r\n" +
@@ -123,11 +123,12 @@ int main(int argc, char* argv[]) {
 
         // 解析主机名和端口
         boost::asio::ip::tcp::resolver resolver(io_service);
-        boost::asio::ip::tcp::resolver::query query(SERVICE_IP, SERVICE_PORT);
+        boost::asio::ip::tcp::resolver::query query(BLOCKCHAIN_SERVICE_IP, BLOCKCHAIN_SERVICE_PORT);
         boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
 
         std::bitset<BIT_SIZE> bits;
         bits.set(1);
+        bits.set(1021);
         // cout<<"-----------------------------------------------------------------------------------------------------"<<endl;
         setD(io_service,endpoint_iterator,"hello",bits);
         // sleep(1);

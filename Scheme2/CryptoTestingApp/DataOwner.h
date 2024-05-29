@@ -42,6 +42,9 @@ public:
 
     Server *server;
 
+    boost::asio::io_service *io_service;
+    boost::asio::ip::tcp::resolver::iterator endpoint_iterator;
+
     unsigned char *key = (unsigned char*) "0123456789123456";
     unsigned char *iv = (unsigned char*) "0123456789123456";
 
@@ -49,7 +52,8 @@ public:
 
     void update(int ind,vector<string> WList,OP op);
 
-    DataOwner();
+    DataOwner(boost::asio::io_service *io_service,
+    boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
 
 };
 

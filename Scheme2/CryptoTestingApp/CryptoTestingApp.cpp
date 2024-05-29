@@ -80,15 +80,24 @@ int main()
 
     /**********************************************************************/
 
+	//解析区块链所在服务器信息
+	boost::asio::io_service io_service;
+
+    // 解析主机名和端口
+    boost::asio::ip::tcp::resolver resolver(io_service);
+    boost::asio::ip::tcp::resolver::query query(BLOCKCHAIN_SERVICE_IP, BLOCKCHAIN_SERVICE_PORT);
+    boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+
+
 	// 初始化server、dataowner和datauser
 	vector<int> userIds;
 	userIds.emplace_back(1);
 	userIds.emplace_back(2);
 
-	DataOwner *dataOwner = new DataOwner();
+	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
 	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid);
-	DataUser *dataUser2 = new DataUser(2,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
+	DataUser *dataUser2 = new DataUser(2,eid,&io_service,endpoint_iterator);
 	dataOwner->server = server;
 	dataUser1->server = server;
 	dataUser2->server = server;

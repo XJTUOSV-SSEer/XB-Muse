@@ -17,9 +17,12 @@
 
 #include <iomanip>
 
-DataUser::DataUser(int userId,int eid){
+DataUser::DataUser(int userId,int eid,boost::asio::io_service *io_service,
+        boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
     this->userId = userId;
     this->eid = eid;
+    this->io_service = io_service;
+    this->endpoint_iterator = endpoint_iterator;
 }
 
 vector<int> DataUser::Search(string w){

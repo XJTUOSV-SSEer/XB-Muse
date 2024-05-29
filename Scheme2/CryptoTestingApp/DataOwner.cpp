@@ -16,8 +16,11 @@
 
 using namespace std;
 
-DataOwner::DataOwner(){
+DataOwner::DataOwner(boost::asio::io_service *io_service,
+    boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
     tree = new GGMTree(GGM_SIZE);
+    this->io_service = io_service;
+    this->endpoint_iterator = endpoint_iterator;
 }
 
 void DataOwner::update(int ind,vector<string> WList,OP op){
