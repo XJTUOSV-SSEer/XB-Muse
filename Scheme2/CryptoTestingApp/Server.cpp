@@ -69,7 +69,7 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
 
         Val val = DictW[Tlist[i - 1]];
         for(BloomFilter<32, GGM_SIZE, HASH_SIZE> d:Ds){
-            // vector<long> is = d.search();
+            vector<long> is = d.search();
             // cout<<"已经撤销的索引："<<endl;
             // for(long index : is){
             //     cout<<index<<endl;
@@ -111,6 +111,8 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
                 i);
             // cout<<"check point 5"<<endl;
             free(val_ct);
+        }else{
+            DelInd.insert(val.tag);
         }
     }
     // cout<<"check point 6"<<endl;

@@ -132,7 +132,7 @@ int main()
 	WList.emplace_back("d");
 
 	dataOwner->insert(21,WList);	//为21号文件添加WList中的关键字
-	// dataOwner->insert(21,WList);	//测试多次添加不会出现问题
+	dataOwner->insert(21,WList);	//测试多次添加不会出现问题
 	dataOwner->insert(1,WList);		//为1号文件添加WList中的关键字
 
 
@@ -149,7 +149,7 @@ int main()
 	vector<int> Res;
 
 
-	// Res = dataUser1->Search_batch("a");
+	Res = dataUser1->Search_batch("a");
 	cout<<"user1搜索a的结果："<<dec<<endl;
 	for(int i : Res){
 		cout<< i << " ";
