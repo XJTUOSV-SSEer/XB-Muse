@@ -31,7 +31,7 @@ class DataOwner{
 public:
     unordered_map<int,unordered_set<int>> AccessList;      //文件id->用户id
     unordered_map<int,unordered_map<string,int>> FileCnts;
-    unordered_map<int,unordered_map<string,int>> FileDelCnts;
+    // unordered_map<int,unordered_map<string,int>> FileDelCnts;
     unordered_map<string,int> batchCnts;
     unordered_map<int,unordered_map<string,string>> MSK;
     unordered_map<int,unordered_map<string,BloomFilter<32, GGM_SIZE, HASH_SIZE>>> D;
@@ -50,8 +50,6 @@ public:
     unsigned char *iv = (unsigned char*) "0123456789123456";
 
 public:
-
-    void update(int ind,vector<string> WList,OP op);
 
     void insert(int ind,vector<string> WList);
     void revoke(string w,vector<int> IDList);

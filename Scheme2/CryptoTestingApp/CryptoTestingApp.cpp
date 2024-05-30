@@ -158,7 +158,7 @@ int main()
 
 
 	// //测试用例2----------------------------------------------------------------
-	Res = dataUser1->Search_batch("b");
+	Res = dataUser2->Search_batch("b");
 	cout<<"user1搜索b的结果："<<dec<<endl;
 	for(int i : Res){
 		cout<< i << " ";

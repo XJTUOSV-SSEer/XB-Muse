@@ -28,7 +28,6 @@ public:
     unsigned char *iv = (unsigned char*) "0123456789123456";
     
 public:
-    // vector<int> Search(string w);
 
     vector<int> Search_batch(string w);
 

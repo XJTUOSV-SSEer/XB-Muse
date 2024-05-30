@@ -10,8 +10,6 @@ Server::Server(vector<int> userIds,int eid){
     this->eid = eid;
     for(int userId:userIds){
         Addrs[userId] = vector<string>();
-        Revtag.emplace(userId, vector<Revoketag>());
-        FileDelCnts[userId] = vector<string>();
     }
 }
 
@@ -36,33 +34,12 @@ void Server::addFile(int ind,int userId,vector<string> cntEnc,vector<KeyValue> k
     }
 }
 
-void Server::delFile(int userId,vector<Revoketag> Revoketags,vector<string> DelCntDiffs){
-    // cout<<"DEL 3"<<endl;
-    for(Revoketag revoketag : Revoketags){
-        Revtag[userId].emplace_back(revoketag);
-    }
-
-    for(string delCnt : DelCntDiffs){
-        FileDelCnts[userId].emplace_back(delCnt);
-    }
-}
-
 unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,vector<BloomFilter<32, GGM_SIZE, HASH_SIZE>> Ds,int userId){
 
     unordered_map<string,int> NewInd;
     unordered_set<string> DelInd;
-    // int flag_size = flags[userId][tkn].size();
-    // for(int i = flag_size; i < Tlist.size() ; i++){
-    //     flags[userId][tkn].emplace_back(false);
-    // }
-    // vector<bool> &flag = flags[userId][tkn];
     BloomFilter<32, GGM_SIZE, HASH_SIZE> D;
-    // cout<<"check point 3"<<endl;
-    // cout<<Tlist.size()<<endl<<flags.size()<<endl;
-    // for(auto &pair:DictW){
-    //     printHexBytes(pair.first);
-    // }
-    // cout<<endl;
+
     for(int i = 1 ; i <= Tlist.size() ; i++){
         // printHexBytes(Tlist[i - 1]);
         bool flag = true;
@@ -70,18 +47,9 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
         Val val = DictW[Tlist[i - 1]];
         for(BloomFilter<32, GGM_SIZE, HASH_SIZE> d:Ds){
             vector<long> is = d.search();
-            // cout<<"已经撤销的索引："<<endl;
-            // for(long index : is){
-            //     cout<<index<<endl;
-            // }
-            // cout<<endl;
             vector<long> indexs = d.get_index((uint8_t*)(val.tag.c_str()));
             sort(indexs.begin(),indexs.end());
-            // cout<<"val对应的索引："<<endl;
-            // for(long index : indexs){
-            //     cout<<index<<endl;
-            // }
-            // cout<<endl;
+
             bool flag1 = false; //标志此tag对应的此布隆过滤器是否有全1的
             for(int index:indexs){
                 if(d.bits[index] == 0){
