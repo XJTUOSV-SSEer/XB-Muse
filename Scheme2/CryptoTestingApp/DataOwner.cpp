@@ -243,11 +243,11 @@ void DataOwner::insert(int ind,vector<string> WList){
             // get all offsets in BF
             vector<long> indexes = BloomFilter<32, GGM_SIZE, HASH_SIZE>::get_index(tag);
             sort(indexes.begin(), indexes.end());
-            cout<<"keyword "<<w<<ind<<" 在布隆过滤器上的索引为："<<endl;
-            for(long index:indexes){
-                cout<< index<<" "<<endl;
-            }
-            cout<<endl;
+            // cout<<"keyword "<<w<<ind<<" 在布隆过滤器上的索引为："<<endl;
+            // for(long index:indexes){
+            //     cout<< index<<" "<<endl;
+            // }
+            // cout<<endl;
 
             // get SRE ciphertext list
             vector<string> ciphertext_list;

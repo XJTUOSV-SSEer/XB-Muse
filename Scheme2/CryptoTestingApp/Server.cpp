@@ -47,7 +47,7 @@ void Server::delFile(int userId,vector<Revoketag> Revoketags,vector<string> DelC
     }
 }
 
-unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,vector<bool> flags,int userId){
+unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,vector<BloomFilter<32, GGM_SIZE, HASH_SIZE>> Ds,int userId){
 
     unordered_map<string,int> NewInd;
     unordered_set<string> DelInd;
@@ -65,9 +65,37 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
     // cout<<endl;
     for(int i = 1 ; i <= Tlist.size() ; i++){
         // printHexBytes(Tlist[i - 1]);
-        bool flag;
-        if(!flags[i - 1]){
-            Val val = DictW[Tlist[i - 1]];
+        bool flag = true;
+
+        Val val = DictW[Tlist[i - 1]];
+        for(BloomFilter<32, GGM_SIZE, HASH_SIZE> d:Ds){
+            // vector<long> is = d.search();
+            // cout<<"已经撤销的索引："<<endl;
+            // for(long index : is){
+            //     cout<<index<<endl;
+            // }
+            // cout<<endl;
+            vector<long> indexs = d.get_index((uint8_t*)(val.tag.c_str()));
+            sort(indexs.begin(),indexs.end());
+            // cout<<"val对应的索引："<<endl;
+            // for(long index : indexs){
+            //     cout<<index<<endl;
+            // }
+            // cout<<endl;
+            bool flag1 = false; //标志此tag对应的此布隆过滤器是否有全1的
+            for(int index:indexs){
+                if(d.bits[index] == 0){
+                    flag1 = true;
+                }
+            }
+            if(!flag1){     //若某个布隆过滤器标志全部删除，则检验不通过
+                flag = false;
+                break;
+            }
+        }
+        // cout<<"flag"<<i<<"  "<<flag<<endl;
+
+        if(flag){
             int indi;
             char val_tag[DIGEST_SIZE];
             memcpy(val_tag,val.tag.c_str(),DIGEST_SIZE);

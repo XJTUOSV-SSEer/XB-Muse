@@ -39,7 +39,7 @@ public:
 
     void batch_revoke(string w,int cnt);
 
-    unordered_map<string,int> search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,vector<bool> flags,int userId);
+    unordered_map<string,int> search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,vector<BloomFilter<32, GGM_SIZE, HASH_SIZE>> Ds,int userId);
 
 };
 

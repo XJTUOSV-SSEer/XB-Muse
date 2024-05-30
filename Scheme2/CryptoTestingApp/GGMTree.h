@@ -24,7 +24,7 @@ private:
 public:
     explicit GGMTree(long num_node);
     void static derive_key_from_tree(uint8_t *current_key, long offset, int start_level, int target_level);
-    vector<GGMNode> min_coverage(vector<GGMNode> node_list);
+    static vector<GGMNode> min_coverage(vector<GGMNode> node_list);
     int get_level() const;
 };
 

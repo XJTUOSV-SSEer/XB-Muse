@@ -173,29 +173,30 @@ vector<int> DataUser::Search_batch(string w){
         BloomFilter<32, GGM_SIZE, HASH_SIZE> d;
         d.bits = getD(*io_service,endpoint_iterator,string((char*)addr,DIGEST_SIZE));
         vector<long> is = d.search();
-        cout<<"已经撤销的索引："<<endl;
-        for(long index : is){
-            cout<<index<<endl;
-        }
-        cout<<endl;
+        // cout<<"已经撤销的索引："<<endl;
+        // for(long index : is){
+        //     cout<<index<<endl;
+        // }
+        // cout<<endl;
         Ds.emplace_back(d);
     }
+
     vector<bool> flags(TList.size());
     for(int i = 0 ; i < TList.size() ; i++){
         flags[i] = false;
         string tag = TList[i];
-        cout<<"TList"<<i<<endl;
-        vector<long> is = Ds[0].get_index((uint8_t*)tag.c_str());
-        for(long index : is){
-            cout<<index<<endl;
-        }
+        // cout<<"TList"<<i<<endl;
+        // vector<long> is = Ds[0].get_index((uint8_t*)tag.c_str());
+        // for(long index : is){
+        //     cout<<index<<endl;
+        // }
         for(BloomFilter<32, GGM_SIZE, HASH_SIZE> d:Ds){
             // vector<long> is = d.search();
             // cout<<"已经撤销的索引："<<endl;
             // for(long index : is){
             //     cout<<index<<endl;
             // }
-            cout<<endl;
+            // cout<<endl;
             vector<long> indexs = d.get_index((uint8_t*)tag.c_str());
             bool flag = false; //标志此tag对应的此布隆过滤器是否有全1的
             for(int index:indexs){
@@ -214,12 +215,21 @@ vector<int> DataUser::Search_batch(string w){
     // }
     // cout<<endl;
     vector<GGMNode> remain_node;
-    remain_node.emplace_back(GGMNode(0,0,key));
-
+    if(Ds.size() == 0){
+        remain_node.emplace_back(GGMNode(0,0,key));
+    }else{
+        vector<GGMNode> node_list;
+        for(int i = 0 ; i < GGM_SIZE ; i++){
+            if(Ds[0].bits[i] == 0){
+                node_list.emplace_back(GGMNode(i,GGM_LEVEL));
+            }
+        }
+        remain_node = GGMTree::min_coverage(node_list);
+    }
     uint8_t digest[DIGEST_SIZE];
     sha256_digest((unsigned char *)w.c_str(),w.size(),digest);
     // cout<<"check point 2"<<endl;
-    unordered_map<string,int> Res = server->search(TList,remain_node,string((char*)digest,DIGEST_SIZE),flags,userId);
+    unordered_map<string,int> Res = server->search(TList,remain_node,string((char*)digest,DIGEST_SIZE),Ds,userId);
     vector<int> res;
     for(const auto &pair:Res){
         res.emplace_back(pair.second);
