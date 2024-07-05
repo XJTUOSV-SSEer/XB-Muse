@@ -55,7 +55,13 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
 
     for(int i = 1 ; i <= Tlist.size() ; i++){
 
-        if(true){//!flag[i - 1]){
+        bool isInD = true;
+        vector<long> indexs = D.get_index((uint8_t *)Tlist[i - 1].c_str());
+        for(long val:indexs){
+            if(D.bits[val] != 1) isInD = false;
+        }
+
+        if(!flag[i - 1]||isInD){
             Val val = DictW[Tlist[i - 1]];
             int indi;
             char val_tag[DIGEST_SIZE];

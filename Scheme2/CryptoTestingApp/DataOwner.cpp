@@ -18,7 +18,7 @@ using namespace std;
 
 void setD(boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator,std::string w,std::bitset<GGM_SIZE> bits){
 
-
+    // cout<<4<<endl;
     std::stringstream ss;
     boost::property_tree::ptree pt;
 
@@ -50,7 +50,9 @@ void setD(boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::it
     // cout<<"SetD request:"<<endl;
     // cout<<request<<endl<<endl;
     // 发送 HTTP 请求报文
+    // cout<<5<<endl;
     send_http(io_service,endpoint_iterator,request);
+    // cout<<9<<endl;
     // cout<<"------------------"<<endl;
 }
 
@@ -167,6 +169,8 @@ void DataOwner::revoke(string w,vector<int> IDList){
         sha256_digest(buffer,w.size() + sizeof(int),tag);
         D.add_tag(tag);
     }
+    // cout<<2<<endl;
     setD(*io_service,endpoint_iterator,string((char*)addr,DIGEST_SIZE),D.bits);
+    // cout<<10<<endl;
     server->batch_revoke(w,cnt);
 }

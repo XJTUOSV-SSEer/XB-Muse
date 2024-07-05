@@ -95,7 +95,7 @@ int main()
 
     /**********************************************************************/
 
-	int status = 1;
+	int status = 0;
 
 	if(status == 0){
 		// 初始化server、dataowner和datauser
@@ -262,6 +262,149 @@ int main()
     	std::cout << "运行时间: " << duration << " 秒" << std::endl;
 
 		cout<<"搜索的结果个数："<<dec<<Res.size()<<endl;
+	}else if(status == 2){
+		// 初始化server、dataowner和datauser
+		vector<int> userIds;
+		userIds.emplace_back(1);
+
+		DataOwner *dataOwner = new DataOwner();
+		Server *server = new Server(userIds,eid);
+		DataUser *dataUser1 = new DataUser(1,eid);
+		dataOwner->server = server;
+		dataUser1->server = server;
+
+		//初始化实验参数
+		std::ifstream file("../DataSet/Lab1DataSet5");
+		string toAddWord = "AAAAAAAAAAA";
+
+		unordered_map<string,vector<int>> dataSet;
+		if (file.is_open()) {
+			std::string line;
+			while (std::getline(file, line)) {
+				vector<string> vc = split_string(line);
+				dataSet[vc[0]] = vector<int>();
+				int size = vc.size();
+				for(int i = 1 ; i < size ; i++){
+					dataSet[vc[0]].emplace_back(stoi(vc[i]));
+				}
+			}
+			file.close();
+		} else {
+			std::cout << "Unable to open file" << std::endl;
+			return 1;
+		}
+		// for (const auto& pair : dataSet) {
+		// 	std::cout << "Key: " << pair.first << ", Values: [";
+		// 	for (size_t i = 0; i < pair.second.size(); ++i) {
+		// 		std::cout << pair.second[i];
+		// 		if (i < pair.second.size() - 1) {
+		// 			std::cout << ", ";
+		// 		}
+		// 	}
+		// 	std::cout << "]" << std::endl;
+		// }
+
+		unordered_map<int,vector<string>> dataSet_reverted;
+		for (const auto& pair : dataSet) {
+			for (size_t i = 0; i < pair.second.size(); ++i) {
+				dataSet_reverted[pair.second[i]].emplace_back(pair.first);
+				dataOwner->AccessList[pair.second[i]].insert(1);
+				server->AccessList[pair.second[i]].insert(1);
+			}
+		}
+		for (const auto& pair : dataSet_reverted) {
+			vector<string> WList;
+			for (size_t i = 0; i < pair.second.size(); ++i) {
+				WList.emplace_back(pair.second[i]);
+			}
+			dataOwner->update(pair.first,WList,ADD);
+		}
+		int ind = 1;
+		vector<string> WList = {toAddWord};
+		for(int i = 0 ; i < 4 ; i++){
+			clock_t start = clock();
+			for(int j = 1 ; j <= 5 * (i + 1) ; j++){
+				dataOwner->update(i * 1000 + j,WList,ADD);
+			}
+			clock_t end = clock();
+    		double duration = static_cast<double>(end - start);
+			cout<< duration<<endl;
+    	// std::cout << "运行时间: " << duration << " 秒" << std::endl;
+		}
+		// cout<<"搜索的结果个数："<<dec<<Res.size()<<endl;
+	}else if(status == 3){
+		// 初始化server、dataowner和datauser
+		vector<int> userIds;
+		userIds.emplace_back(1);
+
+		DataOwner *dataOwner = new DataOwner();
+		Server *server = new Server(userIds,eid);
+		DataUser *dataUser1 = new DataUser(1,eid);
+		dataOwner->server = server;
+		dataUser1->server = server;
+
+		//初始化实验参数
+		std::ifstream file("../DataSet/Lab1DataSet5");
+		string toRevokeWord = "AAAAAAAAAAA";
+
+		unordered_map<string,vector<int>> dataSet;
+		if (file.is_open()) {
+			std::string line;
+			while (std::getline(file, line)) {
+				vector<string> vc = split_string(line);
+				dataSet[vc[0]] = vector<int>();
+				int size = vc.size();
+				for(int i = 1 ; i < size ; i++){
+					dataSet[vc[0]].emplace_back(stoi(vc[i]));
+				}
+			}
+			file.close();
+		} else {
+			std::cout << "Unable to open file" << std::endl;
+			return 1;
+		}
+		// for (const auto& pair : dataSet) {
+		// 	std::cout << "Key: " << pair.first << ", Values: [";
+		// 	for (size_t i = 0; i < pair.second.size(); ++i) {
+		// 		std::cout << pair.second[i];
+		// 		if (i < pair.second.size() - 1) {
+		// 			std::cout << ", ";
+		// 		}
+		// 	}
+		// 	std::cout << "]" << std::endl;
+		// }
+
+		unordered_map<int,vector<string>> dataSet_reverted;
+		for (const auto& pair : dataSet) {
+			for (size_t i = 0; i < pair.second.size(); ++i) {
+				dataSet_reverted[pair.second[i]].emplace_back(pair.first);
+				dataOwner->AccessList[pair.second[i]].insert(1);
+				server->AccessList[pair.second[i]].insert(1);
+			}
+		}
+		for (const auto& pair : dataSet_reverted) {
+			vector<string> WList;
+			for (size_t i = 0; i < pair.second.size(); ++i) {
+				WList.emplace_back(pair.second[i]);
+			}
+			dataOwner->update(pair.first,WList,ADD);
+		}
+		vector<string> WList = {toRevokeWord};
+		for(int ind = 1 ; ind <= 1000 ; ind++){
+			dataOwner->update(ind,WList,ADD);
+		}
+		int ind = 1;
+		for(int i = 0 ; i < 4 ; i++){
+			clock_t start = clock();
+			for(int j = 1 ; j <= 50 * (i + 1) ; j++){
+				dataOwner->update(ind++,WList,DEL);
+			}
+			clock_t end = clock();
+    		double duration = static_cast<double>(end - start);
+			cout<< duration<<endl;
+    	// std::cout << "运行时间: " << duration << " 秒" << std::endl;
+		}
+		// cout<<"搜索的结果个数："<<dec<<Res.size()<<endl;
 	}
 
 	/************************一些用来验证api的代码******************************************/

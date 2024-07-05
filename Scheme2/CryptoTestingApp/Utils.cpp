@@ -147,10 +147,13 @@ unsigned int key_derivation(unsigned char *plaintext, int plaintext_len,
 string send_http(boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator,string request){
     // 连接到服务器
     boost::asio::ip::tcp::socket socket(io_service);
+    // cout<<6<<endl;
     boost::asio::connect(socket, endpoint_iterator);
 
     // 发送 HTTP 请求报文
+    // cout<<7<<endl;
     boost::asio::write(socket, boost::asio::buffer(request));
+    // cout<<8<<endl;
 
     // 读取响应报文
     boost::asio::streambuf response_buf;

@@ -21,8 +21,8 @@
 #include "../common/data_type.h"
 #include "../common/encrypt_config.h"
 
-#define BLOCKCHAIN_SERVICE_IP "192.168.1.109"
-#define BLOCKCHAIN_SERVICE_PORT "12346"
+#define BLOCKCHAIN_SERVICE_IP "192.168.1.101"
+#define BLOCKCHAIN_SERVICE_PORT "12348"
 // unsigned char *key = (unsigned char*) "0123456789123456";
 // unsigned char *iv = (unsigned char*) "0123456789123456";
 using namespace std;
