@@ -1,7 +1,7 @@
 #define AES_BLOCK_SIZE 16
 #define DIGEST_SIZE 32
-#define GGM_SIZE 65536
-#define GGM_LEVEL 16
+#define GGM_SIZE 1024
+#define GGM_LEVEL 10
 #define HASH_SIZE 3
 
 #define SHA256_DIGEST_LENGTH 32

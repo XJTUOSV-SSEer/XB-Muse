@@ -21,11 +21,16 @@ public:
 
     int eid;
 
+    boost::asio::io_service *io_service;
+    boost::asio::ip::tcp::resolver::iterator endpoint_iterator;
+
     unsigned char *key = (unsigned char*) "0123456789123456";
     unsigned char *iv = (unsigned char*) "0123456789123456";
     
 public:
-    vector<int> Search(string w);
 
-    DataUser(int userId,int eid);
+    vector<int> Search_batch(string w);
+
+    DataUser(int userId,int eid,boost::asio::io_service *io_service,
+        boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
 };

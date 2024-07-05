@@ -143,3 +143,38 @@ unsigned int key_derivation(unsigned char *plaintext, int plaintext_len,
 
     return AES_BLOCK_SIZE;
 }
+
+string send_http(boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator,string request){
+    // 连接到服务器
+    boost::asio::ip::tcp::socket socket(io_service);
+    // cout<<6<<endl;
+    boost::asio::connect(socket, endpoint_iterator);
+
+    // 发送 HTTP 请求报文
+    // cout<<7<<endl;
+    boost::asio::write(socket, boost::asio::buffer(request));
+    // cout<<8<<endl;
+
+    // 读取响应报文
+    boost::asio::streambuf response_buf;
+    boost::system::error_code error;
+    size_t bytes_transferred = 0;
+    std::string response;
+
+    // 分段读取响应报文
+    do {
+        bytes_transferred = boost::asio::read(socket, response_buf, boost::asio::transfer_at_least(1), error);
+        response.append(boost::asio::buffers_begin(response_buf.data()), boost::asio::buffers_begin(response_buf.data()) + bytes_transferred);
+        response_buf.consume(bytes_transferred);
+    } while (!error);
+
+    if (error != boost::asio::error::eof) {
+        std::cout << "Error: " << error.message() << std::endl;
+        socket.close();
+        return "Error";
+    }
+
+    socket.close();
+
+    return response;
+}
