@@ -109,6 +109,11 @@ void compute_leaf_keys(const vector<GGMNode>& node_list, int level,unordered_map
     }
 }
 
+void ecall_insert_set_string(void *DelInd_ptr,char *val_tag,size_t DelInd_ptr_size,size_t val_tag_size){
+    unordered_set<string> *ptr = (unordered_set<string> *) DelInd_ptr;
+    ocall_insert_set_string(ptr,val_tag,sizeof(*ptr),val_tag_size);
+}
+
 void ecall_check_doc(const void *remain_node,const void *D,char *val_tag,char *val_ct,
                     void *NewInd,void *DelInd,void *flag,
                     size_t remain_node_size, size_t bloom_filter_size, 

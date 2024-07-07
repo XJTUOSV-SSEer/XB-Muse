@@ -30,6 +30,13 @@ typedef struct ms_ecall_check_doc_t {
 	int ms_index;
 } ms_ecall_check_doc_t;
 
+typedef struct ms_ecall_insert_set_string_t {
+	void* ms_DelInd_ptr;
+	char* ms_val_tag;
+	size_t ms_DelInd_ptr_size;
+	size_t ms_val_tag_size;
+} ms_ecall_insert_set_string_t;
+
 typedef struct ms_ocall_print_string_t {
 	const char* ms_str;
 } ms_ocall_print_string_t;
@@ -219,6 +226,18 @@ sgx_status_t ecall_check_doc(sgx_enclave_id_t eid, const void* remain_node, cons
 	ms.ms_flag_size = flag_size;
 	ms.ms_index = index;
 	status = sgx_ecall(eid, 2, &ocall_table_CryptoEnclave, &ms);
+	return status;
+}
+
+sgx_status_t ecall_insert_set_string(sgx_enclave_id_t eid, void* DelInd_ptr, char* val_tag, size_t DelInd_ptr_size, size_t val_tag_size)
+{
+	sgx_status_t status;
+	ms_ecall_insert_set_string_t ms;
+	ms.ms_DelInd_ptr = DelInd_ptr;
+	ms.ms_val_tag = val_tag;
+	ms.ms_DelInd_ptr_size = DelInd_ptr_size;
+	ms.ms_val_tag_size = val_tag_size;
+	status = sgx_ecall(eid, 3, &ocall_table_CryptoEnclave, &ms);
 	return status;
 }
 

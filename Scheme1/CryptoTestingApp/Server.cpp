@@ -52,6 +52,7 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
         flags[userId][tkn].emplace_back(false);
     }
     vector<bool> &flag = flags[userId][tkn];
+    cout<<Tlist.size()<<endl;
 
     for(int i = 1 ; i <= Tlist.size() ; i++){
 

@@ -20,6 +20,10 @@ enclave {
             size_t val_tag_size,size_t val_ct_size,size_t val_ct_cnt,
             size_t NewInd_size,size_t DelInd_size,size_t flag_size,
             int index);
+        
+        public void ecall_insert_set_string([in,out,size = DelInd_ptr_size]void *DelInd_ptr,
+            [in,size = val_tag_size]char *val_tag,
+        size_t DelInd_ptr_size,size_t val_tag_size);
     };
 
     untrusted {

@@ -61,8 +61,6 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
                 break;
             }
         }
-        // cout<<"flag"<<i<<"  "<<flag<<endl;
-
         if(flag){
             int indi;
             char val_tag[DIGEST_SIZE];
@@ -71,19 +69,18 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
             for(int i = 0 ; i < val.ct.size(); i++){
                 memcpy((uint8_t *)val_ct + i * (AES_BLOCK_SIZE + sizeof(int)),val.ct[i].c_str(),AES_BLOCK_SIZE + sizeof(int));
             }
-            // cout<<"check point 4"<<endl;
             ecall_check_doc(eid,&remain_node,&D,(char *)val_tag,(char *)val_ct,&NewInd,&DelInd,&flag,
                 sizeof(remain_node),sizeof(D),
                 DIGEST_SIZE,AES_BLOCK_SIZE + sizeof(int) ,val.ct.size(),
                 sizeof(NewInd),sizeof(DelInd),sizeof(flag),
                 i);
-            // cout<<"check point 5"<<endl;
             free(val_ct);
         }else{
-            DelInd.insert(val.tag);
+            char val_tag[DIGEST_SIZE];
+            memcpy(val_tag,val.tag.c_str(),DIGEST_SIZE);
+            ecall_insert_set_string(eid,&DelInd,(char *)val_tag,sizeof(DelInd),DIGEST_SIZE);
         }
     }
-    // cout<<"check point 6"<<endl;
     unordered_map<string,int> OldInd = EDBcache[userId][tkn];
     
     for(string tag:DelInd){
