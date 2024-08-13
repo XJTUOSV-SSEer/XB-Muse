@@ -73,6 +73,12 @@ void ecall_SRE_cKRev(const char *key,size_t key_len,const void *D,void *result,s
     }
 
     vector<GGMNode> vec_GGM = GGMTree::min_coverage(node_list);
+    // print_bytes(vec_GGM[0].key,AES_BLOCK_SIZE);
+    for(auto & i : vec_GGM) {
+        memcpy(i.key, key, AES_BLOCK_SIZE);
+        GGMTree::derive_key_from_tree(i.key, i.index, i.level, 0);
+    }
+
     size_t cnt = vec_GGM.size();
     uint8_t keys[cnt * AES_BLOCK_SIZE];
     int levels[cnt];
@@ -84,11 +90,7 @@ void ecall_SRE_cKRev(const char *key,size_t key_len,const void *D,void *result,s
     }
     ocall_insert_vector_GGMNode(result,keys,levels,indexs,
     resultSize,cnt * AES_BLOCK_SIZE,cnt);
-    
-    for(auto & i : vec_GGM) {
-        memcpy(i.key, key, AES_BLOCK_SIZE);
-        GGMTree::derive_key_from_tree(i.key, i.index, i.level, 0);
-    }
+
     return ;
 }
 
@@ -122,11 +124,26 @@ void ecall_check_doc(const void *remain_node,const void *D,char *val_tag,char *v
     unordered_set<string> *DelInd_ptr = (unordered_set<string> *) DelInd;
     vector<bool> *flag_ptr = (vector<bool> *) flag;
     unordered_map<long,uint8_t *> keys;
+
     compute_leaf_keys(*remain_node_ptr, GGMTree::get_level(),keys);
+    // printf("%d",keys.size());
+
+    // printf("enclave size : %d",(*remain_node_ptr).size());
+    // for(int i = 0 ; i < (*remain_node_ptr).size() ; i++){
+    //     printf("aaa");
+    //     print_bytes((*remain_node_ptr)[i].key,AES_BLOCK_SIZE);
+    // }
 
     vector<int> res_list;
     
     vector<long> search_pos = BloomFilter<32, GGM_SIZE, HASH_SIZE>::get_index((uint8_t*)val_tag);
+
+    // for(int i = 0 ; i < search_pos.size() ; i++){
+    //     print_bytes(keys[search_pos[i]],AES_BLOCK_SIZE);
+    // }
+    // printf("show : ");
+    // print_bytes(keys[5],AES_BLOCK_SIZE);
+    // printf("\n");
 
     sort(search_pos.begin(), search_pos.end());
     // derive the key from search position and decrypt the id
@@ -141,6 +158,13 @@ void ecall_check_doc(const void *remain_node,const void *D,char *val_tag,char *v
         aes_decrypt((uint8_t *) (ciphertext_list[i].c_str() + AES_BLOCK_SIZE), ciphertext_list[i].size() - AES_BLOCK_SIZE,
                     keys[search_pos[i]], (uint8_t *) ciphertext_list[i].c_str(),IV_LEN,
                     res);
+        // printf("密文：");
+        // print_bytes((uint8_t *) (ciphertext_list[i].c_str() + AES_BLOCK_SIZE),ciphertext_list[i].size() - AES_BLOCK_SIZE);
+        // printf("密钥：");
+        // print_bytes(keys[search_pos[i]],AES_BLOCK_SIZE);
+        // printf("明文：");
+        // printf("%d",*((int*) res));
+        // printf("");
         if(*((int*) res) > 0) {
             res_list.emplace_back(*((int*) res));
         }

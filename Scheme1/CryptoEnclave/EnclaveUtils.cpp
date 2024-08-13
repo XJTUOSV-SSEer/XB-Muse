@@ -18,52 +18,9 @@ void printf( const char *fmt, ...)
     ocall_print_string(buf);
 }
 
-void print_bytes(uint8_t *ptr, uint32_t len) {
-  for (uint32_t i = 0; i < len; i++) {
-    printf("%x", *(ptr + i));
-  }
-
-  printf("\n");
+void print_bytes(uint8_t *ptr,uint32_t len) {  
+    ocall_print_string_bytes((char *)ptr,len);
 }
-
-
-// int  cmp(const uint8_t *value1, const uint8_t *value2, uint32_t len){
-//     for (uint32_t i = 0; i < len; i++) {
-//         if (*(value1+i) != *(value2+i)) {
-//         return -1;
-//         }
-//     }
-
-//     return 0;
-// }
-
-// void  clear(uint8_t *dest, uint32_t len){
-//     for (uint32_t i = 0; i < len; i++) {
-//         *(dest + i) = 0;
-//     }
-// }
-
-// //将文档 content分词，分词符号为","
-// std::vector<std::string>  wordTokenize(char *content,int content_length){
-//     char delim[] = ",";//" ,.-";
-//     std::vector<std::string> result;
-
-//     char *content_cpy = (char*)malloc(content_length);
-//     memcpy(content_cpy,content,content_length);
-
-//     char *token = strtok(content_cpy,delim);
-//     while (token != NULL)
-//     {
-//         result.push_back(token); 
-//         token =  strtok(NULL,delim);
-//     }
-
-//     free(token);
-//     free(content_cpy);
-    
-//     return result;
-// }
-
 
 int aes_encrypt(unsigned char *plaintext, int plaintext_len,
                 unsigned char *key, unsigned char *iv,

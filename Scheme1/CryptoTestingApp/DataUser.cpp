@@ -66,6 +66,7 @@ vector<int> DataUser::Search(string w){
         if( w1 == w && cnt1 == FileDelCnts[w1]){
             flag = false;
             vector<long> delete_pos = revoketag.D.search();
+            D = revoketag.D;
             ecall_SRE_cKRev(eid,(char *)key,KEY_LEN,&revoketag.D.bits,&remain_node,sizeof(revoketag.D),sizeof(remain_node));
             break;
         }
@@ -73,8 +74,12 @@ vector<int> DataUser::Search(string w){
     if(flag){
         remain_node.emplace_back(GGMNode(0,0,key));
     }
+    // printf("DataUser::Search : ");
+    // printf("size : %d \n",remain_node.size());
+    // printHexBytes(string((char*)remain_node[remain_node.size() - 1].key,AES_BLOCK_SIZE));
     uint8_t digest[DIGEST_SIZE];
     sha256_digest((unsigned char *)w.c_str(),w.size(),digest);
+    // cout<<D.bits<<endl;
     unordered_map<string,int> Res = server->search(TList,remain_node,string((char*)digest,DIGEST_SIZE),D,userId);
     vector<int> res;
     for(const auto &pair:Res){

@@ -34,6 +34,11 @@ typedef struct ms_ocall_print_string_t {
 	const char* ms_str;
 } ms_ocall_print_string_t;
 
+typedef struct ms_ocall_print_string_bytes_t {
+	const char* ms_str;
+	size_t ms_len;
+} ms_ocall_print_string_bytes_t;
+
 typedef struct ms_ocall_insert_set_string_t {
 	void* ms_set;
 	void* ms_str;
@@ -91,6 +96,14 @@ static sgx_status_t SGX_CDECL CryptoEnclave_ocall_print_string(void* pms)
 {
 	ms_ocall_print_string_t* ms = SGX_CAST(ms_ocall_print_string_t*, pms);
 	ocall_print_string(ms->ms_str);
+
+	return SGX_SUCCESS;
+}
+
+static sgx_status_t SGX_CDECL CryptoEnclave_ocall_print_string_bytes(void* pms)
+{
+	ms_ocall_print_string_bytes_t* ms = SGX_CAST(ms_ocall_print_string_bytes_t*, pms);
+	ocall_print_string_bytes(ms->ms_str, ms->ms_len);
 
 	return SGX_SUCCESS;
 }
@@ -161,11 +174,12 @@ static sgx_status_t SGX_CDECL CryptoEnclave_sgx_thread_set_multiple_untrusted_ev
 
 static const struct {
 	size_t nr_ocall;
-	void * table[9];
+	void * table[10];
 } ocall_table_CryptoEnclave = {
-	9,
+	10,
 	{
 		(void*)CryptoEnclave_ocall_print_string,
+		(void*)CryptoEnclave_ocall_print_string_bytes,
 		(void*)CryptoEnclave_ocall_insert_set_string,
 		(void*)CryptoEnclave_ocall_insert_map_str_int,
 		(void*)CryptoEnclave_ocall_insert_vector_GGMNode,

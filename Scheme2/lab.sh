@@ -5,7 +5,7 @@ make SGX_MODE=HW SGX_DEBUG=1
 result_line=""
 # for i in 50 100 200
 # do
-for j in 3 8 13 16 17
+for j in 2 4 6 8 10
 do
   sum=0
   # 执行程序10次，将j作为入参
@@ -19,7 +19,7 @@ do
     result_float=$(echo $result | awk '{print $1}')
     sum=$(echo "$sum + $result_float" | bc)
   done
-  result_line+="$(echo "scale=5; $sum / 1" | bc),"
+  result_line+="$(echo "scale=5; $sum" | bc),"
 done
 echo $result_line >> result.csv
 # done

@@ -131,8 +131,10 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
                 // sha256_digest(buffer,w.size() + sizeof(int),addr);
 
                 D[userId][w].add_tag(tag);
+                // cout<<D[userId][w].bits<<endl;
                 vector<long> v = D[userId][w].get_index(tag);
                 Revoketags.emplace_back(Revoketag(string((char*)addr,w.size() + sizeof(int)),D[userId][w]));
+                // cout<<Revoketags[Revoketags.size()-1].D.bits<<endl;
                 // cout<<"DEL 2"<<endl;
             }
 

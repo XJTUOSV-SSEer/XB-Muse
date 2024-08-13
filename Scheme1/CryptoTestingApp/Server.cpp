@@ -45,6 +45,8 @@ void Server::delFile(int userId,vector<Revoketag> Revoketags,vector<string> DelC
 
 unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,BloomFilter<32, GGM_SIZE, HASH_SIZE> D,int userId){
 
+    // cout<<D.bits<<endl;
+
     unordered_map<string,int> NewInd;
     unordered_set<string> DelInd;
     int flag_size = flags[userId][tkn].size();
@@ -52,17 +54,20 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
         flags[userId][tkn].emplace_back(false);
     }
     vector<bool> &flag = flags[userId][tkn];
-    cout<<Tlist.size()<<endl;
-
+    // cout<<"Tlist.size() : "<<Tlist.size()<<endl;
+    // printf("unenclave size : %d\n",remain_node.size());
     for(int i = 1 ; i <= Tlist.size() ; i++){
 
         bool isInD = true;
-        vector<long> indexs = D.get_index((uint8_t *)Tlist[i - 1].c_str());
-        for(long val:indexs){
-            if(D.bits[val] != 1) isInD = false;
-        }
+        vector<long> indexs = D.get_index((uint8_t *)DictW[Tlist[i - 1]].tag.c_str());
+        // for(long val:indexs){
+        //     cout<<val<<"   "<<D.bits[val]<<endl;
+        //     if(D.bits[val] != 1) isInD = false;
+        // }
+        // cout<<isInD<<endl;
 
-        if(!flag[i - 1]||isInD){
+        if(!flag[i - 1] ||isInD){
+        // if(true){
             Val val = DictW[Tlist[i - 1]];
             int indi;
             char val_tag[DIGEST_SIZE];
@@ -71,6 +76,9 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
             for(int i = 0 ; i < val.ct.size(); i++){
                 memcpy((uint8_t *)val_ct + i * (AES_BLOCK_SIZE + sizeof(int)),val.ct[i].c_str(),AES_BLOCK_SIZE + sizeof(int));
             }
+            // printf("\n");
+            // printHexBytes(string((char *)remain_node[0].key,AES_BLOCK_SIZE));
+            // printf("unenclave size : %d\n",remain_node.size());
             ecall_check_doc(eid,&remain_node,&D,(char *)val_tag,(char *)val_ct,&NewInd,&DelInd,&flag,
                 sizeof(remain_node),sizeof(D),
                 DIGEST_SIZE,AES_BLOCK_SIZE + sizeof(int) ,val.ct.size(),

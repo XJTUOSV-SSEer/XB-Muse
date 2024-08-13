@@ -19,11 +19,18 @@ void printf( const char *fmt, ...)
 }
 
 void print_bytes(uint8_t *ptr, uint32_t len) {
-  for (uint32_t i = 0; i < len; i++) {
-    printf("%x", *(ptr + i));
-  }
+//   for (uint32_t i = 0; i < len; i++) {
+//     printf("%x", *(ptr + i));
+//   }
 
-  printf("\n");
+//   printf("\n");
+
+    std::string hexString;
+    for (size_t i = 0; i < len; i++) {
+        hexString += std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(static_cast<unsigned char>(ptr[i]));
+    }
+    printf(hexString.c_str());
+
 }
 
 

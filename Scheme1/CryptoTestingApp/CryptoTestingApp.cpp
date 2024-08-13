@@ -41,6 +41,10 @@ void ocall_print_string(const char *str) {
     printf("%s\n", str);
 }
 
+void ocall_print_string_bytes(const char *str,size_t len) {
+	printHexBytes(string(str,len));
+}
+
 void ocall_insert_set_string(void *set,void *str,size_t set_len,size_t string_len){
 	unordered_set<string> *set_ptr = (unordered_set<string> *) set;
 	(*set_ptr).insert(string((char *)str,string_len));
@@ -119,7 +123,7 @@ int main(int argc,char* argv[])
         "SQ"
 	};
 
-	int status = 1;
+	int status = 0;
 
 	if(status == 0){
 		// 初始化server、dataowner和datauser
@@ -252,16 +256,6 @@ int main(int argc,char* argv[])
 			std::cout << "Unable to open file" << std::endl;
 			return 1;
 		}
-		// for (const auto& pair : dataSet) {
-		// 	std::cout << "Key: " << pair.first << ", Values: [";
-		// 	for (size_t i = 0; i < pair.second.size(); ++i) {
-		// 		std::cout << pair.second[i];
-		// 		if (i < pair.second.size() - 1) {
-		// 			std::cout << ", ";
-		// 		}
-		// 	}
-		// 	std::cout << "]" << std::endl;
-		// }
 
 		unordered_map<int,vector<string>> dataSet_reverted;
 		for (const auto& pair : dataSet) {
@@ -317,16 +311,6 @@ int main(int argc,char* argv[])
 			std::cout << "Unable to open file" << std::endl;
 			return 1;
 		}
-		// for (const auto& pair : dataSet) {
-		// 	std::cout << "Key: " << pair.first << ", Values: [";
-		// 	for (size_t i = 0; i < pair.second.size(); ++i) {
-		// 		std::cout << pair.second[i];
-		// 		if (i < pair.second.size() - 1) {
-		// 			std::cout << ", ";
-		// 		}
-		// 	}
-		// 	std::cout << "]" << std::endl;
-		// }
 
 		unordered_map<int,vector<string>> dataSet_reverted;
 		for (const auto& pair : dataSet) {
@@ -387,16 +371,6 @@ int main(int argc,char* argv[])
 			std::cout << "Unable to open file" << std::endl;
 			return 1;
 		}
-		// for (const auto& pair : dataSet) {
-		// 	std::cout << "Key: " << pair.first << ", Values: [";
-		// 	for (size_t i = 0; i < pair.second.size(); ++i) {
-		// 		std::cout << pair.second[i];
-		// 		if (i < pair.second.size() - 1) {
-		// 			std::cout << ", ";
-		// 		}
-		// 	}
-		// 	std::cout << "]" << std::endl;
-		// }
 
 		unordered_map<int,vector<string>> dataSet_reverted;
 		for (const auto& pair : dataSet) {
@@ -429,7 +403,7 @@ int main(int argc,char* argv[])
     	// std::cout << "运行时间: " << duration << " 秒" << std::endl;
 		}
 		// cout<<"搜索的结果个数："<<dec<<Res.size()<<endl;
-	}if(status == 4){
+	}else if(status == 4){
 		int delNum = atoi(argv[1]);
 		string dataSetNumStr = string(argv[2]);
 		int dataSetNum = atoi(argv[2]);
@@ -495,6 +469,86 @@ int main(int argc,char* argv[])
 
 		// cout<<"搜索的结果个数："<<dec<<Res.size()<<endl;
 		return duration;
+	}else if(status == 5){
+		int userNum = atoi(argv[1]);
+
+		vector<int> userIds;
+		vector<DataUser *> dataUsers;
+		Server *server = new Server(userIds,eid);
+		for(int i = 1 ; i <= userNum ; i++){
+			userIds.emplace_back(i);
+			DataUser* dataUser = new DataUser(i,eid);
+			dataUser->server = server;
+			dataUsers.emplace_back(dataUser);
+		}
+
+		DataOwner *dataOwner = new DataOwner();
+		dataOwner->server = server;
+
+		//初始化实验参数
+		std::ifstream file("../DataSet/Lab1DataSet8");
+		// cout<<"../DataSet/Lab1DataSet"+dataSetNumStr<<endl;
+		string toSearchWord = target_keys[8 - 1];
+
+		unordered_map<string,vector<int>> dataSet;
+		if (file.is_open()) {
+			std::string line;
+			while (std::getline(file, line)) {
+				vector<string> vc = split_string(line);
+				dataSet[vc[0]] = vector<int>();
+				int size = vc.size();
+				for(int i = 1 ; i < size ; i++){
+					dataSet[vc[0]].emplace_back(stoi(vc[i]));
+				}
+			}
+			file.close();
+		} else {
+			std::cout << "Unable to open file" << std::endl;
+			return -1;
+		}
+		// cout<<"11111"<<endl;
+		unordered_map<int,vector<string>> dataSet_reverted;
+		// cout<<dataUsers.size()<<endl;
+		for (const auto& pair : dataSet) {
+			for (size_t i = 0; i < pair.second.size(); ++i) {
+				dataSet_reverted[pair.second[i]].emplace_back(pair.first);
+				for(DataUser* user : dataUsers){
+					dataOwner->AccessList[pair.second[i]].insert((*user).userId);
+					server->AccessList[pair.second[i]].insert((*user).userId);
+				}
+			}
+		}
+		// cout<<"22222"<<endl;
+		for (const auto& pair : dataSet_reverted) {
+			vector<string> WList;
+			for (size_t i = 0; i < pair.second.size(); ++i) {
+				WList.emplace_back(pair.second[i]);
+			}
+			dataOwner->update(pair.first,WList,ADD);
+		}
+		vector<string> WList;
+		WList.emplace_back(toSearchWord);
+		for(int i = 0 ; i < 150 ; i++){
+			dataOwner->update(dataSet[toSearchWord][i],WList,DEL);
+		}
+		int time = 0;
+		// cout<<"333333"<<endl;
+		for(DataUser* dataUser : dataUsers){
+			// cout<<(*dataUser).userId<<endl;
+			clock_t start = clock();
+			vector<int> Res = dataUser->Search(toSearchWord);
+			clock_t end = clock();
+			time = max(time,(int)(end - start));
+		}
+		// cout<<"444444"<<endl;
+
+
+		double duration = static_cast<double>(time) / CLOCKS_PER_SEC;
+		cout<<duration<<endl;
+		// std::cout << "运行时间: " << duration << " 秒" << std::endl;
+
+		// cout<<"搜索的结果个数："<<dec<<Res.size()<<endl;
+		return duration;
 	}
 
 	/************************一些用来验证api的代码******************************************/
@@ -537,110 +591,6 @@ int main(int argc,char* argv[])
     // //     printf("%x ", digest[i]);
     // // }
     // // printf("\n");
-
-
-
-
-
-
-
-
-
-	/****************************actual opreation******************************/
-	// printf("Adding doc\n");
-	
-	// /*** 处理插入操作Update Protocol with op = add */
-	// uint64_t start_add_time =  timeSinceEpochMillisec(); //插入操作开始时间
-	// for(int i=1;i <= total_file_no; i++){  //total_file_no 多个Update
-	// 	//client read a document
-	// 	//printf("->%d",i);
-	// 	docContent *fetch_data;//原始文档
-	// 	fetch_data = (docContent *)malloc(sizeof( docContent));
-    //     //获取下一篇doc
-	// 	myClient->ReadNextDoc(fetch_data);
-
-	// 	//encrypt and send to Server 
-	// 	entry *encrypted_entry;
-	// 	encrypted_entry = (entry*)malloc(sizeof(entry));
-		
-	// 	encrypted_entry->first.content_length = fetch_data->id.id_length; //初始化长度
-	// 	encrypted_entry->first.content = (char*) malloc(fetch_data->id.id_length);
-	// 	encrypted_entry->second.message_length = fetch_data->content_length + AESGCM_MAC_SIZE + AESGCM_IV_SIZE;	//初始化长度
-	// 	encrypted_entry->second.message = (char *)malloc(encrypted_entry->second.message_length);
-
-	// 	//客户端对doc进行加密,结果存入entry实体中
-	// 	myClient->EncryptDoc(fetch_data,encrypted_entry);
-		
-	// 	//send(id,f) to server
-	// 	myServer->ReceiveEncDoc(encrypted_entry);
-		
-	// 	//upload (op,id) to Enclave
-	// 	/*****************更新enclave中数据结构*************************/
-	// 	//encalve Update所有操作
-	// 	//Question: 这个多出一个sgx id的参数是sgx的特性吗？
-	// 	ecall_addDoc(eid,fetch_data->id.doc_id,fetch_data->id.id_length,
-	// 				fetch_data->content,fetch_data->content_length);
-	// 	/**************************************************************/
-
-	// 	//free memory 
-	// 	free(fetch_data->content);
-	// 	free(fetch_data->id.doc_id);
-	// 	free(fetch_data);
-
-	// 	free(encrypted_entry->first.content);
-	// 	free(encrypted_entry->second.message);
-	// 	free(encrypted_entry);
-	// }
-	// uint64_t end_add_time =  timeSinceEpochMillisec(); //插入操作结束时间
-	// std::cout << "********Time for adding********" << std::endl;
-	// std::cout << "Total time:" << end_add_time-start_add_time << " ms" << std::endl;
-	// std::cout << "Average time (file):" << (end_add_time-start_add_time)*1.0/total_file_no << " ms" << std::endl;
-	// std::cout << "Average time (pair):" << (end_add_time-start_add_time)*1.0/total_pair_no << " ms" << std::endl;
-
-	// //** 处理删除操作Update Protocol with op = del (id)
-	// printf("\nDeleting doc\n");
-	// uint64_t start_del_time =  timeSinceEpochMillisec(); //删除操作开始时间
-	// //docId* delV = new docId[del_no];
-	// docId delV_i; //docID:文件ID数据结构
-	// for(int del_index=1; del_index <=del_no; del_index++){
-	// 	//printf("->%s",delV_i[del_index].doc_id);
-	// 	myClient->Del_GivenDocIndex(del_index, &delV_i);
-    //     /*****************在enclave中查询关键字*************************/
-	// 	ecall_delDoc(eid,delV_i.doc_id,delV_i.id_length); //加入到 d 列表
-    //     /**************************************************************/
-	// }
-	// uint64_t end_del_time =  timeSinceEpochMillisec(); //删除操作结束时间
-	// std::cout << "********Time for deleting********" << std::endl;
-	// std::cout << "Total time:" << end_del_time-start_del_time << " ms" << std::endl;
-	// std::cout << "Average time:" << (end_del_time-start_del_time)*1.0/del_no << " ms" << std::endl;
-
-	// free(delV_i.doc_id);
-
-	
-    // /*** 处理搜索操作***/
-	// // std::string s_keyword[2]= {"list","clinton"}; 
-	// std::string s_keyword[1]= {"bird"};
-	// int keyword_count = 1; //查询关键字的数量
-	// std::cout << "********Time for searching********" << std::endl;
-	// uint64_t total_search_time = 0;
-	// for (int s_i = 0; s_i < keyword_count; s_i++){
-	// 	std::cout << "Searching ==>" << s_keyword[s_i].c_str() << std::endl;
-	// 	// printf("\nSearching ==> %s\n", s_keyword[s_i].c_str());
-	// 	uint64_t start_time =  timeSinceEpochMillisec();
-	// 	// std::cout << timeSinceEpochMillisec() << std::endl;
-    //     /*****************将文档id加入删除list*************************/
-	// 	ecall_search(eid, s_keyword[s_i].c_str(), s_keyword[s_i].size());//直接对应第三部分Search的所有流程
-    //     /*****************将文档id加入删除list*************************/
-    //     uint64_t end_time =  timeSinceEpochMillisec();
-	// 	// std::cout << timeSinceEpochMillisec() << std::endl;
-	// 	std::cout << "Elapsed time:" << end_time-start_time << " ms"  << std::endl;
-	// 	total_search_time += end_time-start_time;
-	// }
-	// std::cout << "Total time:" << total_search_time << " ms" << std::endl;
-	// std::cout << "Average time:" << total_search_time*1.0/keyword_count << " ms" << std::endl;
-
-	// delete myClient;
-	// // delete myServer;
 
 	return 0;
 }
