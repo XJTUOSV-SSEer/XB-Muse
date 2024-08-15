@@ -1,1 +1,0 @@
-sshpass -p 123456 ssh node4@192.168.1.101 python3.6 /home/node4/yangxu/chensifan/testRPC/app/test.py

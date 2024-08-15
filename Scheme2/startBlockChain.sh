@@ -1,1 +1,0 @@
-sshpass -p 123456 ssh node4@192.168.1.101 ganache-cli -g 1 -1 9007199254740991 --db ./RDBlockchain -s 1234 -a 2

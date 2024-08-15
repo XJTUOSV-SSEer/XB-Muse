@@ -3,6 +3,8 @@
 
 #define AES_BLOCK_SIZE 16
 #define DIGEST_SIZE 32
+
+//这里要求 GGM_SIZE = 2 ^ GGM_LEVEL
 #define GGM_SIZE 1024
 #define GGM_LEVEL 10
 #define HASH_SIZE 3
