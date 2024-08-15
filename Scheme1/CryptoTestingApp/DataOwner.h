@@ -14,8 +14,6 @@
 
 #include "Server.h"
 
-#endif
-
 using namespace std;
 
 class DataOwner{
@@ -44,3 +42,4 @@ public:
 
 };
 
+#endif

@@ -9,8 +9,6 @@
 #include "Server.h"
 #include <vector>
 
-#endif
-
 using namespace std;
 
 class DataUser{
@@ -31,3 +29,5 @@ public:
 
     DataUser(int userId,int eid);
 };
+
+#endif

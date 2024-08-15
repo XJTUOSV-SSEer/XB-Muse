@@ -112,7 +112,7 @@ int main(int argc,char* argv[])
 
 	return 0;
 
-	else if(status == 1){
+	if(status == 1){
 		// 初始化server、dataowner和datauser
 		vector<int> userIds;
 		userIds.emplace_back(1);

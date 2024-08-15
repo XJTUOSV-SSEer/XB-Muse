@@ -5,6 +5,10 @@
 #include <vector>
 #include <unordered_map>
 
+#include "Server.h"
+#include "DataOwner.h"
+#include "DataUser.h"
+
 using namespace std;
 
 //搜索数据集对应的目标词

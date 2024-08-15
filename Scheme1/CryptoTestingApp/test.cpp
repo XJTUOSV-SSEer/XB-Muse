@@ -1,9 +1,6 @@
 #include "test.h"
 
 #include "../common/data_type.h"
-#include "Server.h"
-#include "DataOwner.h"
-#include "DataUser.h"
 
 #include <iostream>
 #include <fstream>
