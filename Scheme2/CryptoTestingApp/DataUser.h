@@ -7,8 +7,6 @@
 #include "Server.h"
 #include <vector>
 
-#endif
-
 using namespace std;
 
 class DataUser{
@@ -34,3 +32,5 @@ public:
     DataUser(int userId,int eid,boost::asio::io_service *io_service,
         boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
 };
+
+#endif

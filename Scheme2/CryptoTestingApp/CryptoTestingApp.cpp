@@ -14,6 +14,8 @@
 #include "DataUser.h"
 #include "Utils.h"
 
+#include "test.h"
+
 #include <cstdint>
 #include <chrono>
 #include <iostream>
@@ -65,18 +67,6 @@ void ocall_insert_vector_GGMNode(void *vec, const unsigned char* keys, int *leve
 	}
 }
 
-std::vector<std::string> split_string(const std::string& input) {
-    std::vector<std::string> result;
-    std::istringstream iss(input);
-    std::string token;
-
-    while (std::getline(iss, token, ' ')) {
-        result.push_back(token);
-    }
-
-    return result;
-}
-
 //main func
 int main(int argc,char* argv[])
 {
@@ -105,31 +95,31 @@ int main(int argc,char* argv[])
     boost::asio::ip::tcp::resolver::query query(BLOCKCHAIN_SERVICE_IP, BLOCKCHAIN_SERVICE_PORT);
     boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
 
-	//用于实验
-	vector<string> target_keys = {
-		"YADOXGCCJI",
-        "CGAMP",
-        "AFA",
-        "VMO",
-        "KPXGT",
+	vector<int> args = prase_argv_to_int(argc,argv);
 
-        "FLPTGGDGBO",
-        "URNOIDX",
-        "XAHOE",
-        "NHB",
-        "CM",
+	int status = args[0];
 
-        "QZV",
-        "GX",
-        "VUQHKM",
-        "EVVOOPNK",
-        "HXHIPC",
+	if(status == 0){
+		test0(args,eid,io_service,endpoint_iterator);
+	}else if(status == 1){
+		test1(args,eid,io_service,endpoint_iterator);
+	}else if(status == 2){
+		test2(args,eid,io_service,endpoint_iterator);
+	}else if(status == 3){
+		test3(args,eid,io_service,endpoint_iterator);
+	}else if(status == 4){
+		test4(args,eid,io_service,endpoint_iterator);
+	}else if(status == 5){
+		test5(args,eid,io_service,endpoint_iterator);
+	}else if(status == 6){
+		test6(args,eid,io_service,endpoint_iterator);
+	}else if(status == 7){
+		test7(args,eid,io_service,endpoint_iterator);
+	}else{
+		test8(args,eid,io_service,endpoint_iterator);
+	}
 
-        "ELGPS",
-        "SQ"
-	};
-
-	int status = 0;
+	return 0;
 
 	if(status == 0){
 
@@ -224,26 +214,6 @@ int main(int argc,char* argv[])
 		}
 		cout<<endl;
 		
-		// //测试用例4----------------------------------------------------------------
-		// vector<string> revokeWList;
-		// revokeWList.emplace_back("a");
-		// dataOwner->update(1,revokeWList,DEL);
-		// Res = dataUser1->Search_batch("a");
-		// cout<<"撤销1号文件上a关键字后user1搜索a的搜索结果："<<endl;
-		// for(int i : Res){
-		// 	cout<< i << " ";
-		// }
-		// cout<<endl;
-
-		// //测试用例5----------------------------------------------------------------
-		// revokeWList = {"b"};
-		// dataOwner->update(21,revokeWList,DEL);
-		// Res = dataUser1->Search_batch("b");
-		// cout<<"撤销21号文件上b关键字后user1搜索b的搜索结果："<<endl;
-		// for(int i : Res){
-		// 	cout<< i << " ";
-		// }
-		// cout<<endl;
 	}else if(status == 1){
 
 		// 初始化server、dataowner和datauser
@@ -276,16 +246,6 @@ int main(int argc,char* argv[])
 			std::cout << "Unable to open file" << std::endl;
 			return 1;
 		}
-		// for (const auto& pair : dataSet) {
-		// 	std::cout << "Key: " << pair.first << ", Values: [";
-		// 	for (size_t i = 0; i < pair.second.size(); ++i) {
-		// 		std::cout << pair.second[i];
-		// 		if (i < pair.second.size() - 1) {
-		// 			std::cout << ", ";
-		// 		}
-		// 	}
-		// 	std::cout << "]" << std::endl;
-		// }
 
 		unordered_map<int,vector<string>> dataSet_reverted;
 		for (const auto& pair : dataSet) {
