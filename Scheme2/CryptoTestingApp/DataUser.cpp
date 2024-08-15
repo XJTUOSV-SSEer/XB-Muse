@@ -108,17 +108,9 @@ vector<int> DataUser::Search_batch(string w){
     }
 
     vector<GGMNode> remain_node;
-    if(Ds.size() == 0){
-        remain_node.emplace_back(GGMNode(0,0,key));
-    }else{
-        vector<GGMNode> node_list;
-        for(int i = 0 ; i < GGM_SIZE ; i++){
-            if(Ds[0].bits[i] == 0){
-                node_list.emplace_back(GGMNode(i,GGM_LEVEL));
-            }
-        }
-        remain_node = GGMTree::min_coverage(node_list);
-    }
+
+    remain_node.emplace_back(GGMNode(0,0,key));
+    
     uint8_t digest[DIGEST_SIZE];
     sha256_digest((unsigned char *)w.c_str(),w.size(),digest);
     unordered_map<string,int> Res = server->search(TList,remain_node,string((char*)digest,DIGEST_SIZE),Ds,userId);
