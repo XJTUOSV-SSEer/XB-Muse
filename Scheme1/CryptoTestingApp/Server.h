@@ -4,7 +4,7 @@
 #include "../common/data_type.h"
 #include "../common/config.h"
 #include "Utils.h"
-#include "GGMNode.h"
+#include "../common/GGMNode.h"
 
 #include <unordered_map>
 #include <unordered_set>

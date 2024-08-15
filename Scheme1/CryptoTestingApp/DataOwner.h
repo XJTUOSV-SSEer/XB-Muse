@@ -11,7 +11,7 @@
 
 #include "../common/data_type.h"
 #include "../common/config.h"
-#include "BloomFilter.h"
+#include "../common/BF/BloomFilter.h"
 #include "GGMTree.h"
 
 #include "Utils.h"

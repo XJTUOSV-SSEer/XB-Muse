@@ -15,7 +15,7 @@
 using namespace std;
 
 DataOwner::DataOwner(){
-    tree = new GGMTree(GGM_SIZE);
+    
 }
 
 void DataOwner::update(int ind,vector<string> WList,OP op){

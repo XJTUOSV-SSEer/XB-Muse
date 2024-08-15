@@ -15,8 +15,8 @@
 #include <iterator>
 #include <vector>
 #include <list>
-#include "BloomFilter.h"
-#include "GGMNode.h"
+#include "../common/BF/BloomFilter.h"
+#include "../common/GGMNode.h"
 #include "GGMTree.h"
 #include "../common/data_type.h"
 

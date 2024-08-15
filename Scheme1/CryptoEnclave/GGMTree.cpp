@@ -1,8 +1,5 @@
 #include "GGMTree.h"
 
-GGMTree::GGMTree(long num_node) {
-}
-
 void GGMTree::derive_key_from_tree(uint8_t *current_key, long offset, int start_level, int target_level) {
     uint8_t next_key[AES_BLOCK_SIZE];
     int cnt = 0;

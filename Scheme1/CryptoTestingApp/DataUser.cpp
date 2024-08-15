@@ -1,6 +1,4 @@
 #include "DataUser.h"
-#include "GGMNode.h"
-#include "GGMTree.h"
 #include "CryptoEnclave_u.h"
 #include <string>
 
