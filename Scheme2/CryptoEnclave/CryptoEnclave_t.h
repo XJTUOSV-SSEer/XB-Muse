@@ -21,6 +21,7 @@ void ecall_check_doc(const void* remain_node, const void* D, char* val_tag, char
 void ecall_insert_set_string(void* DelInd_ptr, char* val_tag, size_t DelInd_ptr_size, size_t val_tag_size);
 
 sgx_status_t SGX_CDECL ocall_print_string(const char* str);
+sgx_status_t SGX_CDECL ocall_print_string_bytes(const char* str, size_t len);
 sgx_status_t SGX_CDECL ocall_insert_set_string(void* set, void* str, size_t set_len, size_t string_len);
 sgx_status_t SGX_CDECL ocall_insert_map_str_int(void* map, void* tag, int val, size_t map_len, size_t tag_len);
 sgx_status_t SGX_CDECL ocall_insert_vector_GGMNode(void* vec, const unsigned char* keys, int* levels, int* indexs, size_t vec_len, size_t keys_len, size_t cnt);

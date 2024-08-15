@@ -41,6 +41,10 @@ void ocall_print_string(const char *str) {
     printf("%s\n", str);
 }
 
+void ocall_print_string_bytes(const char *str,size_t len) {
+	printHexBytes(string(str,len));
+}
+
 void ocall_insert_set_string(void *set,void *str,size_t set_len,size_t string_len){
 	unordered_set<string> *set_ptr = (unordered_set<string> *) set;
 	(*set_ptr).insert(string((char *)str,string_len));
@@ -126,7 +130,7 @@ int main(int argc,char* argv[])
         "SQ"
 	};
 
-	int status = 5;
+	int status = 0;
 
 	if(status == 0){
 

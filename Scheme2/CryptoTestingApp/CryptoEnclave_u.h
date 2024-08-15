@@ -20,6 +20,10 @@ extern "C" {
 #define OCALL_PRINT_STRING_DEFINED__
 void SGX_UBRIDGE(SGX_NOCONVENTION, ocall_print_string, (const char* str));
 #endif
+#ifndef OCALL_PRINT_STRING_BYTES_DEFINED__
+#define OCALL_PRINT_STRING_BYTES_DEFINED__
+void SGX_UBRIDGE(SGX_NOCONVENTION, ocall_print_string_bytes, (const char* str, size_t len));
+#endif
 #ifndef OCALL_INSERT_SET_STRING_DEFINED__
 #define OCALL_INSERT_SET_STRING_DEFINED__
 void SGX_UBRIDGE(SGX_NOCONVENTION, ocall_insert_set_string, (void* set, void* str, size_t set_len, size_t string_len));

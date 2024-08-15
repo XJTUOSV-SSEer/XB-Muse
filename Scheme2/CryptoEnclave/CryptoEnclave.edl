@@ -29,6 +29,8 @@ enclave {
     untrusted {
         void ocall_print_string([in, string] const char *str);
 
+        void ocall_print_string_bytes([in, size = len] const char *str,size_t len);
+
         void ocall_insert_set_string([in,out,size = set_len] void *set,
             [in,out,size = string_len] void *str,
             size_t set_len,size_t string_len
