@@ -71,19 +71,36 @@ int init_data_set(string filePath,unordered_map<string,vector<int>> &dataSet,uno
 	for (const auto& pair : dataSet) {
 		for (size_t i = 0; i < pair.second.size(); ++i) {
 			dataSet_reverted[pair.second[i]].emplace_back(pair.first);
-			// dataOwner->AccessList[pair.second[i]].insert(1);
-			// server->AccessList[pair.second[i]].insert(1);
 		}
 	}
-	for (const auto& pair : dataSet_reverted) {
+
+	return 0;
+}
+
+void auth_all(DataOwner *dataOwner,unordered_map<string,vector<int>> &dataSet,int dataUserId){
+    for (const auto& pair : dataSet) {
+		for (size_t i = 0; i < pair.second.size(); ++i) {
+			dataOwner->AccessList[pair.second[i]].insert(dataUserId);
+		}
+	}
+}
+
+void auth_all(Server *server,unordered_map<string,vector<int>> &dataSet,int dataUserId){
+    for (const auto& pair : dataSet) {
+		for (size_t i = 0; i < pair.second.size(); ++i) {
+			server->AccessList[pair.second[i]].insert(dataUserId);
+		}
+	}
+}
+
+void update_all(DataOwner *dataOwner,unordered_map<int,vector<string>> &dataSet_reverted,int dataUserId){
+    for (const auto& pair : dataSet_reverted) {
 		vector<string> WList;
 		for (size_t i = 0; i < pair.second.size(); ++i) {
 			WList.emplace_back(pair.second[i]);
 		}
-		// dataOwner->update(pair.first,WList,ADD);
+		dataOwner->update(pair.first,WList,ADD);
 	}
-
-	return 0;
 }
 
 std::vector<int> prase_argv_to_int(int argc,char* argv[]){
@@ -95,6 +112,7 @@ std::vector<int> prase_argv_to_int(int argc,char* argv[]){
 	return args;
 }
 
+//test
 void test0(vector<int> args,int eid){
 // 初始化server、dataowner和datauser
 		vector<int> userIds;
@@ -197,34 +215,42 @@ void test0(vector<int> args,int eid){
 		cout<<endl;
 }
 
+//search - a
 void test1(vector<int> args,int eid){
     
 }
 
+//search - b
 void test2(vector<int> args,int eid){
     
 }
 
+//search - c
 void test3(vector<int> args,int eid){
     
 }
 
+//search - d
 void test4(vector<int> args,int eid){
     
 }
 
+//update - a
 void test5(vector<int> args,int eid){
     
 }
 
+//update - b
 void test6(vector<int> args,int eid){
     
 }
 
+//update - c
 void test7(vector<int> args,int eid){
     
 }
 
+//update - d
 void test8(vector<int> args,int eid){
     
 }
