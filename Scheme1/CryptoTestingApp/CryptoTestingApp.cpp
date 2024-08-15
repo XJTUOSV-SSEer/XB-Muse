@@ -14,6 +14,8 @@
 #include "DataUser.h"
 #include "Utils.h"
 
+#include "test.h"
+
 #include <cstdint>
 #include <chrono>
 #include <iostream>
@@ -65,19 +67,6 @@ void ocall_insert_vector_GGMNode(void *vec, const unsigned char* keys, int *leve
 	}
 }
 
-std::vector<std::string> split_string(const std::string& input) {
-    std::vector<std::string> result;
-    std::istringstream iss(input);
-    std::string token;
-
-    while (std::getline(iss, token, ' ')) {
-        result.push_back(token);
-    }
-
-    return result;
-}
-
-
 //main func
 int main(int argc,char* argv[])
 {
@@ -97,33 +86,18 @@ int main(int argc,char* argv[])
 
     /**********************************************************************/
 
-	//用于实验
-	vector<string> target_keys = {
-		"YADOXGCCJI",
-        "CGAMP",
-        "AFA",
-        "VMO",
-        "KPXGT",
+	vector<int> args = prase_argv_to_int(argc,argv);
 
-        "FLPTGGDGBO",
-        "URNOIDX",
-        "XAHOE",
-        "NHB",
-        "CM",
-
-        "QZV",
-        "GX",
-        "VUQHKM",
-        "EVVOOPNK",
-        "HXHIPC",
-
-        "ELGPS",
-        "SQ"
-	};
-
-	int status = 0;
+	int status = args[0];
 
 	if(status == 0){
+		test0(args,eid);
+	}
+
+	return 0;
+
+	if(status == 0){
+
 		// 初始化server、dataowner和datauser
 		vector<int> userIds;
 		userIds.emplace_back(1);
