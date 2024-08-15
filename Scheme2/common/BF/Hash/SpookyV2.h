@@ -46,7 +46,7 @@ typedef  uint16_t  uint16;
 typedef  uint8_t   uint8;
 #endif
 
-#include <memory.h>
+#include<cstring>
 
 class SpookyHash
 {

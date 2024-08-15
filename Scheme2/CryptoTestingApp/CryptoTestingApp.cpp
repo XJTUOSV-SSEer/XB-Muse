@@ -7,14 +7,13 @@
 #include "CryptoEnclave_u.h"
 
 #include "../common/data_type.h"
-#include "../common/encrypt_config.h"
+#include "../common/config.h"
 
 #include "Server.h"
 #include "DataOwner.h"
 #include "DataUser.h"
 #include "Utils.h"
 
-//for measurement
 #include <cstdint>
 #include <chrono>
 #include <iostream>

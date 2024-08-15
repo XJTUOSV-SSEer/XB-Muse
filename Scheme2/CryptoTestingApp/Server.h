@@ -2,9 +2,9 @@
 #define SERVER_H
 
 #include "../common/data_type.h"
-#include "../common/encrypt_config.h"
+#include "../common/config.h"
 #include "Utils.h"
-#include "GGMNode.h"
+#include "../common/GGMNode.h"
 
 #include <unordered_map>
 #include <unordered_set>
@@ -21,7 +21,6 @@ public:
     unordered_map<int,vector<string>> Addrs;//Queue[u]
     
     unordered_map<int,unordered_map<string,unordered_map<string,int>>> EDBcache;
-    // unordered_map<int,unordered_map<string,vector<bool>>> flags;
 
     unordered_map<string,int> batchCnt;
 

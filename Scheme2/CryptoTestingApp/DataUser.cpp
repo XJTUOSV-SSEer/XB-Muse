@@ -1,9 +1,8 @@
 #include "DataUser.h"
-#include "GGMNode.h"
+#include "../common/GGMNode.h"
 #include "GGMTree.h"
 #include "CryptoEnclave_u.h"
 #include <string>
-//#include <string.h> // memset(KF, 0, sizeof(KF));
 #include "stdio.h"
 #include <stdlib.h>
 #include <fstream>
@@ -54,9 +53,6 @@ std::bitset<GGM_SIZE> getD(boost::asio::io_service &io_service, boost::asio::ip:
         "\r\n" +
         json_str;
 
-    // cout << "Get request:" << endl;
-    // cout << request << endl << endl;
-
     std::string response = send_http(io_service,endpoint_iterator,request);
 
     size_t body_start = response.find("\r\n\r\n");
@@ -86,12 +82,9 @@ vector<int> DataUser::Search_batch(string w){
         uint8_t decryptdDiff[diff.size()];
         aes_decrypt((unsigned char*)diff.c_str(),diff.size(),key,iv,decryptdDiff);
         string w1 = string((char *)decryptdDiff,diff.size() - sizeof(int));
-        // cout<<"num:"<<*(int *)(decryptdDiff + diff.size() - sizeof(int))<<endl;
         FileCnts[w1] = *(int *)(decryptdDiff + diff.size() - sizeof(int));
-        // cout<< w1 <<" "<<*(int*)(decryptdDiff + diff.size() - sizeof(int))<<endl;
     }
     int cnt = FileCnts[w];
-    // cout<<"cnt:"<<cnt<<endl;
     for(int i = 1 ; i <= cnt ; i++){
         uint8_t digest[DIGEST_SIZE];
         memcpy(buffer,w.c_str(),w.size());
@@ -99,12 +92,10 @@ vector<int> DataUser::Search_batch(string w){
         sha256_digest(buffer,w.size()+sizeof(int),digest);
         TList.emplace_back(string((char *)digest,DIGEST_SIZE));
     }
-    // vector<Revoketag> revoketags = server->Revtag[userId];
 
     int delCnt = server->batchCnt[w];
     vector<BloomFilter<32, GGM_SIZE, HASH_SIZE>> Ds;
     for(int i = 1 ; i <= delCnt ; i++){
-        // cout << "check point"<<endl;
         uint8_t buffer[w.size() + sizeof(int)];
         memcpy(buffer,w.c_str(),w.size());
         memcpy(buffer + w.size(),(uint8_t*)&i,sizeof(int));
@@ -130,7 +121,6 @@ vector<int> DataUser::Search_batch(string w){
     }
     uint8_t digest[DIGEST_SIZE];
     sha256_digest((unsigned char *)w.c_str(),w.size(),digest);
-    // cout<<"check point 2"<<endl;
     unordered_map<string,int> Res = server->search(TList,remain_node,string((char*)digest,DIGEST_SIZE),Ds,userId);
     vector<int> res;
     for(const auto &pair:Res){

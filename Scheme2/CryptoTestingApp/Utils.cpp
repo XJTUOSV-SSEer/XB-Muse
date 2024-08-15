@@ -1,9 +1,4 @@
 #include "Utils.h"
-// #include <vector>
-// #include <iostream>
- 
-// using std::string;
-// using std::vector;
 
 //此函数做调试用
 void printHexBytes(const std::string& str) {
@@ -92,25 +87,6 @@ unsigned int hmac_digest(unsigned char *plaintext, int plaintext_len,
 
     sha256_digest(plaintext,plaintext_len,digest);
 
-    // HMAC_CTX *ctx;
-
-    // unsigned int len;
-
-    // /* Create and initialise the context */
-    // ctx = HMAC_CTX_new();
-
-    // /* Initialise the decryption operation. */
-    // HMAC_Init_ex(ctx, key, key_len, EVP_sha256(), NULL);
-
-    // /* compute the digest */
-    // HMAC_Update(ctx, plaintext, plaintext_len);
-
-    // /* Finalise the digest */
-    // HMAC_Final(ctx, digest, &len);
-
-    // /* Clean up */
-    // HMAC_CTX_free(ctx);
-
     return DIGEST_SIZE;
 }
 
@@ -122,38 +98,16 @@ unsigned int key_derivation(unsigned char *plaintext, int plaintext_len,
     sha256_digest(plaintext,plaintext_len,buffer);
     memcpy(digest,buffer,AES_BLOCK_SIZE);
 
-    // HMAC_CTX *ctx;
-
-    // unsigned int len;
-
-    // /* Create and initialise the context */
-    // ctx = HMAC_CTX_new();
-
-    // /* Initialise the decryption operation. */
-    // HMAC_Init_ex(ctx, key, key_len, EVP_md5(), NULL);
-
-    // /* compute the digest */
-    // HMAC_Update(ctx, plaintext, plaintext_len);
-
-    // /* Finalise the digest */
-    // HMAC_Final(ctx, digest, &len);
-
-    // /* Clean up */
-    // HMAC_CTX_free(ctx);
-
     return AES_BLOCK_SIZE;
 }
 
 string send_http(boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator,string request){
     // 连接到服务器
     boost::asio::ip::tcp::socket socket(io_service);
-    // cout<<6<<endl;
     boost::asio::connect(socket, endpoint_iterator);
 
     // 发送 HTTP 请求报文
-    // cout<<7<<endl;
     boost::asio::write(socket, boost::asio::buffer(request));
-    // cout<<8<<endl;
 
     // 读取响应报文
     boost::asio::streambuf response_buf;

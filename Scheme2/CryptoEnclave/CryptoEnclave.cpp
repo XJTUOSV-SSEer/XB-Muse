@@ -15,40 +15,15 @@
 #include <iterator> // for std::begin, std::end
 #include <vector>
 #include <list>
-#include "BloomFilter.h"
-#include "GGMNode.h"
 #include "GGMTree.h"
-// #include "../common/EncrytoUtil/Utils.h"
+#include "../common/BF/BloomFilter.h"
+#include "../common/GGMNode.h"
 #include "../common/data_type.h"
 
 using namespace std;
 
 void ecall_init(){
-    // printf("enclave : %d",1);
-    // auto *key = (unsigned char*) "0123456789123456";
-    // auto *iv = (unsigned char*) "0123456789123456";
-    // auto *plaintext = (unsigned char*) "The test segmentation for AES_CTR mode";
-
-    // unsigned char ciphertext[128];
-
-    // unsigned char nowkey[AES_BLOCK_SIZE];
-    // memcpy(nowkey,key,AES_BLOCK_SIZE);
-
-    // printf("enclave : %d",2);
-    // int val = 123;
-    // unsigned char digest[AES_BLOCK_SIZE];
-
-    // printf("enclave : %d",3);
-
-    // int ciphertext_len = aes_encrypt(plaintext, strlen((char*) plaintext),
-    //         key, iv,IV_LEN,
-    //         ciphertext);
-
-    // printf("enclave : %d",4);
-    // unsigned char recover[128];
-    // int plaintext_len = aes_decrypt(ciphertext, ciphertext_len,
-    //         key, iv, IV_LEN,recover);
-    // printf("enclave : %d",5); 
+    printf("ecall init success");
 }
 
 void ecall_SRE_cKRev(const char *key,size_t key_len,const void *D,void *result,size_t FloomSize,size_t resultSize){

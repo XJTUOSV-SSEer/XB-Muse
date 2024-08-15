@@ -26,9 +26,6 @@ void Server::addFile(int ind,int userId,vector<string> cntEnc,vector<KeyValue> k
         DictW[keyValue.addr] = keyValue.val;
     }
 
-    // if(Addrs.find(userId) == AccessList.end()){
-    //     Addrs[userId] = unordered_set<int>();
-    // }
     for(string c : cntEnc){
         Addrs[userId].emplace_back(c);
     }
@@ -41,7 +38,7 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
     BloomFilter<32, GGM_SIZE, HASH_SIZE> D;
 
     for(int i = 1 ; i <= Tlist.size() ; i++){
-        // printHexBytes(Tlist[i - 1]);
+
         bool flag = true;
 
         Val val = DictW[Tlist[i - 1]];
@@ -97,7 +94,6 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
     for(const auto& pair : Res){
         EDBcache[userId][tkn][pair.first] = pair.second;
     }
-    // cout<<"Res.size:"<<Res.size()<<endl;
     return Res;
 }
 
