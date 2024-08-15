@@ -1,11 +1,3 @@
-/***
- * Demonstrate Client
- * maintain a current Kf
- * read documents in a given directory and give one by one to App.cpp with <fileId, array of words>
- * develop utility to enc and dec file with a given key kf
- * issue a random update operation (op,in) to App
- * issue a random keyword search
- */
 #ifndef DATAOWNER_H
 #define DATAOWNER_H
 
@@ -35,7 +27,6 @@ public:
     unordered_map<int,unordered_map<string,string>> MSK;
     unordered_map<int,unordered_map<string,BloomFilter<32, GGM_SIZE, HASH_SIZE>>> D;
     
-    // vector<string> cntEnc;
     GGMTree *tree;
 
     unordered_map<int,UsersKey> UserKeys;
