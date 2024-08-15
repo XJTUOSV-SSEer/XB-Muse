@@ -1,7 +1,5 @@
 #include "DataOwner.h"
-// #include "Utils.h"
 #include <string>
-//#include <string.h> // memset(KF, 0, sizeof(KF));
 #include "stdio.h"
 #include <stdlib.h>
 #include <fstream>
@@ -24,18 +22,13 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
     unordered_set<int> userList = AccessList[ind];
     vector<string> keyValues;
     int Cnt = 0;
-    // cout<<"update : 1"<<endl;
     for(int userId : userList){
-        // cout<<"update : 2"<<endl;
         UsersKey keys = UserKeys[userId];
         vector<string> cntEnc;
         vector<KeyValue> keyValues;
         vector<string> DelCntDiffs;
         vector<Revoketag> Revoketags;
         for(string w : WList){
-            // cout<<"将关键字"<<w<<"加入到文件"<<ind<<"上"<<endl;
-            // cout<<"update : 3"<<endl;
-            // cout<<w<<endl;
             if(FileCnts.find(userId) == FileCnts.end()){
                 FileCnts[userId] = unordered_map<string,int>();
                 D[userId] = unordered_map<string,BloomFilter<32, GGM_SIZE, HASH_SIZE>>();
@@ -49,14 +42,12 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
             memcpy(buffer,w.c_str(),w.size());
             memcpy(buffer + w.size(),(uint8_t*)&ind, sizeof(int));
             uint8_t tag[DIGEST_SIZE];
-            // uint8_t *tag;
 
             sha256_digest(buffer,w.size() + sizeof(int),tag);
 
             if(op == ADD){
                 FileCnts[userId][w]++;
                 int cnt = FileCnts[userId][w];
-                // uint8_t plaintext[w.size() + sizeof(int)];
                 memcpy(buffer,w.c_str(),w.size());
                 memcpy(buffer + w.size(),(uint8_t*)&cnt, sizeof(int));
                 uint8_t cipertext[w.size() + sizeof(int)];
@@ -67,11 +58,6 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
                 // get all offsets in BF
                 vector<long> indexes = BloomFilter<32, GGM_SIZE, HASH_SIZE>::get_index(tag);
                 sort(indexes.begin(), indexes.end());
-                // cout<<"布隆过滤器上的索引为："<<endl;
-                // for(long index:indexes){
-                //     cout<< index<<" "<<endl;
-                // }
-                // cout<<endl;
 
                 // get SRE ciphertext list
                 vector<string> ciphertext_list;
@@ -89,23 +75,16 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
                     // save the encrypted id in the list
                     ciphertext_list.emplace_back(string((char*) encrypted_id, AES_BLOCK_SIZE + sizeof(int)));
                 }
-                // Val val;
-                // val.ct = ciphertext_list;
-                // val.tag = tag;
-
-                // uint8_t addr[w.size() + sizeof(int)];
                 memcpy(buffer,w.c_str(),w.size());
                 memcpy(buffer + w.size(),(uint8_t*)&cnt,sizeof(int));
                 uint8_t addr[DIGEST_SIZE];
                 // uint8_t *tag;
 
                 sha256_digest(buffer,w.size() + sizeof(int),addr);
-                // keyValues.emplace_back(KeyValue(addr,val));
                 keyValues.emplace_back(KeyValue(string((char*)addr,DIGEST_SIZE),Val(ciphertext_list,string((char*)tag,DIGEST_SIZE))));
                 
                 
             }else{
-                // cout<<"DEL 1"<<endl;
                 if(FileDelCnts.find(userId) == FileDelCnts.end()){
                     FileDelCnts[userId] = unordered_map<string,int>();
                 }
@@ -128,28 +107,13 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
                 uint8_t addr[w.size() + sizeof(int)];
 
                 aes_encrypt(buffer,w.size() + sizeof(int),key,iv,addr);
-                // sha256_digest(buffer,w.size() + sizeof(int),addr);
 
                 D[userId][w].add_tag(tag);
-                // cout<<D[userId][w].bits<<endl;
                 vector<long> v = D[userId][w].get_index(tag);
                 Revoketags.emplace_back(Revoketag(string((char*)addr,w.size() + sizeof(int)),D[userId][w]));
-                // cout<<Revoketags[Revoketags.size()-1].D.bits<<endl;
-                // cout<<"DEL 2"<<endl;
             }
 
         }
-
-        // cout<<"cntEnc : "<<endl;
-        // for(string s : cntEnc){
-        //     printHexBytes(s);
-        //     uint8_t decryptdDiff[s.size()];
-        //     aes_decrypt((unsigned char*)s.c_str(),s.size(),key,iv,decryptdDiff);
-        //     string w1 = string((char *)decryptdDiff,s.size() - sizeof(int));
-        //     cout<<"num:"<<*(int *)(decryptdDiff + s.size() - sizeof(int))<<endl;
-        //     cout<<"w:"<<w1<<endl;
-        // }
-
 
         if(op == ADD){
             server->addFile(ind,userId,cntEnc,keyValues);

@@ -1,9 +1,5 @@
-//
-// Created by shangqi on 2020/6/17.
-//
-
-#ifndef AURA_BLOOMFILTER_H
-#define AURA_BLOOMFILTER_H
+#ifndef BLOOMFILTER_H
+#define BLOOMFILTER_H
 
 #include <bitset>
 #include <vector>
@@ -62,4 +58,4 @@ public:
 };
 
 
-#endif //AURA_BLOOMFILTER_H
+#endif

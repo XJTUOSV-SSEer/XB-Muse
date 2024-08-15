@@ -1,9 +1,5 @@
-//
-// Created by shangqi on 2020/6/20.
-//
-
-#ifndef AURA_GGMTREE_H
-#define AURA_GGMTREE_H
+#ifndef GGMTREE_H
+#define GGMTREE_H
 
 #include <bitset>
 #include <cmath>
@@ -11,9 +7,7 @@
 #include <vector>
 
 #include "GGMNode.h"
-// extern "C" {
 #include "EnclaveUtils.h"
-// }
 
 using namespace std;
 
@@ -29,4 +23,4 @@ public:
 };
 
 
-#endif //AURA_GGMTREE_H
+#endif

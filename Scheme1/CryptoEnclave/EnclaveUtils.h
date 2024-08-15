@@ -17,11 +17,7 @@
 #include <openssl/sha.h>
 #include <openssl/err.h>
 #include <string.h>
-// #include "../common/data_type.h"
-#include "../common/encrypt_config.h"
-
-// unsigned char *key = (unsigned char*) "0123456789123456";
-// unsigned char *iv = (unsigned char*) "0123456789123456";
+#include "../common/config.h"
 
 void printf( const char *fmt, ...);
 void print_bytes(uint8_t *ptr, uint32_t len);
@@ -49,11 +45,3 @@ unsigned int key_derivation(unsigned char *plaintext, int plaintext_len,
                             unsigned char *digest);
 
 #endif
-
-
-//improved
-//void prf_F_improve(const void *key,const void *plaintext,size_t plaintext_len, entryKey *k );
-//void prf_Enc_improve(const void *key,const void *plaintext,size_t plaintext_len, entryValue *v);
-//void prf_Dec_Improve(const void *key,const void *ciphertext,size_t ciphertext_len, entryValue *value );
-//
-// #endif

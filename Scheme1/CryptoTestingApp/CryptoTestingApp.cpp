@@ -7,14 +7,13 @@
 #include "CryptoEnclave_u.h"
 
 #include "../common/data_type.h"
-#include "../common/encrypt_config.h"
+#include "../common/config.h"
 
 #include "Server.h"
 #include "DataOwner.h"
 #include "DataUser.h"
 #include "Utils.h"
 
-//for measurement
 #include <cstdint>
 #include <chrono>
 #include <iostream>
@@ -82,7 +81,6 @@ std::vector<std::string> split_string(const std::string& input) {
 //main func
 int main(int argc,char* argv[])
 {
-	// std::cout<< "不可信部分构建成功" <<std::endl;
 	/* Setup enclave */
 	sgx_enclave_id_t eid; //sgx id
 	sgx_status_t ret; //sgx状态类型
@@ -400,9 +398,7 @@ int main(int argc,char* argv[])
 			clock_t end = clock();
     		double duration = static_cast<double>(end - start);
 			cout<< duration<<endl;
-    	// std::cout << "运行时间: " << duration << " 秒" << std::endl;
 		}
-		// cout<<"搜索的结果个数："<<dec<<Res.size()<<endl;
 	}else if(status == 4){
 		int delNum = atoi(argv[1]);
 		string dataSetNumStr = string(argv[2]);

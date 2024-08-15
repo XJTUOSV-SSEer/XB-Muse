@@ -3,7 +3,7 @@
 #include "GGMTree.h"
 #include "CryptoEnclave_u.h"
 #include <string>
-//#include <string.h> // memset(KF, 0, sizeof(KF));
+
 #include "stdio.h"
 #include <stdlib.h>
 #include <fstream>
@@ -30,12 +30,9 @@ vector<int> DataUser::Search(string w){
         uint8_t decryptdDiff[diff.size()];
         aes_decrypt((unsigned char*)diff.c_str(),diff.size(),key,iv,decryptdDiff);
         string w1 = string((char *)decryptdDiff,diff.size() - sizeof(int));
-        // cout<<"num:"<<*(int *)(decryptdDiff + diff.size() - sizeof(int))<<endl;
         FileCnts[w1] = *(int *)(decryptdDiff + diff.size() - sizeof(int));
-        // cout<< w1 <<" "<<*(int*)(decryptdDiff + diff.size() - sizeof(int))<<endl;
     }
     int cnt = FileCnts[w];
-    // cout<<"cnt:"<<cnt<<endl;
     for(int i = 1 ; i <= cnt ; i++){
         uint8_t digest[DIGEST_SIZE];
         memcpy(buffer,w.c_str(),w.size());
@@ -45,14 +42,13 @@ vector<int> DataUser::Search(string w){
     }
     vector<Revoketag> revoketags = server->Revtag[userId];
     vector<string> DelCnts = server->FileDelCnts[userId];
-    // cout<<"DelCnts size : "<<DelCnts.size()<<"     "<<"revoketags size:"<<revoketags.size()<<endl;
+
     for(string delcnt : DelCnts){
         uint8_t decryptdDelCnt[delcnt.size()];
         aes_decrypt((unsigned char*)delcnt.c_str(),delcnt.size(),key,iv,decryptdDelCnt);
         string w1 = string((char *)decryptdDelCnt,delcnt.size() - sizeof(int));
         int cnt1 = *(int*) (decryptdDelCnt + delcnt.size() - sizeof(int));
         FileDelCnts[w1] = cnt1;
-        // cout<<"DelCnts:         "<<"w1 : "<<w1 <<"     " <<"cnt1 : "<<cnt1<<endl;
     }
     vector<GGMNode> remain_node;
     bool flag = true;
@@ -74,12 +70,8 @@ vector<int> DataUser::Search(string w){
     if(flag){
         remain_node.emplace_back(GGMNode(0,0,key));
     }
-    // printf("DataUser::Search : ");
-    // printf("size : %d \n",remain_node.size());
-    // printHexBytes(string((char*)remain_node[remain_node.size() - 1].key,AES_BLOCK_SIZE));
     uint8_t digest[DIGEST_SIZE];
     sha256_digest((unsigned char *)w.c_str(),w.size(),digest);
-    // cout<<D.bits<<endl;
     unordered_map<string,int> Res = server->search(TList,remain_node,string((char*)digest,DIGEST_SIZE),D,userId);
     vector<int> res;
     for(const auto &pair:Res){

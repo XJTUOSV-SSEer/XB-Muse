@@ -1,13 +1,7 @@
-//
-// Created by shangqi on 2020/6/20.
-//
+#ifndef GGMNODE_H
+#define GGMNODE_H
 
-#ifndef AURA_GGMNODE_H
-#define AURA_GGMNODE_H
-
-// extern "C" {
 #include "EnclaveUtils.h"
-// }
 
 class GGMNode {
 public:
@@ -27,4 +21,4 @@ public:
     }
 };
 
-#endif //AURA_GGMNODE_H
+#endif

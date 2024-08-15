@@ -2,7 +2,7 @@
 #define DATAUSER_H
 
 #include "../common/data_type.h"
-#include "../common/encrypt_config.h"
+#include "../common/config.h"
 #include "Utils.h"
 #include "Server.h"
 #include <vector>

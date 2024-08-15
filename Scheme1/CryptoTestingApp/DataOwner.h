@@ -10,12 +10,12 @@
 #define DATAOWNER_H
 
 #include "../common/data_type.h"
-#include "../common/encrypt_config.h"
+#include "../common/config.h"
 #include "BloomFilter.h"
 #include "GGMTree.h"
-// extern "C"{
+
 #include "Utils.h"
-// }
+
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
