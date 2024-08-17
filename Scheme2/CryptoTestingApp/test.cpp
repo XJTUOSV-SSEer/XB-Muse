@@ -229,8 +229,56 @@ void test5(vector<int> args,int eid,boost::asio::io_service &io_service,boost::a
 }
 
 //update - b
+//args 列表含义：数据集标识 要撤销的数据量/50
 void test6(vector<int> args,int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
-    
+    // 初始化server、dataowner和datauser
+	// cout << "test4:1" <<endl;
+	vector<int> userIds;
+	userIds.emplace_back(1);
+
+	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	string toSearchWord = target_keys[args[1] - 1];
+
+	unordered_map<string,vector<int>> dataSet;
+	unordered_map<int,vector<string>> dataSet_reverted;
+	// cout << "test4:2" <<endl;
+	init_data_set("../DataSet/Lab1DataSet"+to_string(args[1]),dataSet,dataSet_reverted);
+	// cout << "test4:3" <<endl;
+	auth_all(dataOwner,dataSet,1);
+	// cout << "test4:4" <<endl;
+	auth_all(server,dataSet,1);
+	// cout << "test4:5" <<endl;
+	update_all(dataOwner,dataSet_reverted,1);
+	// cout << "test4:6" <<endl;
+
+	string toRevokeWord = "AAAAAAAAAAA";
+	vector<string> WList = {toRevokeWord};
+	for(int ind = 1 ; ind <= 1000 ; ind++){
+		dataOwner->insert(ind,WList);
+	}
+
+	vector<vector<int>> IDLists;
+	for(int i = 0 ; i < args[2] ; i++){
+		vector<int> IDList;
+		for(int j = 50 * i + 1; j <= 50 * (i + 1) + 1 ; j++){
+			IDList.emplace_back(j);
+		}
+		IDLists.emplace_back(IDList);
+	}
+
+	clock_t start = clock();
+	for(vector<int> IDList : IDLists){
+		dataOwner->revoke(toRevokeWord,IDList);
+	}
+	clock_t end = clock();
+	double duration = static_cast<double>(end - start);
+	cout<< duration<<endl;
+
 }
 
 //update - c

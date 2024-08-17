@@ -21,6 +21,7 @@ DataUser::DataUser(int userId,int eid){
 }
 
 vector<int> DataUser::Search(string w){
+    // cout<<"DataUser::Search : 1"<<endl;
     vector<string> TList;
     vector<string> diffs = server->Addrs[userId];
     uint8_t buffer[w.size() + sizeof(int)];
@@ -70,7 +71,9 @@ vector<int> DataUser::Search(string w){
     }
     uint8_t digest[DIGEST_SIZE];
     sha256_digest((unsigned char *)w.c_str(),w.size(),digest);
+    // cout<<"DataUser::Search : 2"<<endl;
     unordered_map<string,int> Res = server->search(TList,remain_node,string((char*)digest,DIGEST_SIZE),D,userId);
+    // cout<<"DataUser::Search : 3"<<endl;
     vector<int> res;
     for(const auto &pair:Res){
         res.emplace_back(pair.second);

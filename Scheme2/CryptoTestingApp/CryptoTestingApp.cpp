@@ -373,17 +373,7 @@ int main(int argc,char* argv[])
 			std::cout << "Unable to open file" << std::endl;
 			return 1;
 		}
-		// for (const auto& pair : dataSet) {
-		// 	std::cout << "Key: " << pair.first << ", Values: [";
-		// 	for (size_t i = 0; i < pair.second.size(); ++i) {
-		// 		std::cout << pair.second[i];
-		// 		if (i < pair.second.size() - 1) {
-		// 			std::cout << ", ";
-		// 		}
-		// 	}
-		// 	std::cout << "]" << std::endl;
-		// }
-
+		
 		unordered_map<int,vector<string>> dataSet_reverted;
 		for (const auto& pair : dataSet) {
 			for (size_t i = 0; i < pair.second.size(); ++i) {

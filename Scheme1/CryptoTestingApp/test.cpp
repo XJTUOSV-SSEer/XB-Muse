@@ -90,7 +90,7 @@ void auth_all(Server *server,unordered_map<string,vector<int>> &dataSet,int data
 	}
 }
 
-void update_all(DataOwner *dataOwner,unordered_map<int,vector<string>> &dataSet_reverted,int dataUserId){
+void update_all(DataOwner *dataOwner,unordered_map<int,vector<string>> &dataSet_reverted){
     for (const auto& pair : dataSet_reverted) {
 		vector<string> WList;
 		for (size_t i = 0; i < pair.second.size(); ++i) {
@@ -229,7 +229,41 @@ void test3(vector<int> args,int eid){
 
 //search - d
 void test4(vector<int> args,int eid){
-    
+    // 初始化server、dataowner和datauser
+	// cout << "test4:1" <<endl;
+	vector<int> userIds;
+	userIds.emplace_back(1);
+
+	DataOwner *dataOwner = new DataOwner();
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid);
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	string toSearchWord = target_keys[args[1] - 1];
+
+	unordered_map<string,vector<int>> dataSet;
+	unordered_map<int,vector<string>> dataSet_reverted;
+	// cout << "test4:2" <<endl;
+	init_data_set("../DataSet/Lab1DataSet"+to_string(args[1]),dataSet,dataSet_reverted);
+	// cout << "test4:3" <<endl;
+	auth_all(dataOwner,dataSet,1);
+	// cout << "test4:4" <<endl;
+	auth_all(server,dataSet,1);
+	// cout << "test4:5" <<endl;
+	update_all(dataOwner,dataSet_reverted);
+	// cout << "test4:6" <<endl;
+
+	vector<int> toRevokeList;
+	toRevokeList.insert(toRevokeList.end(),dataSet[toSearchWord].begin(),dataSet[toSearchWord].begin() + args[2]);
+	// cout << "test4:7" <<endl;
+	clock_t start = clock();
+	vector<int> Res = dataUser1->Search(toSearchWord);
+	// cout << "test4:8" <<endl;
+	clock_t end = clock();
+
+    double duration = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	cout<<duration<<endl;
 }
 
 //update - a

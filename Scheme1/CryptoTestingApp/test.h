@@ -24,7 +24,7 @@ void auth_all(DataOwner *dataOwner,unordered_map<string,vector<int>> &dataSet,in
 
 void auth_all(Server *server,unordered_map<string,vector<int>> &dataSet,int dataUserId);
 
-void update_all(DataOwner *dataOwner,unordered_map<int,vector<string>> &dataSet_reverted,int dataUserId);
+void update_all(DataOwner *dataOwner,unordered_map<int,vector<string>> &dataSet_reverted);
 
 void test0(vector<int> args,int eid);
 
