@@ -25,6 +25,10 @@
 // unsigned char *iv = (unsigned char*) "0123456789123456";
 using namespace std;
 
+static bool debug_switch = false;
+
+void log(const std::string& str, bool showIngoreSwitch = false);
+
 void printHexBytes(const std::string& str);
 
 int aes_encrypt(unsigned char *plaintext, int plaintext_len,

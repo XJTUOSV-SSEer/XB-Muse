@@ -17,7 +17,6 @@ public:
     Server *server;
 
     unordered_map<string,int> FileCnts;
-    unordered_map<string,int> FileDelCnts;
 
     int eid;
 

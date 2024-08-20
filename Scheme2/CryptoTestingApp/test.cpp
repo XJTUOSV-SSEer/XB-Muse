@@ -90,7 +90,7 @@ void auth_all(Server *server,unordered_map<string,vector<int>> &dataSet,int data
 	}
 }
 
-void update_all(DataOwner *dataOwner,unordered_map<int,vector<string>> &dataSet_reverted,int dataUserId){
+void update_all(DataOwner *dataOwner,unordered_map<int,vector<string>> &dataSet_reverted){
     for (const auto& pair : dataSet_reverted) {
 		vector<string> WList;
 		for (size_t i = 0; i < pair.second.size(); ++i) {
@@ -220,7 +220,45 @@ void test3(vector<int> args,int eid,boost::asio::io_service &io_service,boost::a
 
 //search - d
 void test4(vector<int> args,int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
-    
+    // 初始化server、dataowner和datauser
+	log( "test4:1" );
+	vector<int> userIds;
+	userIds.emplace_back(1);
+
+	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	string toSearchWord = target_keys[args[1] - 1];
+
+	unordered_map<string,vector<int>> dataSet;
+	unordered_map<int,vector<string>> dataSet_reverted;
+	log( "test4:2");
+	init_data_set("../DataSet/Lab1DataSet"+to_string(args[1]),dataSet,dataSet_reverted);
+	log( "test4:3  ");
+	auth_all(dataOwner,dataSet,1);
+	log( "test4:4" );
+	auth_all(server,dataSet,1);
+	log( "test4:5" );
+	update_all(dataOwner,dataSet_reverted);
+	log( "test4:6" );
+
+	int toRevokeBatchNum = args[2];
+	for(int i = 0 ; i < toRevokeBatchNum ; i++){
+		vector<int> toRevokeIndList;
+		toRevokeIndList.insert(toRevokeIndList.end(),dataSet[toSearchWord].begin() + i * 300,dataSet[toSearchWord].begin() + (i + 1) * 300);
+		dataOwner->revoke(toSearchWord,toRevokeIndList);
+	}
+	log( "test4:7" );
+	clock_t start = clock();
+	vector<int> Res = dataUser1->Search_batch(toSearchWord);
+	log( "test4:8" );
+	clock_t end = clock();
+
+    double duration = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	cout<<duration<<endl;
 }
 
 //update - a
@@ -253,7 +291,7 @@ void test6(vector<int> args,int eid,boost::asio::io_service &io_service,boost::a
 	// cout << "test4:4" <<endl;
 	auth_all(server,dataSet,1);
 	// cout << "test4:5" <<endl;
-	update_all(dataOwner,dataSet_reverted,1);
+	update_all(dataOwner,dataSet_reverted);
 	// cout << "test4:6" <<endl;
 
 	string toRevokeWord = "AAAAAAAAAAA";

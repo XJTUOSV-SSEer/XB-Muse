@@ -113,7 +113,9 @@ vector<int> DataUser::Search_batch(string w){
     
     uint8_t digest[DIGEST_SIZE];
     sha256_digest((unsigned char *)w.c_str(),w.size(),digest);
+    log("DataUser::Search_batch : 1");
     unordered_map<string,int> Res = server->search(TList,remain_node,string((char*)digest,DIGEST_SIZE),Ds,userId);
+    log("DataUser::Search_batch : 2");
     vector<int> res;
     for(const auto &pair:Res){
         res.emplace_back(pair.second);

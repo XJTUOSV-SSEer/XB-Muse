@@ -3,8 +3,6 @@
 
 #include "../common/data_type.h"
 #include "../common/config.h"
-#include "../common/BF/BloomFilter.h"
-#include "GGMTree.h"
 
 #include "Utils.h"
 
@@ -21,11 +19,6 @@ class DataOwner{
 public:
     unordered_map<int,unordered_set<int>> AccessList;      //文件id->用户id
     unordered_map<int,unordered_map<string,int>> FileCnts;
-    unordered_map<int,unordered_map<string,int>> FileDelCnts;
-    unordered_map<int,unordered_map<string,string>> MSK;
-    unordered_map<int,unordered_map<string,BloomFilter<32, GGM_SIZE, HASH_SIZE>>> D;
-    
-    GGMTree *tree;
 
     unordered_map<int,UsersKey> UserKeys;
 

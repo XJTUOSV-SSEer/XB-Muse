@@ -36,6 +36,7 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
     unordered_map<string,int> NewInd;
     unordered_set<string> DelInd;
     BloomFilter<32, GGM_SIZE, HASH_SIZE> D;
+    log("Server::search : 1");
 
     for(int i = 1 ; i <= Tlist.size() ; i++){
 
@@ -65,11 +66,13 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
             for(int i = 0 ; i < val.ct.size(); i++){
                 memcpy((uint8_t *)val_ct + i * (AES_BLOCK_SIZE + sizeof(int)),val.ct[i].c_str(),AES_BLOCK_SIZE + sizeof(int));
             }
+            log("Server::search : 2 # " + to_string(i));
             ecall_check_doc(eid,&remain_node,&D,(char *)val_tag,(char *)val_ct,&NewInd,&DelInd,&flag,
                 sizeof(remain_node),sizeof(D),
                 DIGEST_SIZE,AES_BLOCK_SIZE + sizeof(int) ,val.ct.size(),
                 sizeof(NewInd),sizeof(DelInd),sizeof(flag),
                 i);
+            log("Server::search : 3");
             free(val_ct);
         }else{
             char val_tag[DIGEST_SIZE];

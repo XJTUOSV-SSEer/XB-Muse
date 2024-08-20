@@ -8,6 +8,11 @@ void printHexBytes(const std::string& str) {
     std::cout << std::dec << std::endl;
 }
 
+void log(const std::string& str,bool showIngoreSwitch){
+    if(debug_switch || showIngoreSwitch){
+        cout<<str<<endl;
+    }
+}
 
 int aes_encrypt(unsigned char *plaintext, int plaintext_len,
                 unsigned char *key, unsigned char *iv,
