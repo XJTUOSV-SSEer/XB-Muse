@@ -1,8 +1,5 @@
 #include "GGMTree.h"
 
-GGMTree::GGMTree(long num_node) {
-}
-
 void GGMTree::derive_key_from_tree(uint8_t *current_key, long offset, int start_level, int target_level) {
     uint8_t next_key[AES_BLOCK_SIZE];
     int cnt = 0;
@@ -11,15 +8,11 @@ void GGMTree::derive_key_from_tree(uint8_t *current_key, long offset, int start_
     // derive tag
     for (int k = start_level; k > target_level; --k) {
         int k_bit = (offset & (1 << (k - 1))) >> (k - 1);
-        // printf("enclave GGMTree : %d",1);
         key_derivation((unsigned char*) &k_bit, sizeof(int),
                        current_key, AES_BLOCK_SIZE,
                        next_key);
-        // printf("enclave GGMTree : %d",2);
         memcpy(current_key, next_key, AES_BLOCK_SIZE);
-        // printf("enclave GGMTree cnt : %d",cnt++);
     }
-    // printf("enclave GGMTree : %d",444);
     return ;
 }
 
@@ -36,7 +29,6 @@ vector<GGMNode> GGMTree::min_coverage(vector<GGMNode> node_list) {
             // same parent in the binary path
             if(((node1.index >> 1) == (node2.index >> 1)) && (node1.level == node2.level)) {
                 GGMNode n(node1.index >> 1,node1.level - 1);
-                // printf("node1.index >> 1 : %ld , node1.level - 1 : %d",node1.index >> 1,node1.level - 1);
                 next_level_node.emplace_back(node1.index >> 1,node1.level - 1);
                 i++;
             } else {

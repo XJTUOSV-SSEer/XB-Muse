@@ -17,8 +17,7 @@
 #include <openssl/sha.h>
 #include <openssl/err.h>
 #include <string.h>
-// #include "../common/data_type.h"
-#include "../common/encrypt_config.h"
+#include "../common/config.h"
 
 // unsigned char *key = (unsigned char*) "0123456789123456";
 // unsigned char *iv = (unsigned char*) "0123456789123456";

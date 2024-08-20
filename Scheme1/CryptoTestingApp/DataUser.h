@@ -2,12 +2,12 @@
 #define DATAUSER_H
 
 #include "../common/data_type.h"
-#include "../common/encrypt_config.h"
+#include "../common/config.h"
+#include "../common/GGMNode.h"
+#include "GGMTree.h"
 #include "Utils.h"
 #include "Server.h"
 #include <vector>
-
-#endif
 
 using namespace std;
 
@@ -29,3 +29,5 @@ public:
 
     DataUser(int userId,int eid);
 };
+
+#endif

@@ -2,7 +2,6 @@
 #define DATA_TYPE_H
 
 #include "config.h"
-#include "encrypt_config.h"
 #include "./BF/BloomFilter.h"
 #include <stdint.h>
 #include <vector>
@@ -14,26 +13,6 @@
 #include <tuple>
 #include <utility>
 #include <unordered_map>
-
-// /* for all sources except OCALL/ECALL */
-
-// const std::string raw_doc_dir= "streaming/"; 
-
-// #define AESGCM_IV_SIZE 12//Question: AES加密算法需要的参数？补全长度？
-// static unsigned char gcm_iv[] = {
-//     0x99, 0xaa, 0x3e, 0x68, 0xed, 0x81, 0x73, 0xa0, 0xee, 0xd0, 0x66, 0x84
-// };
-
-// #define AESGCM_MAC_SIZE 16//Question: AES加密算法需要的参数？补全长度？
-
-// #define MAX_FILE_LENGTH 10 
-
-// #define ENC_KEY_SIZE 16 // for AES128
-// #define ENTRY_VALUE_LEN 128 // 1024-bit
-
-// #define ENTRY_HASH_KEY_LEN_128 16 // for HMAC-SHA128- bit key
-// #define BUFLEN 10240 //buffer for enc + dec
-// #define RAND_LEN 64// 256 // 2048-bit
 
 using namespace std;
 
@@ -86,21 +65,6 @@ struct KeyValue{
             val == other.val;
     }
 };
-
-// struct DelCnt{
-//     string w;
-//     string enc_w_cnt1;
-
-//     DelCnt(string w,string enc_w_cnt1){
-//         this->w = w;
-//         this->enc_w_cnt1 = enc_w_cnt1;
-//     }
-
-//     bool operator==(const DelCnt& other) const {
-//         return w == other.w &&
-//             enc_w_cnt1 == other.enc_w_cnt1;
-//     }
-// };
 
 struct Revoketag{
     string addr;

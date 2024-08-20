@@ -24,16 +24,12 @@ void Server::addFile(int ind,int userId,vector<string> cntEnc,vector<KeyValue> k
         DictW[keyValue.addr] = keyValue.val;
     }
 
-    // if(Addrs.find(userId) == AccessList.end()){
-    //     Addrs[userId] = unordered_set<int>();
-    // }
     for(string c : cntEnc){
         Addrs[userId].emplace_back(c);
     }
 }
 
 void Server::delFile(int userId,vector<Revoketag> Revoketags,vector<string> DelCntDiffs){
-    // cout<<"DEL 3"<<endl;
     for(Revoketag revoketag : Revoketags){
         Revtag[userId].emplace_back(revoketag);
     }
@@ -44,7 +40,7 @@ void Server::delFile(int userId,vector<Revoketag> Revoketags,vector<string> DelC
 }
 
 unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,BloomFilter<32, GGM_SIZE, HASH_SIZE> D,int userId){
-
+    // cout << "Server::search : 1"<<endl;
     unordered_map<string,int> NewInd;
     unordered_set<string> DelInd;
     int flag_size = flags[userId][tkn].size();
@@ -52,16 +48,14 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
         flags[userId][tkn].emplace_back(false);
     }
     vector<bool> &flag = flags[userId][tkn];
-
+    // cout << "Server::search : 2"<<endl;
     for(int i = 1 ; i <= Tlist.size() ; i++){
-
+        
+        // cout << "Server::search : 2 : 1 #  "<< i <<endl;
         bool isInD = true;
-        vector<long> indexs = D.get_index((uint8_t *)Tlist[i - 1].c_str());
-        for(long val:indexs){
-            if(D.bits[val] != 1) isInD = false;
-        }
+        vector<long> indexs = D.get_index((uint8_t *)DictW[Tlist[i - 1]].tag.c_str());
 
-        if(!flag[i - 1]||isInD){
+        if(!flag[i - 1] ||isInD){
             Val val = DictW[Tlist[i - 1]];
             int indi;
             char val_tag[DIGEST_SIZE];
@@ -78,6 +72,7 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
             free(val_ct);
         }
     }
+    // cout << "Server::search : 3"<<endl;
 
     unordered_map<string,int> OldInd = EDBcache[userId][tkn];
     
@@ -95,7 +90,6 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
     for(const auto& pair : Res){
         EDBcache[userId][tkn][pair.first] = pair.second;
     }
-    // cout<<"Res.size:"<<Res.size()<<endl;
     return Res;
 }
 

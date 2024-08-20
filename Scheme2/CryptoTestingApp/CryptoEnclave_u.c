@@ -30,9 +30,21 @@ typedef struct ms_ecall_check_doc_t {
 	int ms_index;
 } ms_ecall_check_doc_t;
 
+typedef struct ms_ecall_insert_set_string_t {
+	void* ms_DelInd_ptr;
+	char* ms_val_tag;
+	size_t ms_DelInd_ptr_size;
+	size_t ms_val_tag_size;
+} ms_ecall_insert_set_string_t;
+
 typedef struct ms_ocall_print_string_t {
 	const char* ms_str;
 } ms_ocall_print_string_t;
+
+typedef struct ms_ocall_print_string_bytes_t {
+	const char* ms_str;
+	size_t ms_len;
+} ms_ocall_print_string_bytes_t;
 
 typedef struct ms_ocall_insert_set_string_t {
 	void* ms_set;
@@ -91,6 +103,14 @@ static sgx_status_t SGX_CDECL CryptoEnclave_ocall_print_string(void* pms)
 {
 	ms_ocall_print_string_t* ms = SGX_CAST(ms_ocall_print_string_t*, pms);
 	ocall_print_string(ms->ms_str);
+
+	return SGX_SUCCESS;
+}
+
+static sgx_status_t SGX_CDECL CryptoEnclave_ocall_print_string_bytes(void* pms)
+{
+	ms_ocall_print_string_bytes_t* ms = SGX_CAST(ms_ocall_print_string_bytes_t*, pms);
+	ocall_print_string_bytes(ms->ms_str, ms->ms_len);
 
 	return SGX_SUCCESS;
 }
@@ -161,11 +181,12 @@ static sgx_status_t SGX_CDECL CryptoEnclave_sgx_thread_set_multiple_untrusted_ev
 
 static const struct {
 	size_t nr_ocall;
-	void * table[9];
+	void * table[10];
 } ocall_table_CryptoEnclave = {
-	9,
+	10,
 	{
 		(void*)CryptoEnclave_ocall_print_string,
+		(void*)CryptoEnclave_ocall_print_string_bytes,
 		(void*)CryptoEnclave_ocall_insert_set_string,
 		(void*)CryptoEnclave_ocall_insert_map_str_int,
 		(void*)CryptoEnclave_ocall_insert_vector_GGMNode,
@@ -219,6 +240,18 @@ sgx_status_t ecall_check_doc(sgx_enclave_id_t eid, const void* remain_node, cons
 	ms.ms_flag_size = flag_size;
 	ms.ms_index = index;
 	status = sgx_ecall(eid, 2, &ocall_table_CryptoEnclave, &ms);
+	return status;
+}
+
+sgx_status_t ecall_insert_set_string(sgx_enclave_id_t eid, void* DelInd_ptr, char* val_tag, size_t DelInd_ptr_size, size_t val_tag_size)
+{
+	sgx_status_t status;
+	ms_ecall_insert_set_string_t ms;
+	ms.ms_DelInd_ptr = DelInd_ptr;
+	ms.ms_val_tag = val_tag;
+	ms.ms_DelInd_ptr_size = DelInd_ptr_size;
+	ms.ms_val_tag_size = val_tag_size;
+	status = sgx_ecall(eid, 3, &ocall_table_CryptoEnclave, &ms);
 	return status;
 }
 

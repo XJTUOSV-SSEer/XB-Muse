@@ -2,12 +2,10 @@
 #define DATAUSER_H
 
 #include "../common/data_type.h"
-#include "../common/encrypt_config.h"
+#include "../common/config.h"
 #include "Utils.h"
 #include "Server.h"
 #include <vector>
-
-#endif
 
 using namespace std;
 
@@ -34,3 +32,5 @@ public:
     DataUser(int userId,int eid,boost::asio::io_service *io_service,
         boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
 };
+
+#endif

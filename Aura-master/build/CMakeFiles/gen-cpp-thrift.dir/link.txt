@@ -1,0 +1,2 @@
+/home/node10/anaconda3/bin/x86_64-conda-linux-gnu-ar qc libgen-cpp-thrift.a CMakeFiles/gen-cpp-thrift.dir/gen-cpp/SSEService.cpp.o CMakeFiles/gen-cpp-thrift.dir/gen-cpp/Server_constants.cpp.o CMakeFiles/gen-cpp-thrift.dir/gen-cpp/Server_types.cpp.o
+/home/node10/anaconda3/bin/x86_64-conda-linux-gnu-ranlib libgen-cpp-thrift.a

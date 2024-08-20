@@ -1,28 +1,16 @@
-/***
- * Demonstrate Client
- * maintain a current Kf
- * read documents in a given directory and give one by one to App.cpp with <fileId, array of words>
- * develop utility to enc and dec file with a given key kf
- * issue a random update operation (op,in) to App
- * issue a random keyword search
- */
 #ifndef DATAOWNER_H
 #define DATAOWNER_H
 
 #include "../common/data_type.h"
-#include "../common/encrypt_config.h"
-#include "BloomFilter.h"
+#include "../common/config.h"
+#include "../common/BF/BloomFilter.h"
 #include "GGMTree.h"
-// extern "C"{
 #include "Utils.h"
-// }
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
 
 #include "Server.h"
-
-#endif
 
 using namespace std;
 
@@ -59,3 +47,4 @@ public:
 
 };
 
+#endif

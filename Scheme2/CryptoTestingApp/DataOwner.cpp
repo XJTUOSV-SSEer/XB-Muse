@@ -1,7 +1,6 @@
 #include "DataOwner.h"
-// #include "Utils.h"
+
 #include <string>
-//#include <string.h> // memset(KF, 0, sizeof(KF));
 #include "stdio.h"
 #include <stdlib.h>
 #include <fstream>
@@ -18,7 +17,6 @@ using namespace std;
 
 void setD(boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator,std::string w,std::bitset<GGM_SIZE> bits){
 
-    // cout<<4<<endl;
     std::stringstream ss;
     boost::property_tree::ptree pt;
 
@@ -34,7 +32,6 @@ void setD(boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::it
     pt.put("w", finalW);
     pt.put("bit_array", bits.to_string());
 
-    // 将 property_tree 序列化为 JSON 字符串
     boost::property_tree::write_json(ss, pt);
     std::string json_str = ss.str();
 
@@ -47,18 +44,12 @@ void setD(boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::it
         "\r\n" +
         json_str;
 
-    // cout<<"SetD request:"<<endl;
-    // cout<<request<<endl<<endl;
     // 发送 HTTP 请求报文
-    // cout<<5<<endl;
     send_http(io_service,endpoint_iterator,request);
-    // cout<<9<<endl;
-    // cout<<"------------------"<<endl;
 }
 
 DataOwner::DataOwner(boost::asio::io_service *io_service,
     boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
-    tree = new GGMTree(GGM_SIZE);
     this->io_service = io_service;
     this->endpoint_iterator = endpoint_iterator;
 }
@@ -67,9 +58,8 @@ void DataOwner::insert(int ind,vector<string> WList){
     unordered_set<int> userList = AccessList[ind];
     vector<string> keyValues;
     int Cnt = 0;
-    // cout<<"update : 1"<<endl;
+
     for(int userId : userList){
-        // cout<<"update : 2"<<endl;
         UsersKey keys = UserKeys[userId];
         vector<string> cntEnc;
         vector<KeyValue> keyValues;
@@ -88,14 +78,11 @@ void DataOwner::insert(int ind,vector<string> WList){
             memcpy(buffer,w.c_str(),w.size());
             memcpy(buffer + w.size(),(uint8_t*)&ind, sizeof(int));
             uint8_t tag[DIGEST_SIZE];
-            // uint8_t *tag;
 
             sha256_digest(buffer,w.size() + sizeof(int),tag);
             
             FileCnts[userId][w]++;
             int cnt = FileCnts[userId][w];
-            // cout<<userId<<" "<<w<<" "<<cnt<<endl;
-            // uint8_t plaintext[w.size() + sizeof(int)];
             memcpy(buffer,w.c_str(),w.size());
             memcpy(buffer + w.size(),(uint8_t*)&cnt, sizeof(int));
             uint8_t cipertext[w.size() + sizeof(int)];
@@ -103,14 +90,8 @@ void DataOwner::insert(int ind,vector<string> WList){
             cntEnc.emplace_back(string((char *)cipertext,w.size()+sizeof(int)));
             
             //SRE加密
-            // get all offsets in BF
             vector<long> indexes = BloomFilter<32, GGM_SIZE, HASH_SIZE>::get_index(tag);
             sort(indexes.begin(), indexes.end());
-            // cout<<"keyword "<<w<<ind<<" 在布隆过滤器上的索引为："<<endl;
-            // for(long index:indexes){
-            //     cout<< index<<" "<<endl;
-            // }
-            // cout<<endl;
 
             // get SRE ciphertext list
             vector<string> ciphertext_list;
@@ -132,10 +113,8 @@ void DataOwner::insert(int ind,vector<string> WList){
             memcpy(buffer,w.c_str(),w.size());
             memcpy(buffer + w.size(),(uint8_t*)&cnt,sizeof(int));
             uint8_t addr[DIGEST_SIZE];
-            // uint8_t *tag;
 
             sha256_digest(buffer,w.size() + sizeof(int),addr);
-            // keyValues.emplace_back(KeyValue(addr,val));
             keyValues.emplace_back(KeyValue(string((char*)addr,DIGEST_SIZE),Val(ciphertext_list,string((char*)tag,DIGEST_SIZE))));
         }
 
@@ -164,13 +143,10 @@ void DataOwner::revoke(string w,vector<int> IDList){
         memcpy(buffer,w.c_str(),w.size());
         memcpy(buffer + w.size(),(uint8_t*)&ind, sizeof(int));
         uint8_t tag[DIGEST_SIZE];
-        // uint8_t *tag;
 
         sha256_digest(buffer,w.size() + sizeof(int),tag);
         D.add_tag(tag);
     }
-    // cout<<2<<endl;
     setD(*io_service,endpoint_iterator,string((char*)addr,DIGEST_SIZE),D.bits);
-    // cout<<10<<endl;
     server->batch_revoke(w,cnt);
 }

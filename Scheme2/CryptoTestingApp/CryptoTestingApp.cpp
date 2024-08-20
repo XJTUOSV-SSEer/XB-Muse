@@ -7,14 +7,15 @@
 #include "CryptoEnclave_u.h"
 
 #include "../common/data_type.h"
-#include "../common/encrypt_config.h"
+#include "../common/config.h"
 
 #include "Server.h"
 #include "DataOwner.h"
 #include "DataUser.h"
 #include "Utils.h"
 
-//for measurement
+#include "test.h"
+
 #include <cstdint>
 #include <chrono>
 #include <iostream>
@@ -41,6 +42,10 @@ void ocall_print_string(const char *str) {
     printf("%s\n", str);
 }
 
+void ocall_print_string_bytes(const char *str,size_t len) {
+	printHexBytes(string(str,len));
+}
+
 void ocall_insert_set_string(void *set,void *str,size_t set_len,size_t string_len){
 	unordered_set<string> *set_ptr = (unordered_set<string> *) set;
 	(*set_ptr).insert(string((char *)str,string_len));
@@ -62,22 +67,10 @@ void ocall_insert_vector_GGMNode(void *vec, const unsigned char* keys, int *leve
 	}
 }
 
-std::vector<std::string> split_string(const std::string& input) {
-    std::vector<std::string> result;
-    std::istringstream iss(input);
-    std::string token;
-
-    while (std::getline(iss, token, ' ')) {
-        result.push_back(token);
-    }
-
-    return result;
-}
-
 //main func
-int main()
+int main(int argc,char* argv[])
 {
-	std::cout<< "不可信部分构建成功" <<std::endl;
+	// std::cout<< "不可信部分构建成功" <<std::endl;
 	/* Setup enclave */
 	sgx_enclave_id_t eid; //sgx id
 	sgx_status_t ret; //sgx状态类型
@@ -102,7 +95,31 @@ int main()
     boost::asio::ip::tcp::resolver::query query(BLOCKCHAIN_SERVICE_IP, BLOCKCHAIN_SERVICE_PORT);
     boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
 
-	int status = 3;
+	vector<int> args = prase_argv_to_int(argc,argv);
+
+	int status = args[0];
+
+	if(status == 0){
+		test0(args,eid,io_service,endpoint_iterator);
+	}else if(status == 1){
+		test1(args,eid,io_service,endpoint_iterator);
+	}else if(status == 2){
+		test2(args,eid,io_service,endpoint_iterator);
+	}else if(status == 3){
+		test3(args,eid,io_service,endpoint_iterator);
+	}else if(status == 4){
+		test4(args,eid,io_service,endpoint_iterator);
+	}else if(status == 5){
+		test5(args,eid,io_service,endpoint_iterator);
+	}else if(status == 6){
+		test6(args,eid,io_service,endpoint_iterator);
+	}else if(status == 7){
+		test7(args,eid,io_service,endpoint_iterator);
+	}else{
+		test8(args,eid,io_service,endpoint_iterator);
+	}
+
+	return 0;
 
 	if(status == 0){
 
@@ -197,26 +214,6 @@ int main()
 		}
 		cout<<endl;
 		
-		// //测试用例4----------------------------------------------------------------
-		// vector<string> revokeWList;
-		// revokeWList.emplace_back("a");
-		// dataOwner->update(1,revokeWList,DEL);
-		// Res = dataUser1->Search_batch("a");
-		// cout<<"撤销1号文件上a关键字后user1搜索a的搜索结果："<<endl;
-		// for(int i : Res){
-		// 	cout<< i << " ";
-		// }
-		// cout<<endl;
-
-		// //测试用例5----------------------------------------------------------------
-		// revokeWList = {"b"};
-		// dataOwner->update(21,revokeWList,DEL);
-		// Res = dataUser1->Search_batch("b");
-		// cout<<"撤销21号文件上b关键字后user1搜索b的搜索结果："<<endl;
-		// for(int i : Res){
-		// 	cout<< i << " ";
-		// }
-		// cout<<endl;
 	}else if(status == 1){
 
 		// 初始化server、dataowner和datauser
@@ -249,16 +246,6 @@ int main()
 			std::cout << "Unable to open file" << std::endl;
 			return 1;
 		}
-		// for (const auto& pair : dataSet) {
-		// 	std::cout << "Key: " << pair.first << ", Values: [";
-		// 	for (size_t i = 0; i < pair.second.size(); ++i) {
-		// 		std::cout << pair.second[i];
-		// 		if (i < pair.second.size() - 1) {
-		// 			std::cout << ", ";
-		// 		}
-		// 	}
-		// 	std::cout << "]" << std::endl;
-		// }
 
 		unordered_map<int,vector<string>> dataSet_reverted;
 		for (const auto& pair : dataSet) {
@@ -386,17 +373,7 @@ int main()
 			std::cout << "Unable to open file" << std::endl;
 			return 1;
 		}
-		// for (const auto& pair : dataSet) {
-		// 	std::cout << "Key: " << pair.first << ", Values: [";
-		// 	for (size_t i = 0; i < pair.second.size(); ++i) {
-		// 		std::cout << pair.second[i];
-		// 		if (i < pair.second.size() - 1) {
-		// 			std::cout << ", ";
-		// 		}
-		// 	}
-		// 	std::cout << "]" << std::endl;
-		// }
-
+		
 		unordered_map<int,vector<string>> dataSet_reverted;
 		for (const auto& pair : dataSet) {
 			for (size_t i = 0; i < pair.second.size(); ++i) {
@@ -429,6 +406,145 @@ int main()
 			cout<< duration<<endl;
     	// std::cout << "运行时间: " << duration << " 秒" << std::endl;
 		}
+	}else if(status == 4){
+
+		string dataSetNumStr = string(argv[1]);
+		int dataSetNum = atoi(argv[1]);
+
+		// 初始化server、dataowner和datauser
+		vector<int> userIds;
+		userIds.emplace_back(1);
+
+		DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
+		Server *server = new Server(userIds,eid);
+		DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
+		dataOwner->server = server;
+		dataUser1->server = server;
+
+		//初始化实验参数
+		std::ifstream file("../DataSet/Lab1DataSet"+dataSetNumStr);
+		// cout<<"../DataSet/Lab1DataSet"+dataSetNumStr<<endl;
+		string toSearchWord = target_keys[dataSetNum - 1];
+
+		unordered_map<string,vector<int>> dataSet;
+		if (file.is_open()) {
+			std::string line;
+			while (std::getline(file, line)) {
+				vector<string> vc = split_string(line);
+				dataSet[vc[0]] = vector<int>();
+				int size = vc.size();
+				for(int i = 1 ; i < size ; i++){
+					dataSet[vc[0]].emplace_back(stoi(vc[i]));
+				}
+			}
+			file.close();
+		} else {
+			std::cout << "Unable to open file" << std::endl;
+			return 1;
+		}
+		unordered_map<int,vector<string>> dataSet_reverted;
+		for (const auto& pair : dataSet) {
+			for (size_t i = 0; i < pair.second.size(); ++i) {
+				dataSet_reverted[pair.second[i]].emplace_back(pair.first);
+				dataOwner->AccessList[pair.second[i]].insert(1);
+				server->AccessList[pair.second[i]].insert(1);
+			}
+		}
+		for (const auto& pair : dataSet_reverted) {
+			vector<string> WList;
+			for (size_t i = 0; i < pair.second.size(); ++i) {
+				WList.emplace_back(pair.second[i]);
+			}
+			dataOwner->insert(pair.first,WList);
+		}
+		for(int i = 0 ; i < 4 ; i++){
+			vector<int> IDList;
+			for(int j = 0 ; j < 50 ; j++){
+				IDList.emplace_back(dataSet[toSearchWord][j + i * 50]);
+			}
+			dataOwner->revoke(toSearchWord,IDList);
+		}
+		clock_t start = clock();
+		vector<int> Res = dataUser1->Search_batch(toSearchWord);
+		clock_t end = clock();
+
+    	double duration = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+		cout<<duration<<endl;
+		return duration;
+	}else if(status == 5){
+		int userNum = atoi(argv[1]);
+
+		vector<int> userIds;
+		vector<DataUser *> dataUsers;
+		Server *server = new Server(userIds,eid);
+		for(int i = 1 ; i <= userNum ; i++){
+			userIds.emplace_back(i);
+			DataUser* dataUser = new DataUser(i,eid,&io_service,endpoint_iterator);
+			dataUser->server = server;
+			dataUsers.emplace_back(dataUser);
+		}
+
+		DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
+		dataOwner->server = server;
+
+		//初始化实验参数
+		std::ifstream file("../DataSet/Lab1DataSet8");
+		// cout<<"../DataSet/Lab1DataSet"+dataSetNumStr<<endl;
+		string toSearchWord = target_keys[8 - 1];
+
+		unordered_map<string,vector<int>> dataSet;
+		if (file.is_open()) {
+			std::string line;
+			while (std::getline(file, line)) {
+				vector<string> vc = split_string(line);
+				dataSet[vc[0]] = vector<int>();
+				int size = vc.size();
+				for(int i = 1 ; i < size ; i++){
+					dataSet[vc[0]].emplace_back(stoi(vc[i]));
+				}
+			}
+			file.close();
+		} else {
+			std::cout << "Unable to open file" << std::endl;
+			return 1;
+		}
+		unordered_map<int,vector<string>> dataSet_reverted;
+		for (const auto& pair : dataSet) {
+			for (size_t i = 0; i < pair.second.size(); ++i) {
+				dataSet_reverted[pair.second[i]].emplace_back(pair.first);
+				dataOwner->AccessList[pair.second[i]].insert(1);
+				server->AccessList[pair.second[i]].insert(1);
+			}
+		}
+		for (const auto& pair : dataSet_reverted) {
+			vector<string> WList;
+			for (size_t i = 0; i < pair.second.size(); ++i) {
+				WList.emplace_back(pair.second[i]);
+			}
+			dataOwner->insert(pair.first,WList);
+		}
+		for(int i = 0 ; i < 3 ; i++){
+			vector<int> IDList;
+			for(int j = 0 ; j < 50 ; j++){
+				IDList.emplace_back(50 * i + j);
+			}
+			dataOwner->revoke(toSearchWord,IDList);
+		}
+
+		int time = 0;
+		for(DataUser* dataUser : dataUsers){
+			clock_t start = clock();
+			vector<int> Res = dataUser->Search_batch(toSearchWord);
+			clock_t end = clock();
+			time = max(time,(int)(end - start));
+		}
+
+		double duration = static_cast<double>(time) / CLOCKS_PER_SEC;
+		cout<<duration<<endl;
+		// std::cout << "运行时间: " << duration << " 秒" << std::endl;
+
+		// cout<<"搜索的结果个数："<<dec<<Res.size()<<endl;
+		return duration;
 	}
 
 
