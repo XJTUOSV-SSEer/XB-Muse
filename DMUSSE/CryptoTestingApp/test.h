@@ -26,22 +26,10 @@ void auth_all(Server *server,unordered_map<string,vector<int>> &dataSet,int data
 
 void update_all(DataOwner *dataOwner,unordered_map<int,vector<string>> &dataSet_reverted);
 
-void test0(vector<int> args,int eid);
+void test0(vector<int> args);
 
-void test1(vector<int> args,int eid);
+void test1(vector<int> args);
 
-void test2(vector<int> args,int eid);
-
-void test3(vector<int> args,int eid);
-
-void test4(vector<int> args,int eid);
-
-void test5(vector<int> args,int eid);
-
-void test6(vector<int> args,int eid);
-
-void test7(vector<int> args,int eid);
-
-void test8(vector<int> args,int eid);
+void test2(vector<int> args);
 
 #endif

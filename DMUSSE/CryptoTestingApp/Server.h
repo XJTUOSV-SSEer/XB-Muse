@@ -4,12 +4,12 @@
 #include "../common/data_type.h"
 #include "../common/config.h"
 #include "Utils.h"
-#include "../common/GGMNode.h"
 
 #include <unordered_map>
 #include <unordered_set>
 #include <set>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -26,6 +26,7 @@ public:
 
     void update(unordered_map<string,string> keyValues,unordered_map<int,vector<string>> CntDiffs);
 
+    vector<string> search(vector<string> TList);
 };
 
 #endif

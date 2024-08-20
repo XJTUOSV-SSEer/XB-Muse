@@ -44,9 +44,10 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
 
             CntDiffs[userId].emplace_back(string((char *)cipertext,w.size()+sizeof(int)));
 
+            memset(buffer,0,w.size() + 2 * sizeof(int));
             memcpy(buffer,w.c_str(),w.size());
             memcpy(buffer + w.size(),(uint8_t*)&cnt,sizeof(int));
-            memset(buffer + w.size() + sizeof(int),0,sizeof(int));
+            memset(buffer + w.size() + sizeof(int),0,1);
             uint8_t addr[DIGEST_SIZE];
 
             // uint8_t *tag;
@@ -56,17 +57,21 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
             uint8_t id_op[SHA256_DIGEST_LENGTH];
 
             //计算addr1
-            memset(buffer + w.size() + sizeof(int),1,sizeof(int));
-            sha256_digest(buffer,w.size() + 2 * sizeof(int),addr);
+            memset(buffer + w.size() + sizeof(int),1,1);
 
-            memset(id_op,op,sizeof(int));
-            memset(id_op + sizeof(int),ind,sizeof(int));
+            sha256_digest(buffer,w.size() + 2 * sizeof(int),addr1);
+
+            memset(id_op,0,SHA256_DIGEST_LENGTH);
+            memset(id_op,op,1);
+            memset(id_op + sizeof(int),ind,1);
+
 
             //计算异或值
             uint8_t val[SHA256_DIGEST_LENGTH];
             for(size_t i = 0 ; i < SHA256_DIGEST_LENGTH ; i++){
-                val[i] ^= addr1[i] ^ id_op[i];
+                val[i] = addr1[i] ^ id_op[i];
             }
+
             keyValues[string((char*)addr,DIGEST_SIZE)] = string((char*)val,SHA256_DIGEST_LENGTH);
         }
         server->update(keyValues,CntDiffs);

@@ -1,16 +1,23 @@
 #include "Utils.h"
 // #include <vector>
-// #include <iostream>
+#include <iostream>
  
-// using std::string;
-// using std::vector;
+using namespace std;
 
 //此函数做调试用
 void printHexBytes(const std::string& str) {
-    for (char c : str) {
-        std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(static_cast<unsigned char>(c));
+    int len = str.size();
+    for (int i = len - 1 ; i >=0 ; i--) {
+        char c = *((char*)(str.c_str() + i));
+        std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(static_cast<unsigned char>(c))<<" ";
     }
     std::cout << std::dec << std::endl;
+}
+
+void log(const std::string& str, bool showIngoreSwitch){
+    if(debug_switch || showIngoreSwitch){
+        cout<<str<<endl;
+    }
 }
 
 

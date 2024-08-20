@@ -14,8 +14,9 @@
 #include "../common/data_type.h"
 #include "../common/config.h"
 
-// unsigned char *key = (unsigned char*) "0123456789123456";
-// unsigned char *iv = (unsigned char*) "0123456789123456";
+static bool debug_switch = true;
+
+void log(const std::string& str, bool showIngoreSwitch = false);
 
 void printHexBytes(const std::string& str);
 

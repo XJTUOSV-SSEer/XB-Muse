@@ -110,16 +110,16 @@ std::vector<int> prase_argv_to_int(int argc,char* argv[]){
 }
 
 //test
-void test0(vector<int> args,int eid){
+void test0(vector<int> args){
 // 初始化server、dataowner和datauser
 		vector<int> userIds;
 		userIds.emplace_back(1);
 		userIds.emplace_back(2);
 
 		DataOwner *dataOwner = new DataOwner();
-		Server *server = new Server(userIds,eid);
-		DataUser *dataUser1 = new DataUser(1,eid);
-		DataUser *dataUser2 = new DataUser(2,eid);
+		Server *server = new Server(userIds);
+		DataUser *dataUser1 = new DataUser(1);
+		DataUser *dataUser2 = new DataUser(2);
 		dataOwner->server = server;
 		dataUser1->server = server;
 		dataUser2->server = server;
@@ -174,7 +174,7 @@ void test0(vector<int> args,int eid){
 		}
 		cout<<endl;
 
-		//测试用例2----------------------------------------------------------------
+		// //测试用例2----------------------------------------------------------------
 		Res = dataUser1->Search("b");
 		cout<<"user1搜索b的结果："<<dec<<endl;
 		for(int i : Res){
@@ -190,7 +190,7 @@ void test0(vector<int> args,int eid){
 		}
 		cout<<endl;
 		
-		//测试用例4----------------------------------------------------------------
+		// //测试用例4----------------------------------------------------------------
 		vector<string> revokeWList;
 		revokeWList.emplace_back("a");
 		dataOwner->update(1,revokeWList,DEL);
@@ -201,7 +201,7 @@ void test0(vector<int> args,int eid){
 		}
 		cout<<endl;
 
-		//测试用例5----------------------------------------------------------------
+		// //测试用例5----------------------------------------------------------------
 		revokeWList = {"b"};
 		dataOwner->update(21,revokeWList,DEL);
 		Res = dataUser1->Search("b");
@@ -213,75 +213,11 @@ void test0(vector<int> args,int eid){
 }
 
 //search - a
-void test1(vector<int> args,int eid){
+void test1(vector<int> args){
     
 }
 
 //search - b
-void test2(vector<int> args,int eid){
-    
-}
-
-//search - c
-void test3(vector<int> args,int eid){
-    
-}
-
-//search - d
-void test4(vector<int> args,int eid){
-    // 初始化server、dataowner和datauser
-	// cout << "test4:1" <<endl;
-	vector<int> userIds;
-	userIds.emplace_back(1);
-
-	DataOwner *dataOwner = new DataOwner();
-	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid);
-	dataOwner->server = server;
-	dataUser1->server = server;
-
-	string toSearchWord = target_keys[args[1] - 1];
-
-	unordered_map<string,vector<int>> dataSet;
-	unordered_map<int,vector<string>> dataSet_reverted;
-	// cout << "test4:2" <<endl;
-	init_data_set("../DataSet/Lab1DataSet"+to_string(args[1]),dataSet,dataSet_reverted);
-	// cout << "test4:3" <<endl;
-	auth_all(dataOwner,dataSet,1);
-	// cout << "test4:4" <<endl;
-	auth_all(server,dataSet,1);
-	// cout << "test4:5" <<endl;
-	update_all(dataOwner,dataSet_reverted);
-	// cout << "test4:6" <<endl;
-
-	vector<int> toRevokeList;
-	toRevokeList.insert(toRevokeList.end(),dataSet[toSearchWord].begin(),dataSet[toSearchWord].begin() + args[2]);
-	// cout << "test4:7" <<endl;
-	clock_t start = clock();
-	vector<int> Res = dataUser1->Search(toSearchWord);
-	// cout << "test4:8" <<endl;
-	clock_t end = clock();
-
-    double duration = static_cast<double>(end - start) / CLOCKS_PER_SEC;
-	cout<<duration<<endl;
-}
-
-//update - a
-void test5(vector<int> args,int eid){
-    
-}
-
-//update - b
-void test6(vector<int> args,int eid){
-    
-}
-
-//update - c
-void test7(vector<int> args,int eid){
-    
-}
-
-//update - d
-void test8(vector<int> args,int eid){
+void test2(vector<int> args){
     
 }

@@ -20,8 +20,6 @@ public:
     unordered_map<int,unordered_set<int>> AccessList;      //文件id->用户id
     unordered_map<int,unordered_map<string,int>> FileCnts;
 
-    unordered_map<int,UsersKey> UserKeys;
-
     Server *server;
 
     unsigned char *key = (unsigned char*) "0123456789123456";
