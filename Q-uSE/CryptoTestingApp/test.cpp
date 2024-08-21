@@ -10,29 +10,6 @@
 
 using namespace std;
 
-vector<string> target_keys = {
-    "YADOXGCCJI",
-    "CGAMP",
-    "AFA",
-    "VMO",
-    "KPXGT",
-
-    "FLPTGGDGBO",
-    "URNOIDX",
-    "XAHOE",
-    "NHB",
-    "CM",
-
-    "QZV",
-    "GX",
-    "VUQHKM",
-    "EVVOOPNK",
-    "HXHIPC",
-
-    "ELGPS",
-    "SQ"
-};
-
 std::vector<std::string> split_string(const std::string& input) {
     std::vector<std::string> result;
     std::istringstream iss(input);
@@ -212,12 +189,54 @@ void test0(vector<int> args){
 		cout<<endl;
 }
 
-//search - a
-void test1(vector<int> args){
+//compare_search_a
+void test1(int argc,char* argv[]){
+	// 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+
+	DataOwner *dataOwner = new DataOwner();
+	Server *server = new Server(userIds);
+	DataUser *dataUser1 = new DataUser(1);
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//处理数据集
+    string dataSetPath = string(argv[2]);
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	auth_all(dataOwner,dataSet,1);
+	auth_all(server,dataSet,1);
+	update_all(dataOwner,dataSet_reverted);
+
+    string targetKey = "566";
+
+	vector<string> WList = {targetKey};
+	vector<int> toRevokeList;
+	for(int i = 0 ; i < 20 ; i++){
+        dataOwner->update(dataSet[targetKey][i],WList,DEL);
+    }
+
+	clock_t start = clock();
+	vector<int> Res = dataUser1->Search(targetKey);
+	clock_t end = clock();
+
+    double duration = static_cast<double>(end - start) / 1000;
+	cout<<duration<<endl;
+}
+
+//compare_search_b
+void test2(vector<int> args){
     
 }
 
-//search - b
-void test2(vector<int> args){
+//compare_update_a
+void test3(vector<int> args){
+    
+}
+
+//compare_update_b
+void test4(vector<int> args){
     
 }

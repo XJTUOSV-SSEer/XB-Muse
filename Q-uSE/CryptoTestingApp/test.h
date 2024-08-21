@@ -11,9 +11,6 @@
 
 using namespace std;
 
-//搜索数据集对应的目标词
-extern vector<string> target_keys;
-
 vector<std::string> split_string(const std::string& input);
 
 int init_data_set(string filePath,unordered_map<string,vector<int>> &dataSet,unordered_map<int,vector<string>> &dataSet_reverted);
@@ -28,8 +25,12 @@ void update_all(DataOwner *dataOwner,unordered_map<int,vector<string>> &dataSet_
 
 void test0(vector<int> args);
 
-void test1(vector<int> args);
+void test1(int argc,char* argv[]);
 
 void test2(vector<int> args);
+
+void test3(vector<int> args);
+
+void test4(vector<int> args);
 
 #endif

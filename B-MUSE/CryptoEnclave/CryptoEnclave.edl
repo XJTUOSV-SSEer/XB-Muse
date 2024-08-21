@@ -1,0 +1,51 @@
+enclave {
+
+    from "sgx_tstdc.edl" import *;
+    
+    trusted {
+        public void ecall_init();
+        public void ecall_SRE_cKRev([in, string] const char *str,size_t key_len,
+            [in,size=FloomSize] const void *D,
+            [in,out, size=resultSize]void *result,
+            size_t FloomSize,size_t resultSize);
+        
+        public void ecall_check_doc([in,size = remain_node_size] const void *remain_node,
+            [in,size = bloom_filter_size] const void *D,
+            [in,size = val_tag_size] char *val_tag,
+            [in,size = val_ct_size,count = val_ct_cnt] char *val_ct,
+            [in,out,size = NewInd_size] void *NewInd,
+            [in,out,size = DelInd_size] void *DelInd,
+            [in,out,size = flag_size] void *flag,
+            size_t remain_node_size, size_t bloom_filter_size,
+            size_t val_tag_size,size_t val_ct_size,size_t val_ct_cnt,
+            size_t NewInd_size,size_t DelInd_size,size_t flag_size,
+            int index);
+        
+        public void ecall_insert_set_string([in,out,size = DelInd_ptr_size]void *DelInd_ptr,
+            [in,size = val_tag_size]char *val_tag,
+        size_t DelInd_ptr_size,size_t val_tag_size);
+    };
+
+    untrusted {
+        void ocall_print_string([in, string] const char *str);
+
+        void ocall_print_string_bytes([in, size = len] const char *str,size_t len);
+
+        void ocall_insert_set_string([in,out,size = set_len] void *set,
+            [in,out,size = string_len] void *str,
+            size_t set_len,size_t string_len
+        );
+
+        void ocall_insert_map_str_int([in,out,size = map_len] void *map,
+            [in,out,size = tag_len] void *tag,
+            int val,size_t map_len,size_t tag_len
+        );
+
+        void ocall_insert_vector_GGMNode([in,out,size = vec_len] void *vec,
+            [in,string] const unsigned char *keys,
+            [in,out,count = cnt] int* levels,
+	        [in,out,count = cnt] int* indexs,
+            size_t vec_len,size_t keys_len,size_t cnt
+        );
+    };
+};

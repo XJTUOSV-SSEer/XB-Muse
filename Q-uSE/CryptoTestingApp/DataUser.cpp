@@ -24,6 +24,7 @@ vector<int> DataUser::Search(string w){
     vector<string> TList;
     vector<string> diffs = server->Addrs[userId];
     uint8_t buffer[w.size() + 2 * sizeof(int)];
+    // cout<<"diffs size : "<<diffs.size()<<endl;
     for(string diff:diffs){
         uint8_t decryptdDiff[diff.size()];
         aes_decrypt((unsigned char*)diff.c_str(),diff.size(),key,iv,decryptdDiff);
