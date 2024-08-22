@@ -50,8 +50,6 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
     vector<bool> &flag = flags[userId][tkn];
     // cout << "Server::search : 2"<<endl;
     for(int i = 1 ; i <= Tlist.size() ; i++){
-        
-        // cout << "Server::search : 2 : 1 #  "<< i <<endl;
         bool isInD = true;
         vector<long> indexs = D.get_index((uint8_t *)DictW[Tlist[i - 1]].tag.c_str());
 
@@ -72,7 +70,7 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
             free(val_ct);
         }
     }
-    // cout << "Server::search : 3"<<endl;
+
 
     unordered_map<string,int> OldInd = EDBcache[userId][tkn];
     

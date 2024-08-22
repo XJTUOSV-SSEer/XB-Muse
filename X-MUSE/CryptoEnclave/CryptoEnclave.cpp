@@ -69,17 +69,27 @@ void ecall_SRE_cKRev(const char *key,size_t key_len,const void *D,void *result,s
     return ;
 }
 
-void compute_leaf_keys(const vector<GGMNode>& node_list, int level,unordered_map<long,uint8_t *> &keys) {
+void compute_leaf_keys(const vector<GGMNode>& node_list, int level,unordered_map<long,uint8_t *> &keys,vector<long> search_pos) {
+
+    unordered_map<int,unordered_map<long,GGMNode>> node_dict;
+
     for(GGMNode node : node_list) {
-        for (int i = 0; i < pow(2, level - node.level); ++i) {
-            int offset = ((node.index) << (level - node.level)) + i;
-            uint8_t derive_key[AES_BLOCK_SIZE];
-            memcpy(derive_key, node.key, AES_BLOCK_SIZE);
-            GGMTree::derive_key_from_tree(derive_key,  offset, level - node.level, 0);
-            if(keys.find(offset) == keys.end()) {
-                keys[offset] = (uint8_t*) malloc(AES_BLOCK_SIZE);
-                memcpy(keys[offset], derive_key, AES_BLOCK_SIZE);
+        node_dict[node.level][node.index] = node;
+    }
+
+    for(long pos : search_pos){
+        long index = pos;
+        for(int searchLevel = level ; searchLevel >=0 ; searchLevel--){
+            if(!(node_dict.find(searchLevel) == node_dict.end()) && !(node_dict[searchLevel].find(index) == node_dict[searchLevel].end())){
+                uint8_t derive_key[AES_BLOCK_SIZE];
+                GGMTree::derive_key_from_tree(derive_key,  pos, level - node_dict[searchLevel][index].level, 0);
+                if(keys.find(pos) == keys.end()){
+                    keys[pos] = (uint8_t*) malloc(AES_BLOCK_SIZE);
+                    memcpy(keys[pos], derive_key, AES_BLOCK_SIZE);
+                }
+                break;
             }
+            index = index >> 1;
         }
     }
 }
@@ -97,11 +107,11 @@ void ecall_check_doc(const void *remain_node,const void *D,char *val_tag,char *v
     vector<bool> *flag_ptr = (vector<bool> *) flag;
     unordered_map<long,uint8_t *> keys;
 
-    compute_leaf_keys(*remain_node_ptr, GGMTree::get_level(),keys);
-
     vector<int> res_list;
     
     vector<long> search_pos = BloomFilter<32, GGM_SIZE, HASH_SIZE>::get_index((uint8_t*)val_tag);
+
+    compute_leaf_keys(*remain_node_ptr, GGMTree::get_level(),keys,search_pos);
 
     sort(search_pos.begin(), search_pos.end());
 
@@ -121,6 +131,13 @@ void ecall_check_doc(const void *remain_node,const void *D,char *val_tag,char *v
         }
         break;
     }
+
+    for(auto &pair : keys){
+        free(pair.second);
+    }
+
+    // printf("search_pos.size() : %d",search_pos.size());
+    // printf("res_list.size() : %d",res_list.size());
 
     if(res_list.size() > 0){
         char val_tag_1[DIGEST_SIZE];
