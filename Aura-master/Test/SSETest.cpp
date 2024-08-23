@@ -71,9 +71,9 @@ void test0(int argc,char* argv[]){
 //compare_search_a
 void test1(int argc,char* argv[]){
 
-    string dataSetPath = string(argv[2]);
-    string targetKey = "566";
-    
+    string dataSetPath = "../../DataSet/enron_processed";
+    string targetKey = string(argv[2]);
+
 
     SSEClientHandler client;
     unordered_map<string,vector<int>> dataSet;
@@ -106,8 +106,8 @@ void test2(int argc,char* argv[]){
 //compare_update_a
 void test3(int argc,char* argv[]){
 
-    string dataSetPath = string(argv[2]);
-    string targetKey = "../../DataSet/enron_processed";
+    string dataSetPath = "../../DataSet/enron_processed";
+    string targetKey = string(argv[2]);
 
     SSEClientHandler client;
     unordered_map<string,vector<int>> dataSet;

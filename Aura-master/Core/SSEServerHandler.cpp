@@ -48,6 +48,9 @@ vector<int> SSEServerHandler::search(uint8_t *token, const vector<GGMNode>& node
             break;
         }
     }
+    for(auto &pair : keys){
+        free(pair.second);
+    }
     return res_list;
 }
 
