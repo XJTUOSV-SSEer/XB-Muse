@@ -70,14 +70,16 @@ void test0(int argc,char* argv[]){
 
 //compare_search_a
 void test1(int argc,char* argv[]){
-    SSEClientHandler client;
 
     string dataSetPath = string(argv[2]);
+    string targetKey = "566";
+    
+
+    SSEClientHandler client;
     unordered_map<string,vector<int>> dataSet;
     unordered_map<int,vector<string>> dataSet_reverted;
     init_data_set(dataSetPath,dataSet,dataSet_reverted);
 
-    string targetKey = "566";
     for(auto& pair:dataSet){
         for(int value:pair.second){
             client.update(INS,pair.first,value);
@@ -96,7 +98,40 @@ void test1(int argc,char* argv[]){
 	cout<<duration<<endl;
 }
 
+//compare_search_b
 void test2(int argc,char* argv[]){
+    
+}
+
+//compare_update_a
+void test3(int argc,char* argv[]){
+
+    string dataSetPath = string(argv[2]);
+    string targetKey = "../../DataSet/enron_processed";
+
+    SSEClientHandler client;
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+
+    for(auto& pair:dataSet){
+        for(int value:pair.second){
+            client.update(INS,pair.first,value);
+        }
+    }
+    clock_t start = clock();
+    for(int i = 0 ; i < 40 ; i++){
+        client.update(DEL,targetKey,dataSet[targetKey][i]);
+    }
+
+    clock_t end = clock();
+
+    double duration = static_cast<double>(end - start) / 1000;
+	cout<<duration<<endl;
+}
+
+//compare_update_b
+void test4(int argc,char* argv[]){
     
 }
 
@@ -108,8 +143,12 @@ int main(int argc,char* argv[]) {
 		test0(argc,argv);
 	}else if(status == 1){
 		test1(argc,argv);
-	}else{
+	}else if(status == 2){
 		test2(argc,argv);
+	}else if(status == 3){
+		test3(argc,argv);
+	}else{
+		test4(argc,argv);
 	}
 
     return 0;

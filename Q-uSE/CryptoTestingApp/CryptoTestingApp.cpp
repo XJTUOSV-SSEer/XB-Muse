@@ -56,20 +56,16 @@ int main(int argc,char* argv[])
 
 	int status = atoi(argv[1]);
 
-	vector<int> args;
-
-	if(status != 1) args = prase_argv_to_int(argc,argv);
-
 	if(status == 0){
-		test0(args);
+		test0(argc,argv);
 	}else if(status == 1){
 		test1(argc,argv);
-	}else if(status == 1){
-		test2(args);
-	}else if(status == 1){
-		test3(args);
+	}else if(status == 2){
+		test2(argc,argv);
+	}else if(status == 3){
+		test3(argc,argv);
 	}else{
-		test4(args);
+		test4(argc,argv);
 	}
 	return 0;
 }

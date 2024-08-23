@@ -97,28 +97,32 @@ int main(int argc,char* argv[])
 
 	int status = atoi(argv[1]);
 
-	vector<int> args;
-
-	if(status != 1) args = prase_argv_to_int(argc,argv);
-
 	if(status == 0){
-		test0(args,eid,io_service,endpoint_iterator);
+		test0(argc,argv,eid,io_service,endpoint_iterator);
 	}else if(status == 1){
 		test1(argc,argv,eid,io_service,endpoint_iterator);
 	}else if(status == 2){
-		test2(args,eid,io_service,endpoint_iterator);
+		test2(argc,argv,eid,io_service,endpoint_iterator);
 	}else if(status == 3){
-		test3(args,eid,io_service,endpoint_iterator);
+		test3(argc,argv,eid,io_service,endpoint_iterator);
 	}else if(status == 4){
-		test4(args,eid,io_service,endpoint_iterator);
+		test4(argc,argv,eid,io_service,endpoint_iterator);
 	}else if(status == 5){
-		test5(args,eid,io_service,endpoint_iterator);
+		test5(argc,argv,eid,io_service,endpoint_iterator);
 	}else if(status == 6){
-		test6(args,eid,io_service,endpoint_iterator);
+		test6(argc,argv,eid,io_service,endpoint_iterator);
 	}else if(status == 7){
-		test7(args,eid,io_service,endpoint_iterator);
+		test7(argc,argv,eid,io_service,endpoint_iterator);
+	}else if(status == 8){
+		test8(argc,argv,eid,io_service,endpoint_iterator);
+	}else if(status == 9){
+		test9(argc,argv,eid,io_service,endpoint_iterator);
+	}else if(status == 10){
+		test10(argc,argv,eid,io_service,endpoint_iterator);
+	}else if(status == 11){
+		test11(argc,argv,eid,io_service,endpoint_iterator);
 	}else{
-		test8(args,eid,io_service,endpoint_iterator);
+		test12(argc,argv,eid,io_service,endpoint_iterator);
 	}
 
 	return 0;

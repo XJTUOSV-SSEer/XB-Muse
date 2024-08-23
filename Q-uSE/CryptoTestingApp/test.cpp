@@ -87,7 +87,7 @@ std::vector<int> prase_argv_to_int(int argc,char* argv[]){
 }
 
 //test
-void test0(vector<int> args){
+void test0(int argc,char* argv[]){
 // 初始化server、dataowner和datauser
 		vector<int> userIds;
 		userIds.emplace_back(1);
@@ -191,10 +191,14 @@ void test0(vector<int> args){
 
 //compare_search_a
 void test1(int argc,char* argv[]){
+
+	string dataSetPath = string(argv[2]);
+    string targetKey = "566";
+
+
 	// 初始化server、dataowner和datauser
 	vector<int> userIds;
 	userIds.emplace_back(1);
-
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds);
 	DataUser *dataUser1 = new DataUser(1);
@@ -202,7 +206,6 @@ void test1(int argc,char* argv[]){
 	dataUser1->server = server;
 
 	//处理数据集
-    string dataSetPath = string(argv[2]);
     unordered_map<string,vector<int>> dataSet;
     unordered_map<int,vector<string>> dataSet_reverted;
     init_data_set(dataSetPath,dataSet,dataSet_reverted);
@@ -210,7 +213,6 @@ void test1(int argc,char* argv[]){
 	auth_all(server,dataSet,1);
 	update_all(dataOwner,dataSet_reverted);
 
-    string targetKey = "566";
 
 	vector<string> WList = {targetKey};
 	vector<int> toRevokeList;
@@ -227,16 +229,51 @@ void test1(int argc,char* argv[]){
 }
 
 //compare_search_b
-void test2(vector<int> args){
+void test2(int argc,char* argv[]){
     
 }
 
 //compare_update_a
-void test3(vector<int> args){
-    
+void test3(int argc,char* argv[]){
+
+	string dataSetPath = "../DataSet/enron_processed";
+    string targetKey = string(argv[2]);
+
+
+    // 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+
+	DataOwner *dataOwner = new DataOwner();
+	Server *server = new Server(userIds);
+	DataUser *dataUser1 = new DataUser(1);
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//处理数据集
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	auth_all(dataOwner,dataSet,1);
+	auth_all(server,dataSet,1);
+	update_all(dataOwner,dataSet_reverted);
+
+
+	vector<string> WList = {targetKey};
+	vector<int> toRevokeList;
+	clock_t start = clock();
+	for(int i = 0 ; i < 40 ; i++){
+        dataOwner->update(dataSet[targetKey][i],WList,DEL);
+    }
+	clock_t end = clock();
+	
+
+    double duration = static_cast<double>(end - start) / 1000;
+	cout<<duration<<endl;
 }
 
+
 //compare_update_b
-void test4(vector<int> args){
+void test4(int argc,char* argv[]){
     
 }

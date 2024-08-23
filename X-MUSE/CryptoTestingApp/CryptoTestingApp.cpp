@@ -88,28 +88,26 @@ int main(int argc,char* argv[])
 
 	int status = atoi(argv[1]);
 
-	vector<int> args;
-
-	if(status != 1) args = prase_argv_to_int(argc,argv);
-
 	if(status == 0){
-		test0(args,eid);
+		test0(argc,argv,eid);
 	}else if(status == 1){
 		test1(argc,argv,eid);
 	}else if(status == 2){
-		test2(args,eid);
+		test2(argc,argv,eid);
 	}else if(status == 3){
-		test3(args,eid);
+		test3(argc,argv,eid);
 	}else if(status == 4){
-		test4(args,eid);
+		test4(argc,argv,eid);
 	}else if(status == 5){
-		test5(args,eid);
+		test5(argc,argv,eid);
 	}else if(status == 6){
-		test6(args,eid);
+		test6(argc,argv,eid);
 	}else if(status == 7){
-		test7(args,eid);
+		test7(argc,argv,eid);
+	}else if(status == 8){
+		test8(argc,argv,eid);
 	}else{
-		test8(args,eid);
+		test9(argc,argv,eid);
 	}
 
 	return 0;

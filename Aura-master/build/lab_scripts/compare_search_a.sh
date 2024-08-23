@@ -31,4 +31,4 @@ do
     result_line+="$(echo "scale=5; $sum / 10" | bc), "
 done
 
-echo $result_line > ./lab_scripts/compare_search_a.csv
+echo $result_line >> ./lab_scripts/result/result_compare_search_a.csv

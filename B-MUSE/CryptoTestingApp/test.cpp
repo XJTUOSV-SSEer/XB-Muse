@@ -110,7 +110,7 @@ std::vector<int> prase_argv_to_int(int argc,char* argv[]){
 }
 
 //test
-void test0(vector<int> args,int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+void test0(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
 // 初始化server、dataowner和datauser
 	vector<int> userIds;
 	userIds.emplace_back(1);
@@ -205,10 +205,30 @@ void test0(vector<int> args,int eid,boost::asio::io_service &io_service,boost::a
 
 //search - a
 void test1(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
-    // 初始化server、dataowner和datauser
+    
+}
+
+//search - b
+void test2(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+    
+}
+
+//search - c
+void test3(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+    
+}
+
+//search - d
+void test4(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+	
+	vector<int> args = prase_argv_to_int(argc,argv);
+    string dataSetPath = "../DataSet/Lab1DataSet"+to_string(args[1]);
+    string targetKey = target_keys[args[1] - 1];
+	
+
+	// 初始化server、dataowner和datauser
 	vector<int> userIds;
 	userIds.emplace_back(1);
-
 	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
 	Server *server = new Server(userIds,eid);
 	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
@@ -216,78 +236,22 @@ void test1(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boo
 	dataUser1->server = server;
 
 	//处理数据集
-    string dataSetPath = string(argv[2]);
-    unordered_map<string,vector<int>> dataSet;
-    unordered_map<int,vector<string>> dataSet_reverted;
-    init_data_set(dataSetPath,dataSet,dataSet_reverted);
-	auth_all(dataOwner,dataSet,1);
-	auth_all(server,dataSet,1);
-	update_all(dataOwner,dataSet_reverted);
-
-    string targetKey = "566";
-
-	vector<string> WList = {targetKey};
-	vector<int> toRevokeList;
-	for(int i = 0 ; i < 20 ; i++){
-        toRevokeList.emplace_back(dataSet[targetKey][i]);
-    }
-	dataOwner->revoke(targetKey,toRevokeList);
-
-	clock_t start = clock();
-	vector<int> Res = dataUser1->Search_batch(targetKey);
-	clock_t end = clock();
-
-    double duration = static_cast<double>(end - start) / 1000;
-	cout<<duration<<endl;
-}
-
-//search - b
-void test2(vector<int> args,int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
-    
-}
-
-//search - c
-void test3(vector<int> args,int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
-    
-}
-
-//search - d
-void test4(vector<int> args,int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
-    // 初始化server、dataowner和datauser
-	log( "test4:1" );
-	vector<int> userIds;
-	userIds.emplace_back(1);
-
-	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
-	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
-	dataOwner->server = server;
-	dataUser1->server = server;
-
-	string toSearchWord = target_keys[args[1] - 1];
-
 	unordered_map<string,vector<int>> dataSet;
 	unordered_map<int,vector<string>> dataSet_reverted;
-	log( "test4:2");
-	init_data_set("../DataSet/Lab1DataSet"+to_string(args[1]),dataSet,dataSet_reverted);
-	log( "test4:3  ");
+	init_data_set(dataSetPath,dataSet,dataSet_reverted);
 	auth_all(dataOwner,dataSet,1);
-	log( "test4:4" );
 	auth_all(server,dataSet,1);
-	log( "test4:5" );
 	update_all(dataOwner,dataSet_reverted);
-	log( "test4:6" );
 
+	
 	int toRevokeBatchNum = args[2];
 	for(int i = 0 ; i < toRevokeBatchNum ; i++){
 		vector<int> toRevokeIndList;
-		toRevokeIndList.insert(toRevokeIndList.end(),dataSet[toSearchWord].begin() + i * 300,dataSet[toSearchWord].begin() + (i + 1) * 300);
-		dataOwner->revoke(toSearchWord,toRevokeIndList);
+		toRevokeIndList.insert(toRevokeIndList.end(),dataSet[targetKey].begin() + i * 300,dataSet[targetKey].begin() + (i + 1) * 300);
+		dataOwner->revoke(targetKey,toRevokeIndList);
 	}
-	log( "test4:7" );
 	clock_t start = clock();
-	vector<int> Res = dataUser1->Search_batch(toSearchWord);
-	log( "test4:8" );
+	vector<int> Res = dataUser1->Search_batch(targetKey);
 	clock_t end = clock();
 
     double duration = static_cast<double>(end - start) / CLOCKS_PER_SEC;
@@ -295,44 +259,42 @@ void test4(vector<int> args,int eid,boost::asio::io_service &io_service,boost::a
 }
 
 //update - a
-void test5(vector<int> args,int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+void test5(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
     
 }
 
 //update - b
 //args 列表含义：数据集标识 要撤销的数据量/50
-void test6(vector<int> args,int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
-    // 初始化server、dataowner和datauser
-	// cout << "test4:1" <<endl;
+void test6(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+	
+	vector<int> args = prase_argv_to_int(argc,argv);
+    string dataSetPath = "../DataSet/Lab1DataSet"+to_string(args[1]);
+    string targetKey = target_keys[args[1] - 1];
+
+	
+	// 初始化server、dataowner和datauser
 	vector<int> userIds;
 	userIds.emplace_back(1);
-
 	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
 	Server *server = new Server(userIds,eid);
 	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
 	dataOwner->server = server;
 	dataUser1->server = server;
 
-	string toSearchWord = target_keys[args[1] - 1];
-
+	//处理数据集
 	unordered_map<string,vector<int>> dataSet;
 	unordered_map<int,vector<string>> dataSet_reverted;
-	// cout << "test4:2" <<endl;
-	init_data_set("../DataSet/Lab1DataSet"+to_string(args[1]),dataSet,dataSet_reverted);
-	// cout << "test4:3" <<endl;
+	init_data_set(dataSetPath,dataSet,dataSet_reverted);
 	auth_all(dataOwner,dataSet,1);
-	// cout << "test4:4" <<endl;
 	auth_all(server,dataSet,1);
-	// cout << "test4:5" <<endl;
 	update_all(dataOwner,dataSet_reverted);
-	// cout << "test4:6" <<endl;
+
 
 	string toRevokeWord = "AAAAAAAAAAA";
 	vector<string> WList = {toRevokeWord};
 	for(int ind = 1 ; ind <= 1000 ; ind++){
 		dataOwner->insert(ind,WList);
 	}
-
 	vector<vector<int>> IDLists;
 	for(int i = 0 ; i < args[2] ; i++){
 		vector<int> IDList;
@@ -353,11 +315,100 @@ void test6(vector<int> args,int eid,boost::asio::io_service &io_service,boost::a
 }
 
 //update - c
-void test7(vector<int> args,int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+void test7(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
     
 }
 
 //update - d
-void test8(vector<int> args,int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+void test8(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
     
+}
+
+//compare_search_a
+void test9(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+	
+	string dataSetPath = string(argv[2]);
+    string targetKey = "566";
+	
+
+	// 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+
+	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//处理数据集
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	auth_all(dataOwner,dataSet,1);
+	auth_all(server,dataSet,1);
+	update_all(dataOwner,dataSet_reverted);
+
+
+	vector<string> WList = {targetKey};
+	vector<int> toRevokeList;
+	for(int i = 0 ; i < 20 ; i++){
+        toRevokeList.emplace_back(dataSet[targetKey][i]);
+    }
+	dataOwner->revoke(targetKey,toRevokeList);
+
+	clock_t start = clock();
+	vector<int> Res = dataUser1->Search_batch(targetKey);
+	clock_t end = clock();
+
+    double duration = static_cast<double>(end - start) / 1000;
+	cout<<duration<<endl;
+}
+
+//compare_search_b
+void test10(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+
+}
+
+//compare_update_a
+void test11(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+	
+	string dataSetPath = "../DataSet/enron_processed";
+    string targetKey = string(argv[2]);
+
+	
+	// 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//处理数据集
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	auth_all(dataOwner,dataSet,1);
+	auth_all(server,dataSet,1);
+	update_all(dataOwner,dataSet_reverted);
+
+	
+	vector<string> WList = {targetKey};
+	vector<int> toRevokeList;
+	for(int i = 0 ; i < 40 ; i++){
+        toRevokeList.emplace_back(dataSet[targetKey][i]);
+    }
+	clock_t start = clock();
+	dataOwner->revoke(targetKey,toRevokeList);
+	clock_t end = clock();
+
+    double duration = static_cast<double>(end - start) / 1000;
+	cout<<duration<<endl;
+}
+
+//compare_update_b
+void test12(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+
 }

@@ -110,7 +110,7 @@ std::vector<int> prase_argv_to_int(int argc,char* argv[]){
 }
 
 //test
-void test0(vector<int> args,int eid){
+void test0(int argc,char* argv[],int eid){
 // 初始化server、dataowner和datauser
 		vector<int> userIds;
 		userIds.emplace_back(1);
@@ -212,12 +212,93 @@ void test0(vector<int> args,int eid){
 		cout<<endl;
 }
 
-//compare_search_a
+//search - a
 void test1(int argc,char* argv[],int eid){
+    
+}
+
+//search - b
+void test2(int argc,char* argv[],int eid){
+    
+}
+
+//search - c
+void test3(int argc,char* argv[],int eid){
+    
+}
+
+//search - d
+void test4(int argc,char* argv[],int eid){
+
+	vector<int> args = prase_argv_to_int(argc,argv);
+	string dataSetPath = "../DataSet/Lab1DataSet"+to_string(args[1]);
+    string targetKey = target_keys[args[1] - 1];
+
+
     // 初始化server、dataowner和datauser
 	vector<int> userIds;
 	userIds.emplace_back(1);
+	DataOwner *dataOwner = new DataOwner();
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid);
+	dataOwner->server = server;
+	dataUser1->server = server;
 
+	//初始化数据集
+	unordered_map<string,vector<int>> dataSet;
+	unordered_map<int,vector<string>> dataSet_reverted;
+	// cout << "test4:2" <<endl;
+	init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	// cout << "test4:3" <<endl;
+	auth_all(dataOwner,dataSet,1);
+	// cout << "test4:4" <<endl;
+	auth_all(server,dataSet,1);
+	// cout << "test4:5" <<endl;
+	update_all(dataOwner,dataSet_reverted);
+	// cout << "test4:6" <<endl;
+
+
+	vector<int> toRevokeList;
+	toRevokeList.insert(toRevokeList.end(),dataSet[targetKey].begin(),dataSet[targetKey].begin() + args[2]);
+	// cout << "test4:7" <<endl;
+	clock_t start = clock();
+	vector<int> Res = dataUser1->Search(targetKey);
+	// cout << "test4:8" <<endl;
+	clock_t end = clock();
+    double duration = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	cout<<duration<<endl;
+}
+
+//update - a
+void test5(int argc,char* argv[],int eid){
+    
+}
+
+//update - b
+void test6(int argc,char* argv[],int eid){
+    
+}
+
+//update - c
+void test7(int argc,char* argv[],int eid){
+    
+}
+
+//update - d
+void test8(int argc,char* argv[],int eid){
+    
+}
+
+//compare_search_a
+void test9(int argc,char* argv[],int eid){
+
+	string dataSetPath = string(argv[2]);
+    string targetKey = "566";
+	
+
+    // 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
 	DataUser *dataUser1 = new DataUser(1,eid);
@@ -225,7 +306,6 @@ void test1(int argc,char* argv[],int eid){
 	dataUser1->server = server;
 
 	//处理数据集
-    string dataSetPath = string(argv[2]);
     unordered_map<string,vector<int>> dataSet;
     unordered_map<int,vector<string>> dataSet_reverted;
     init_data_set(dataSetPath,dataSet,dataSet_reverted);
@@ -233,7 +313,6 @@ void test1(int argc,char* argv[],int eid){
 	auth_all(server,dataSet,1);
 	update_all(dataOwner,dataSet_reverted);
 
-    string targetKey = "566";
 
 	vector<string> WList = {targetKey};
 	vector<int> toRevokeList;
@@ -249,70 +328,47 @@ void test1(int argc,char* argv[],int eid){
 	cout<<duration<<endl;
 }
 
-//search - b
-void test2(vector<int> args,int eid){
-    
+//compare_search_b
+void test10(int argc,char* argv[],int eid){
+
 }
 
-//search - c
-void test3(vector<int> args,int eid){
-    
-}
+//compare_update_a
+void test11(int argc,char* argv[],int eid){
 
-//search - d
-void test4(vector<int> args,int eid){
-    // 初始化server、dataowner和datauser
+	string dataSetPath = "../DataSet/enron_processed";
+    string targetKey = string(argv[2]);
+
+
+	// 初始化server、dataowner和datauser
 	vector<int> userIds;
 	userIds.emplace_back(1);
-
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
 	DataUser *dataUser1 = new DataUser(1,eid);
 	dataOwner->server = server;
 	dataUser1->server = server;
 
-	string toSearchWord = target_keys[args[1] - 1];
-
-	unordered_map<string,vector<int>> dataSet;
-	unordered_map<int,vector<string>> dataSet_reverted;
-	// cout << "test4:2" <<endl;
-	init_data_set("../DataSet/Lab1DataSet"+to_string(args[1]),dataSet,dataSet_reverted);
-	// cout << "test4:3" <<endl;
+	//处理数据集
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
 	auth_all(dataOwner,dataSet,1);
-	// cout << "test4:4" <<endl;
 	auth_all(server,dataSet,1);
-	// cout << "test4:5" <<endl;
 	update_all(dataOwner,dataSet_reverted);
-	// cout << "test4:6" <<endl;
 
+	vector<string> WList = {targetKey};
 	vector<int> toRevokeList;
-	toRevokeList.insert(toRevokeList.end(),dataSet[toSearchWord].begin(),dataSet[toSearchWord].begin() + args[2]);
-	// cout << "test4:7" <<endl;
 	clock_t start = clock();
-	vector<int> Res = dataUser1->Search(toSearchWord);
-	// cout << "test4:8" <<endl;
+	for(int i = 0 ; i < 40 ; i++){
+        dataOwner->update(dataSet[targetKey][i],WList,DEL);
+    }
 	clock_t end = clock();
-
-    double duration = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+    double duration = static_cast<double>(end - start) / 1000;
 	cout<<duration<<endl;
 }
 
-//update - a
-void test5(vector<int> args,int eid){
-    
-}
+//compare_update_b
+void test12(int argc,char* argv[],int eid){
 
-//update - b
-void test6(vector<int> args,int eid){
-    
-}
-
-//update - c
-void test7(vector<int> args,int eid){
-    
-}
-
-//update - d
-void test8(vector<int> args,int eid){
-    
 }
