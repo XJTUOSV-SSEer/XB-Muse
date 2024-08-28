@@ -118,8 +118,8 @@ void test0(int argc,char* argv[],int eid){
 
 		DataOwner *dataOwner = new DataOwner();
 		Server *server = new Server(userIds,eid);
-		DataUser *dataUser1 = new DataUser(1,eid);
-		dataOwner->isUserAntiReplayAttackMap[1] = true;
+		DataUser *dataUser1 = new DataUser(1,eid,false);
+		dataOwner->isUserAntiReplayAttackMap[1] = false;
 
 		DataUser *dataUser2 = new DataUser(2,eid);
 		dataOwner->isUserAntiReplayAttackMap[2] = true;

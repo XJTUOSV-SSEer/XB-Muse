@@ -31,24 +31,16 @@ void Server::addFile(int ind,int userId,vector<string> cntEnc,vector<KeyValue> k
 
 void Server::delFile(int userId,vector<Revoketag> Revoketags,vector<string> DelCntDiffs){
     for(Revoketag revoketag : Revoketags){
-        Revtag[userId].emplace_back(revoketag);
-    }
-
-    for(string delCnt : DelCntDiffs){
-        FileDelCnts[userId].emplace_back(delCnt);
-    }
-}
-
-void Server::delFile(int userId,Revoketag revoketag,vector<string> DelCntDiffs){
-    bool flag = false;
-    for(Revoketag &tag : Revtag[userId]){
-        if(tag.addr == revoketag.addr){
-            tag.D = revoketag.D;
-            flag = true;
+        bool flag = false;
+        for(Revoketag &tag : Revtag[userId]){
+            if(tag.addr == revoketag.addr){
+                tag.D = revoketag.D;
+                flag = true;
+            }
         }
-    }
-    if(!flag){
-        Revtag[userId].emplace_back(revoketag);
+        if(!flag){
+            Revtag[userId].emplace_back(revoketag);
+        }
     }
 
     for(string delCnt : DelCntDiffs){

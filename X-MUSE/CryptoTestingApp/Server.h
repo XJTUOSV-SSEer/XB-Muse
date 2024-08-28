@@ -34,7 +34,6 @@ public:
 
     void addFile(int ind,int userId,vector<string> cntEnc,vector<KeyValue> keyValues);
     void delFile(int userId,vector<Revoketag> Revoketags,vector<string> DelCntDiffs);
-    void delFile(int userId,Revoketag revoketag,vector<string> DelCntDiffs);
 
     unordered_map<string,int> search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,BloomFilter<32, GGM_SIZE, HASH_SIZE> D,int userId);
 

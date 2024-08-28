@@ -136,6 +136,7 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
 void DataOwner::delete_batch(vector<int> IdList,string w,int userId){
     vector<string> keyValues;
     vector<string> DelCntDiffs;
+    vector<Revoketag> Revoketags;
     int Cnt = 0;
     uint8_t buffer[w.size() + sizeof(int)];
     if( FileCnts.find(userId) == FileCnts.end()){
@@ -180,5 +181,6 @@ void DataOwner::delete_batch(vector<int> IdList,string w,int userId){
 
         addr_str = string((char *)cipertext,w.size());
     }
-    server->delFile(userId,Revoketag(addr_str,D[userId][w]),DelCntDiffs);
+    Revoketags.emplace_back(Revoketag(addr_str,D[userId][w]));
+    server->delFile(userId,Revoketags,DelCntDiffs);
 }
