@@ -85,32 +85,42 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
                 
                 
             }else{
-                if(FileDelCnts.find(userId) == FileDelCnts.end()){
-                    FileDelCnts[userId] = unordered_map<string,int>();
-                }
-                if(FileDelCnts[userId].find(w) == FileDelCnts[userId].end()){
-                    FileDelCnts[userId][w] = 0;
-                }
-                FileDelCnts[userId][w] ++;
-                int cnt1 = FileDelCnts[userId][w];
-                memcpy(buffer,w.c_str(),w.size());
-                memcpy(buffer + w.size(),(uint8_t*)&cnt1,sizeof(int));
-
-                uint8_t cipertext[w.size() + sizeof(int)];
-                aes_encrypt(buffer,w.size() + sizeof(int),key,iv,cipertext);
-
-                DelCntDiffs.emplace_back(string((char *)cipertext,w.size() + sizeof(int)));
-
-                //求摘要（G）
-                memcpy(buffer,w.c_str(),w.size());
-                memcpy(buffer + w.size(),(uint8_t*)&cnt1,sizeof(int));
                 uint8_t addr[w.size() + sizeof(int)];
+                if(isUserAntiReplayAttackMap[userId]){
+                    if(FileDelCnts.find(userId) == FileDelCnts.end()){
+                        FileDelCnts[userId] = unordered_map<string,int>();
+                    }
+                    if(FileDelCnts[userId].find(w) == FileDelCnts[userId].end()){
+                        FileDelCnts[userId][w] = 0;
+                    }
+                    FileDelCnts[userId][w] ++;
+                    int cnt1 = FileDelCnts[userId][w];
+                    memcpy(buffer,w.c_str(),w.size());
+                    memcpy(buffer + w.size(),(uint8_t*)&cnt1,sizeof(int));
 
-                aes_encrypt(buffer,w.size() + sizeof(int),key,iv,addr);
+                    uint8_t cipertext[w.size() + sizeof(int)];
+                    aes_encrypt(buffer,w.size() + sizeof(int),key,iv,cipertext);
+
+                    DelCntDiffs.emplace_back(string((char *)cipertext,w.size() + sizeof(int)));
+
+                    //求摘要（G）
+                    memcpy(buffer,w.c_str(),w.size());
+                    memcpy(buffer + w.size(),(uint8_t*)&cnt1,sizeof(int));
+                    
+
+                    aes_encrypt(buffer,w.size() + sizeof(int),key,iv,addr);
+                }else{
+                    memcpy(buffer,w.c_str(),w.size());
+                    aes_encrypt(buffer,w.size(),key,iv,addr);
+                }
 
                 D[userId][w].add_tag(tag);
                 vector<long> v = D[userId][w].get_index(tag);
-                Revoketags.emplace_back(Revoketag(string((char*)addr,w.size() + sizeof(int)),D[userId][w]));
+                if(isUserAntiReplayAttackMap[userId]){
+                    Revoketags.emplace_back(Revoketag(string((char*)addr,w.size() + sizeof(int)),D[userId][w]));
+                }else{
+                    Revoketags.emplace_back(Revoketag(string((char*)addr,w.size()),D[userId][w]));
+                }
             }
 
         }
@@ -122,3 +132,53 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
         }
     }
 };
+
+void DataOwner::delete_batch(vector<int> IdList,string w,int userId){
+    vector<string> keyValues;
+    vector<string> DelCntDiffs;
+    int Cnt = 0;
+    uint8_t buffer[w.size() + sizeof(int)];
+    if( FileCnts.find(userId) == FileCnts.end()){
+        FileCnts[userId] = unordered_map<string,int>();
+        D[userId] = unordered_map<string,BloomFilter<32, GGM_SIZE, HASH_SIZE>>();
+    }
+    if(FileCnts[userId].find(w) == FileCnts[userId].end()){
+        FileCnts[userId][w] = 0;
+        D[userId][w] = BloomFilter<32, GGM_SIZE, HASH_SIZE>();
+    }
+    for(int ind:IdList){
+        if(isUserAntiReplayAttackMap[userId]){
+            FileDelCnts[userId][w]++;
+        }
+
+        memcpy(buffer,w.c_str(),w.size());
+        memcpy(buffer + w.size(),(uint8_t*)&ind, sizeof(int));
+        uint8_t tag[DIGEST_SIZE];
+
+        sha256_digest(buffer,w.size() + sizeof(int),tag);
+        D[userId][w].add_tag(tag);
+    }
+    string addr_str;
+    if(isUserAntiReplayAttackMap[userId]){
+        int cnt1 = FileDelCnts[userId][w];
+        uint8_t addr[w.size() + sizeof(int)];
+        memcpy(buffer,w.c_str(),w.size());
+        memcpy(buffer + w.size(),(uint8_t*)&cnt1,sizeof(int));
+
+        uint8_t cipertext[w.size() + sizeof(int)];
+        aes_encrypt(buffer,w.size() + sizeof(int),key,iv,cipertext);
+
+        addr_str = string((char *)cipertext,w.size() + sizeof(int));
+
+        DelCntDiffs.emplace_back(string((char *)cipertext,w.size() + sizeof(int)));
+    }else{
+        uint8_t addr[w.size()];
+        memcpy(buffer,w.c_str(),w.size());
+
+        uint8_t cipertext[w.size()];
+        aes_encrypt(buffer,w.size(),key,iv,cipertext);
+
+        addr_str = string((char *)cipertext,w.size());
+    }
+    server->delFile(userId,Revoketag(addr_str,D[userId][w]),DelCntDiffs);
+}

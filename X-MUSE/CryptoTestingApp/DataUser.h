@@ -20,6 +20,7 @@ public:
     unordered_map<string,int> FileDelCnts;
 
     int eid;
+    int is_anti_replace_attack;
 
     unsigned char *key = (unsigned char*) "0123456789123456";
     unsigned char *iv = (unsigned char*) "0123456789123456";
@@ -27,7 +28,7 @@ public:
 public:
     vector<int> Search(string w);
 
-    DataUser(int userId,int eid);
+    DataUser(int userId,int eid,bool is_anti_replace_attack = true);
 };
 
 #endif

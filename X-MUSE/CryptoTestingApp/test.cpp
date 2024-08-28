@@ -119,7 +119,11 @@ void test0(int argc,char* argv[],int eid){
 		DataOwner *dataOwner = new DataOwner();
 		Server *server = new Server(userIds,eid);
 		DataUser *dataUser1 = new DataUser(1,eid);
+		dataOwner->isUserAntiReplayAttackMap[1] = true;
+
 		DataUser *dataUser2 = new DataUser(2,eid);
+		dataOwner->isUserAntiReplayAttackMap[2] = true;
+
 		dataOwner->server = server;
 		dataUser1->server = server;
 		dataUser2->server = server;
@@ -193,7 +197,8 @@ void test0(int argc,char* argv[],int eid){
 		//测试用例4----------------------------------------------------------------
 		vector<string> revokeWList;
 		revokeWList.emplace_back("a");
-		dataOwner->update(1,revokeWList,DEL);
+		// dataOwner->update(1,revokeWList,DEL);
+		dataOwner->delete_batch({1},"a",1);
 		Res = dataUser1->Search("a");
 		cout<<"撤销1号文件上a关键字后user1搜索a的搜索结果："<<endl;
 		for(int i : Res){
@@ -241,6 +246,7 @@ void test4(int argc,char* argv[],int eid){
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
 	DataUser *dataUser1 = new DataUser(1,eid);
+	dataOwner->isUserAntiReplayAttackMap[1] = true;
 	dataOwner->server = server;
 	dataUser1->server = server;
 
@@ -346,7 +352,8 @@ void test11(int argc,char* argv[],int eid){
 	userIds.emplace_back(1);
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,false);
+	dataOwner->isUserAntiReplayAttackMap[1] = false;
 	dataOwner->server = server;
 	dataUser1->server = server;
 
@@ -360,10 +367,12 @@ void test11(int argc,char* argv[],int eid){
 
 	vector<string> WList = {targetKey};
 	vector<int> toRevokeList;
-	clock_t start = clock();
+	
 	for(int i = 0 ; i < 40 ; i++){
-        dataOwner->update(dataSet[targetKey][i],WList,DEL);
+		toRevokeList.emplace_back(dataSet[targetKey][i]);
     }
+	clock_t start = clock();
+	dataOwner->delete_batch(toRevokeList,"a",1);
 	clock_t end = clock();
     double duration = static_cast<double>(end - start) / 1000;
 	cout<<duration<<endl;

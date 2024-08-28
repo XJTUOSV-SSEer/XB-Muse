@@ -39,6 +39,23 @@ void Server::delFile(int userId,vector<Revoketag> Revoketags,vector<string> DelC
     }
 }
 
+void Server::delFile(int userId,Revoketag revoketag,vector<string> DelCntDiffs){
+    bool flag = false;
+    for(Revoketag &tag : Revtag[userId]){
+        if(tag.addr == revoketag.addr){
+            tag.D = revoketag.D;
+            flag = true;
+        }
+    }
+    if(!flag){
+        Revtag[userId].emplace_back(revoketag);
+    }
+
+    for(string delCnt : DelCntDiffs){
+        FileDelCnts[userId].emplace_back(delCnt);
+    }
+}
+
 unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,BloomFilter<32, GGM_SIZE, HASH_SIZE> D,int userId){
     // cout << "Server::search : 1"<<endl;
     unordered_map<string,int> NewInd;

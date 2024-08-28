@@ -20,6 +20,7 @@ class DataOwner{
 
 public:
     unordered_map<int,unordered_set<int>> AccessList;      //文件id->用户id
+    unordered_map<int,bool> isUserAntiReplayAttackMap;     //用户id->是否防重放攻击
     unordered_map<int,unordered_map<string,int>> FileCnts;
     unordered_map<int,unordered_map<string,int>> FileDelCnts;
     unordered_map<int,unordered_map<string,string>> MSK;
@@ -37,6 +38,7 @@ public:
 public:
 
     void update(int ind,vector<string> WList,OP op);
+    void delete_batch(vector<int> IdList,string w,int userId);
 
     DataOwner();
 
