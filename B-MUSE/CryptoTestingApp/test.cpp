@@ -201,6 +201,18 @@ void test0(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boo
 		cout<< i << " ";
 	}
 	cout<<endl;
+
+	// 测试用例4----------------------------------------------------------------
+	// cout<<1<<endl;'
+	revokeIndList = {21};
+	dataOwner->revoke("a",revokeIndList);
+
+	Res = dataUser1->Search_batch("a");
+	cout<<"撤销a与21的关系后user1搜索a的结果："<<dec<<endl;
+	for(int i : Res){
+		cout<< i << " ";
+	}
+	cout<<endl;
 }
 
 //search - a

@@ -213,13 +213,11 @@ void test1(int argc,char* argv[]){
 	auth_all(server,dataSet,1);
 	update_all(dataOwner,dataSet_reverted);
 
-
 	vector<string> WList = {targetKey};
 	vector<int> toRevokeList;
 	for(int i = 0 ; i < 20 ; i++){
         dataOwner->update(dataSet[targetKey][i],WList,DEL);
     }
-
 	clock_t start = clock();
 	vector<int> Res = dataUser1->Search(targetKey);
 	clock_t end = clock();

@@ -95,6 +95,7 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
                     }
                     FileDelCnts[userId][w] ++;
                     int cnt1 = FileDelCnts[userId][w];
+                    // cout<<"update delCnt :"<<cnt1<<endl;
                     memcpy(buffer,w.c_str(),w.size());
                     memcpy(buffer + w.size(),(uint8_t*)&cnt1,sizeof(int));
 

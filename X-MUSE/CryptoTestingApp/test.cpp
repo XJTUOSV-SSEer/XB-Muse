@@ -118,8 +118,8 @@ void test0(int argc,char* argv[],int eid){
 
 		DataOwner *dataOwner = new DataOwner();
 		Server *server = new Server(userIds,eid);
-		DataUser *dataUser1 = new DataUser(1,eid,false);
-		dataOwner->isUserAntiReplayAttackMap[1] = false;
+		DataUser *dataUser1 = new DataUser(1,eid,true);
+		dataOwner->isUserAntiReplayAttackMap[1] = true;
 
 		DataUser *dataUser2 = new DataUser(2,eid);
 		dataOwner->isUserAntiReplayAttackMap[2] = true;
@@ -197,8 +197,8 @@ void test0(int argc,char* argv[],int eid){
 		//测试用例4----------------------------------------------------------------
 		vector<string> revokeWList;
 		revokeWList.emplace_back("a");
-		// dataOwner->update(1,revokeWList,DEL);
-		dataOwner->delete_batch({1},"a",1);
+		dataOwner->update(1,revokeWList,DEL);
+		// dataOwner->delete_batch({1},"a",1);
 		Res = dataUser1->Search("a");
 		cout<<"撤销1号文件上a关键字后user1搜索a的搜索结果："<<endl;
 		for(int i : Res){
@@ -207,6 +207,16 @@ void test0(int argc,char* argv[],int eid){
 		cout<<endl;
 
 		//测试用例5----------------------------------------------------------------
+		dataOwner->update(21,revokeWList,DEL);
+		// dataOwner->delete_batch({1},"a",1);
+		Res = dataUser1->Search("a");
+		cout<<"撤销21号文件上a关键字后user1搜索a的搜索结果："<<endl;
+		for(int i : Res){
+			cout<< i << " ";
+		}
+		cout<<endl;
+
+		//测试用例6----------------------------------------------------------------
 		revokeWList = {"b"};
 		dataOwner->update(21,revokeWList,DEL);
 		Res = dataUser1->Search("b");
@@ -307,7 +317,8 @@ void test9(int argc,char* argv[],int eid){
 	userIds.emplace_back(1);
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,true);
+	dataOwner->isUserAntiReplayAttackMap[1] = true;
 	dataOwner->server = server;
 	dataUser1->server = server;
 

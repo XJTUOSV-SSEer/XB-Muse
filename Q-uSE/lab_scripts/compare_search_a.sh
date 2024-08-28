@@ -16,7 +16,7 @@ do
     do
         # 执行程序并获取返回值
         # 入参： 测试数 数据集 撤销数
-        result=$(./cryptoTestingApp 9 $dataSetFilePath)
+        result=$(./cryptoTestingApp 1 $dataSetFilePath)
         echo "第 $k 次执行，结果为: $result"
         # 将返回值加到总和中
         result_float=$(echo $result | awk '{print $1}')
@@ -30,4 +30,4 @@ do
     result_line+="$(echo "scale=5; $sum / 10" | bc), "
 done
 
-echo $result_line > ./lab_scrpts/result_compare_search_a.csv
+echo $result_line > ./lab_scripts/result/result_compare_search_a.csv

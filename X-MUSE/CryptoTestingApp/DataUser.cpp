@@ -62,7 +62,6 @@ vector<int> DataUser::Search(string w){
             // cout<<"DataUser::Search : 10"<<endl;
             int cnt1 = *(int*) (decryptdRevokeTagAddr + revoketag.addr.size() - sizeof(int));
             // cout<<"DataUser::Search : 11"<<endl;
-            FileDelCnts[w1] = cnt1;
             // cout<<"DataUser::Search : 9"<<endl;
             if( w1 == w && cnt1 == FileDelCnts[w1]){
                 flag = false;
@@ -88,6 +87,7 @@ vector<int> DataUser::Search(string w){
     if(flag){
         remain_node.emplace_back(GGMNode(0,0,key));
     }
+    // cout<<"remain_node.size() :  "<<remain_node.size()<<endl;
     uint8_t digest[DIGEST_SIZE];
     sha256_digest((unsigned char *)w.c_str(),w.size(),digest);
     // cout<<"DataUser::Search : 2"<<endl;
