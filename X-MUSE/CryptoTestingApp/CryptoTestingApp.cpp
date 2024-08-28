@@ -106,8 +106,14 @@ int main(int argc,char* argv[])
 		test7(argc,argv,eid);
 	}else if(status == 8){
 		test8(argc,argv,eid);
-	}else{
+	}else if(status == 9){
 		test9(argc,argv,eid);
+	}else if(status == 10){
+		test10(argc,argv,eid);
+	}else if(status == 11){
+		test11(argc,argv,eid);
+	}else{
+		test12(argc,argv,eid);
 	}
 
 	return 0;

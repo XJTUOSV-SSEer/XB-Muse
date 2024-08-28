@@ -292,9 +292,9 @@ void test8(int argc,char* argv[],int eid){
 //compare_search_a
 void test9(int argc,char* argv[],int eid){
 
-	string dataSetPath = string(argv[2]);
-    string targetKey = "566";
-	
+	string dataSetPath = "../DataSet/enron_processed";
+    string targetKey = "195";
+
 
     // 初始化server、dataowner和datauser
 	vector<int> userIds;
@@ -316,12 +316,13 @@ void test9(int argc,char* argv[],int eid){
 
 	vector<string> WList = {targetKey};
 	vector<int> toRevokeList;
-	for(int i = 0 ; i < 20 ; i++){
+	for(int i = 0 ; i < atoi(argv[2]) ; i++){
         dataOwner->update(dataSet[targetKey][i],WList,DEL);
     }
 
-	clock_t start = clock();
 	vector<int> Res = dataUser1->Search(targetKey);
+	clock_t start = clock();
+	Res = dataUser1->Search(targetKey);
 	clock_t end = clock();
 
     double duration = static_cast<double>(end - start) / 1000;

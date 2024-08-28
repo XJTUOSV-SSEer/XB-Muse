@@ -50,11 +50,18 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
     vector<bool> &flag = flags[userId][tkn];
     // cout << "Server::search : 2"<<endl;
     for(int i = 1 ; i <= Tlist.size() ; i++){
-        bool isInD = true;
-        vector<long> indexs = D.get_index((uint8_t *)DictW[Tlist[i - 1]].tag.c_str());
+        Val val = DictW[Tlist[i - 1]];
+        vector<long> indexs = D.get_index((uint8_t *)val.tag.c_str());
+        // sort(indexs.begin(),indexs.end());
+
+        bool isInD = true; //标志此tag对应的此布隆过滤器是否有全1的
+        for(int index:indexs){
+            if(D.bits[index] == 0){
+                isInD = false;
+            }
+        }
 
         if(!flag[i - 1] ||isInD){
-            Val val = DictW[Tlist[i - 1]];
             int indi;
             char val_tag[DIGEST_SIZE];
             memcpy(val_tag,val.tag.c_str(),DIGEST_SIZE);

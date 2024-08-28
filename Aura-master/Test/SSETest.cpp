@@ -72,7 +72,7 @@ void test0(int argc,char* argv[]){
 void test1(int argc,char* argv[]){
 
     string dataSetPath = "../../DataSet/enron_processed";
-    string targetKey = string(argv[2]);
+    string targetKey = "195";
 
 
     SSEClientHandler client;
@@ -86,7 +86,7 @@ void test1(int argc,char* argv[]){
         }
     }
 
-    for(int i = 0 ; i < 20 ; i++){
+    for(int i = 0 ; i < atoi(argv[2]) ; i++){
         client.update(DEL,targetKey,dataSet[targetKey][i]);
     }
 

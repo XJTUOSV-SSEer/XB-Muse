@@ -5,14 +5,14 @@ make
 
 result_line=""
 
-for i in  400 851 566 195 5038
+for i in 500 600 700 800 900
 do
     sum=0
 
     # 取10次的平均值
     echo ""
     echo "入参 :  1 $i"
-    for k in {1..2}
+    for k in {1..10}
     do
         # 执行程序并获取返回值
 

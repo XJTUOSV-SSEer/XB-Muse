@@ -45,7 +45,7 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
         Val val = DictW[Tlist[i - 1]];
         for(BloomFilter<32, GGM_SIZE, HASH_SIZE> d:Ds){
             vector<long> indexs = d.get_index((uint8_t*)(val.tag.c_str()));
-            sort(indexs.begin(),indexs.end());
+            // sort(indexs.begin(),indexs.end());
 
             bool flag1 = false; //标志此tag对应的此布隆过滤器是否有全1的
             for(int index:indexs){
