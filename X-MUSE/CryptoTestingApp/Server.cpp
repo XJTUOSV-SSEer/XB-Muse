@@ -10,7 +10,7 @@ Server::Server(vector<int> userIds,int eid){
     this->eid = eid;
     for(int userId:userIds){
         Addrs[userId] = vector<string>();
-        Revtag.emplace(userId, vector<Revoketag>());
+        // Revtag.emplace(userId, vector<Revoketag>());
         FileDelCnts[userId] = vector<string>();
     }
 }
@@ -29,18 +29,10 @@ void Server::addFile(int ind,int userId,vector<string> cntEnc,vector<KeyValue> k
     }
 }
 
-void Server::delFile(int userId,vector<Revoketag> Revoketags,vector<string> DelCntDiffs){
-    for(Revoketag revoketag : Revoketags){
-        bool flag = false;
-        for(Revoketag &tag : Revtag[userId]){
-            if(tag.addr == revoketag.addr){
-                tag.D = revoketag.D;
-                flag = true;
-            }
-        }
-        if(!flag){
-            Revtag[userId].emplace_back(revoketag);
-        }
+void Server::delFile(int userId,unordered_map<string,BloomFilter<32, GGM_SIZE, HASH_SIZE>> Revoketags,vector<string> DelCntDiffs){
+    
+    for(auto &pair:Revoketags){
+        Revtag[userId][pair.first] = pair.second;
     }
 
     for(string delCnt : DelCntDiffs){

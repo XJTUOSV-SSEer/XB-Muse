@@ -27,7 +27,7 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
         vector<string> cntEnc;
         vector<KeyValue> keyValues;
         vector<string> DelCntDiffs;
-        vector<Revoketag> Revoketags;
+        unordered_map<string,BloomFilter<32, GGM_SIZE, HASH_SIZE>> Revoketags;
         for(string w : WList){
             if(FileCnts.find(userId) == FileCnts.end()){
                 FileCnts[userId] = unordered_map<string,int>();
@@ -118,9 +118,9 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
                 D[userId][w].add_tag(tag);
                 vector<long> v = D[userId][w].get_index(tag);
                 if(isUserAntiReplayAttackMap[userId]){
-                    Revoketags.emplace_back(Revoketag(string((char*)addr,w.size() + sizeof(int)),D[userId][w]));
+                    Revoketags[string((char*)addr,w.size() + sizeof(int))] = D[userId][w];
                 }else{
-                    Revoketags.emplace_back(Revoketag(string((char*)addr,w.size()),D[userId][w]));
+                    Revoketags[string((char*)addr,w.size())] = D[userId][w];
                 }
             }
 
@@ -137,7 +137,7 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
 void DataOwner::delete_batch(vector<int> IdList,string w,int userId){
     vector<string> keyValues;
     vector<string> DelCntDiffs;
-    vector<Revoketag> Revoketags;
+    unordered_map<string,BloomFilter<32, GGM_SIZE, HASH_SIZE>> Revoketags;
     int Cnt = 0;
     uint8_t buffer[w.size() + sizeof(int)];
     if( FileCnts.find(userId) == FileCnts.end()){
@@ -182,6 +182,6 @@ void DataOwner::delete_batch(vector<int> IdList,string w,int userId){
 
         addr_str = string((char *)cipertext,w.size());
     }
-    Revoketags.emplace_back(Revoketag(addr_str,D[userId][w]));
+    Revoketags[addr_str] = D[userId][w];
     server->delFile(userId,Revoketags,DelCntDiffs);
 }
