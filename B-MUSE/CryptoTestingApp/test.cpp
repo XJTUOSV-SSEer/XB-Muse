@@ -167,7 +167,7 @@ void test0(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boo
 		}
 	}
 	dataOwner->insert(12,WList);
-	// cout << "check point 1"<<endl;
+	cout << "check point 1"<<endl;
 	//测试用例1----------------------------------------------------------------
 	vector<int> Res;
 
@@ -180,7 +180,7 @@ void test0(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boo
 	cout<<endl;
 
 
-	// //测试用例2----------------------------------------------------------------
+	// 测试用例2----------------------------------------------------------------
 	Res = dataUser2->Search_batch("b");
 	cout<<"user1搜索b的结果："<<dec<<endl;
 	for(int i : Res){
@@ -422,5 +422,37 @@ void test11(int argc,char* argv[],int eid,boost::asio::io_service &io_service,bo
 
 //compare_update_b
 void test12(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+	
+	string dataSetPath = "../DataSet/Lab1DataSet7";
+    string targetKey = "URNOIDX";
+	
+	// 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
+	dataOwner->server = server;
+	dataUser1->server = server;
 
+	//处理数据集
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	auth_all(dataOwner,dataSet,1);
+	auth_all(server,dataSet,1);
+	update_all(dataOwner,dataSet_reverted);
+
+	
+	vector<string> WList = {targetKey};
+	vector<int> toRevokeList;
+	for(int i = 0 ; i < 200 ; i++){
+        toRevokeList.emplace_back(dataSet[targetKey][i]);
+    }
+	clock_t start = clock();
+	dataOwner->revoke(targetKey,toRevokeList);
+	clock_t end = clock();
+
+    double duration = static_cast<double>(end - start) / 1000;
+	cout<<duration<<endl;
 }

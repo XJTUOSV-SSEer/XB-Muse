@@ -273,5 +273,37 @@ void test3(int argc,char* argv[]){
 
 //compare_update_b
 void test4(int argc,char* argv[]){
-    
+    string dataSetPath = "../DataSet/Lab1DataSet7";
+    string targetKey = "URNOIDX";
+
+	// 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+
+	DataOwner *dataOwner = new DataOwner();
+	Server *server = new Server(userIds);
+	DataUser *dataUser1 = new DataUser(1);
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//处理数据集
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	auth_all(dataOwner,dataSet,1);
+	auth_all(server,dataSet,1);
+	update_all(dataOwner,dataSet_reverted);
+
+
+	vector<string> WList = {targetKey};
+	vector<int> toRevokeList;
+	clock_t start = clock();
+	for(int i = 0 ; i < atoi(argv[2]) ; i++){
+        dataOwner->update(dataSet[targetKey][i],WList,DEL);
+    }
+	clock_t end = clock();
+	
+
+    double duration = static_cast<double>(end - start) / 1000;
+	cout<<duration<<endl;
 }

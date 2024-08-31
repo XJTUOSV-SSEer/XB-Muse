@@ -70,8 +70,9 @@ std::bitset<GGM_SIZE> getD(boost::asio::io_service &io_service, boost::asio::ip:
     size_t pos2 = response_data.find('"', pos1 + 1);
     size_t pos3 = response_data.find('"', pos2 + 1);
     std::string bit_string = response_data.substr(pos2 + 1, pos3 - pos2 - 1);
-
-    return std::bitset<GGM_SIZE>(bit_string);
+    
+    int size = bit_string.size();
+    return std::bitset<GGM_SIZE>(bit_string.substr(0,GGM_SIZE));
 }
 
 vector<int> DataUser::Search_batch(string w){

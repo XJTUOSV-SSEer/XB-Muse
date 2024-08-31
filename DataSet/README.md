@@ -38,6 +38,10 @@ DataSet15 : dataSetSize = 2^20 searchWord = HXHIPC
 
 # lab2
 
+
+
+# enron
+
 实验中查询的目标k-v对：
 key："5038"  ，对应value个数： 1375
 key："195"  ，对应value个数： 1106

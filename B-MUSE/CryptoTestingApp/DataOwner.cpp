@@ -31,7 +31,6 @@ void setD(boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::it
 
     pt.put("w", finalW);
     pt.put("bit_array", bits.to_string());
-
     boost::property_tree::write_json(ss, pt);
     std::string json_str = ss.str();
 

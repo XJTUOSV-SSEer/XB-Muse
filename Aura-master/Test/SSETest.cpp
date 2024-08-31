@@ -133,6 +133,28 @@ void test3(int argc,char* argv[]){
 //compare_update_b
 void test4(int argc,char* argv[]){
     
+    string dataSetPath = "../../DataSet/Lab1DataSet7";
+    string targetKey = "URNOIDX";
+
+    SSEClientHandler client;
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+
+    for(auto& pair:dataSet){
+        for(int value:pair.second){
+            client.update(INS,pair.first,value);
+        }
+    }
+    clock_t start = clock();
+    for(int i = 0 ; i < 1000 ; i++){
+        client.update(DEL,targetKey,dataSet[targetKey][i]);
+    }
+
+    clock_t end = clock();
+
+    double duration = static_cast<double>(end - start) / 1000;
+	cout<<duration<<endl;
 }
 
 int main(int argc,char* argv[]) {

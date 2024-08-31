@@ -43,11 +43,25 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
         bool flag = true;
 
         Val val = DictW[Tlist[i - 1]];
+        // printf("\n");
+        // printf("d.size : %u\n",Ds.size());
         for(BloomFilter<32, GGM_SIZE, HASH_SIZE> d:Ds){
             vector<long> indexs = d.get_index((uint8_t*)(val.tag.c_str()));
-            // sort(indexs.begin(),indexs.end());
+            sort(indexs.begin(),indexs.end());
+            // printf("tag indexs : ");
+            // for(long v : indexs){
+            //     printf("%ld ",v);
+            // }
+            // printf("\n");
 
             bool flag1 = false; //标志此tag对应的此布隆过滤器是否有全1的
+            // printf("bloom indexs : ");
+            // for(int i = 0 ; i < GGM_SIZE ; i++){
+            //     if(d.bits[i] == 1){
+            //         printf("%d ",i);
+            //     }
+            // }
+            // printf("\n");
             for(int index:indexs){
                 if(d.bits[index] == 0){
                     flag1 = true;
@@ -58,6 +72,7 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
                 break;
             }
         }
+        // printf("flag ：%s\n",flag ? "true" : "false");
         if(flag){
             int indi;
             char val_tag[DIGEST_SIZE];

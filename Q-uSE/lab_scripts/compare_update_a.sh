@@ -15,7 +15,7 @@ do
     do
         # 执行程序并获取返回值
         # 入参： 测试数 数据集 撤销数
-        result=$(./cryptoTestingApp 11 $i)
+        result=$(./cryptoTestingApp 3 $i)
         echo "第 $k 次执行，结果为: $result"
         # 将返回值加到总和中
         result_float=$(echo $result | awk '{print $1}')
