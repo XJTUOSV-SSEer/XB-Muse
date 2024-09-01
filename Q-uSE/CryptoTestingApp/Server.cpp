@@ -28,9 +28,14 @@ void Server::update(unordered_map<string,string> keyValues,unordered_map<int,vec
 }
 
 vector<string> Server::search(vector<string> TList){
+    clock_t start = clock();
     vector<string> Fw;
     for(string str : TList){
         Fw.emplace_back(DictW[str]);
     }
+    clock_t end = clock();
+
+    double duration = static_cast<double>(end - start) / 1000;
+    cout<<duration<<" ";
     return Fw;
 }

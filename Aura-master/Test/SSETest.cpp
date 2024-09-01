@@ -100,7 +100,32 @@ void test1(int argc,char* argv[]){
 
 //compare_search_b
 void test2(int argc,char* argv[]){
-    
+
+    string dataSetPath = "../../DataSet/Lab1DataSet12";
+    string targetKey = "GX";
+
+    SSEClientHandler client;
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+
+    for(auto& pair:dataSet){
+        for(int value:pair.second){
+            client.update(INS,pair.first,value);
+        }
+    }
+
+    for(int i = 0 ; i < 100 ; i++){
+        client.update(DEL,targetKey,dataSet[targetKey][i]);
+    }
+
+    // clock_t start = clock();
+	vector<int> Res = client.search(targetKey);
+    // cout<<Res.size()<<endl;
+	// clock_t end = clock();
+
+    // double duration = static_cast<double>(end - start) / 1000;
+	// cout<<duration<<endl;
 }
 
 //compare_update_a

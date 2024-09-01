@@ -38,7 +38,7 @@ DataSet15 : dataSetSize = 2^20 searchWord = HXHIPC
 
 # lab2
 
-
+DataSet1 : dataSetSize = 2^18 searchWord = QBPWXKDBO  searchSize = 20k
 
 # enron
 

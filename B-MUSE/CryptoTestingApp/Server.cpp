@@ -32,7 +32,7 @@ void Server::addFile(int ind,int userId,vector<string> cntEnc,vector<KeyValue> k
 }
 
 unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,vector<BloomFilter<32, GGM_SIZE, HASH_SIZE>> Ds,int userId){
-
+clock_t start = clock();
     unordered_map<string,int> NewInd;
     unordered_set<string> DelInd;
     BloomFilter<32, GGM_SIZE, HASH_SIZE> D;
@@ -111,6 +111,9 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
     for(const auto& pair : Res){
         EDBcache[userId][tkn][pair.first] = pair.second;
     }
+clock_t end = clock();
+double duration = static_cast<double>(end - start) / 1000;
+cout<<duration<<" ";
     return Res;
 }
 

@@ -19,6 +19,8 @@ DataUser::DataUser(int userId){
 }
 
 vector<int> DataUser::Search(string w){
+
+clock_t start1 = clock();
     unordered_set<int> Rw;
     unordered_set<int> toRevokeSet;
     vector<string> TList;
@@ -42,7 +44,9 @@ vector<int> DataUser::Search(string w){
         TList.emplace_back(string((char *)digest,DIGEST_SIZE));
   
     }
+clock_t end1 = clock();
     vector<string> Fw = server->search(TList);
+clock_t start2 = clock();
     for(int i = 1 ; i <= Fw.size() ; i++){
         
         memset(buffer,0,w.size() + 2 * sizeof(int));
@@ -71,6 +75,10 @@ vector<int> DataUser::Search(string w){
             res.emplace_back(v);
         }
     }
+clock_t end2 = clock();
+
+double duration = static_cast<double>(end1 - start1 + end2 - start2) / 1000;
+cout<<duration<<endl;
 
     return res;
 }

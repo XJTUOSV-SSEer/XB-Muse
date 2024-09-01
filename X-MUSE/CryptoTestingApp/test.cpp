@@ -348,7 +348,38 @@ void test9(int argc,char* argv[],int eid){
 
 //compare_search_b
 void test10(int argc,char* argv[],int eid){
+	string dataSetPath = "../DataSet/Lab1DataSet12";
+    string targetKey = "GX";
 
+	// 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+	DataOwner *dataOwner = new DataOwner();
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,false);
+	dataOwner->server = server;
+	dataOwner->isUserAntiReplayAttackMap[1] = false;
+	dataUser1->server = server;
+
+	//处理数据集
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	auth_all(dataOwner,dataSet,1);
+	auth_all(server,dataSet,1);
+	update_all(dataOwner,dataSet_reverted);
+
+	vector<string> WList = {targetKey};
+	vector<int> toRevokeList;
+	for(int i = 0 ; i < 100 ; i++){
+        dataOwner->update(dataSet[targetKey][i],WList,DEL);
+    }
+	// clock_t start = clock();
+	vector<int> Res = dataUser1->Search(targetKey);
+	// clock_t end = clock();
+
+    // double duration = static_cast<double>(end - start) / 1000;
+	// cout<<duration<<endl;
 }
 
 //compare_update_a

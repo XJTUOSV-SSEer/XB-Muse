@@ -42,6 +42,7 @@ void Server::delFile(int userId,unordered_map<string,BloomFilter<32, GGM_SIZE, H
 
 unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> remain_node,string tkn,BloomFilter<32, GGM_SIZE, HASH_SIZE> D,int userId){
     // cout << "Server::search : 1"<<endl;
+clock_t start = clock();
     unordered_map<string,int> NewInd;
     unordered_set<string> DelInd;
     int flag_size = flags[userId][tkn].size();
@@ -96,6 +97,9 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
     for(const auto& pair : Res){
         EDBcache[userId][tkn][pair.first] = pair.second;
     }
+clock_t end = clock();
+double duration = static_cast<double>(end - start) / 1000;
+cout<<duration<<" ";
     return Res;
 }
 

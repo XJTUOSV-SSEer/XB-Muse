@@ -379,7 +379,41 @@ void test9(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boo
 
 //compare_search_b
 void test10(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+	string dataSetPath = "../DataSet/Lab1DataSet12";
+    string targetKey = "GX";
 
+	// 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+
+	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//处理数据集
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	auth_all(dataOwner,dataSet,1);
+	auth_all(server,dataSet,1);
+	update_all(dataOwner,dataSet_reverted);
+
+
+	vector<string> WList = {targetKey};
+	vector<int> toRevokeList;
+	for(int i = 0 ; i < 100 ; i++){
+        toRevokeList.emplace_back(dataSet[targetKey][i]);
+    }
+	dataOwner->revoke(targetKey,toRevokeList);
+
+	// clock_t start = clock();
+	vector<int> Res = dataUser1->Search_batch(targetKey);
+	// clock_t end = clock();
+
+    // double duration = static_cast<double>(end - start) / 1000;
+	// cout<<duration<<endl;
 }
 
 //compare_update_a
@@ -446,7 +480,7 @@ void test12(int argc,char* argv[],int eid,boost::asio::io_service &io_service,bo
 	
 	vector<string> WList = {targetKey};
 	vector<int> toRevokeList;
-	for(int i = 0 ; i < 200 ; i++){
+	for(int i = 0 ; i < 800 ; i++){
         toRevokeList.emplace_back(dataSet[targetKey][i]);
     }
 	clock_t start = clock();
