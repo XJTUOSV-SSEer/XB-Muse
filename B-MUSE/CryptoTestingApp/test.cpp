@@ -490,3 +490,44 @@ void test12(int argc,char* argv[],int eid,boost::asio::io_service &io_service,bo
     double duration = static_cast<double>(end - start) / 1000;
 	cout<<duration<<endl;
 }
+
+//compare_search_a
+void test13(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
+	
+	string dataSetPath = "../DataSet/enron_processed";
+    string targetKey = "195";
+
+	// 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+
+	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//处理数据集
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	auth_all(dataOwner,dataSet,1);
+	auth_all(server,dataSet,1);
+
+
+	vector<string> WList = {targetKey};
+
+
+	for(int i = 0 ; i < 21 ; i++){
+        for(int j = 0 ; j < 20 ; j++){
+            dataOwner->insert(dataSet[targetKey][20 * i + j],WList);
+        }
+
+        clock_t start = clock();
+        vector<int> Res = dataUser1->Search_batch(targetKey);
+        clock_t end = clock();
+
+        double duration = static_cast<double>(end - start) / 1000;
+        cout<<duration<<endl;
+    }
+}

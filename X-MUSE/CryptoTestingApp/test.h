@@ -52,4 +52,6 @@ void test11(int argc,char* argv[],int eid);
 
 void test12(int argc,char* argv[],int eid);
 
+void test13(int argc,char* argv[],int eid);
+
 #endif

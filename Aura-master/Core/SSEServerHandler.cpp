@@ -16,7 +16,7 @@ void SSEServerHandler::add_entries(const string& label, const string& tag, vecto
 
 vector<int> SSEServerHandler::search(uint8_t *token, const vector<GGMNode>& node_list, int level) {
 
-clock_t start = clock();
+// clock_t start = clock();
     keys.clear();
     // pre-search, derive all keys
     compute_leaf_keys(node_list, level);
@@ -54,10 +54,10 @@ clock_t start = clock();
         free(pair.second);
     }
 
-clock_t end = clock();
+// clock_t end = clock();
 
-double duration = static_cast<double>(end - start) / 1000;
-cout<<duration<<endl;
+// double duration = static_cast<double>(end - start) / 1000;
+// cout<<duration<<endl;
     return res_list;
 }
 

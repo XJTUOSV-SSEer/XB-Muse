@@ -64,8 +64,10 @@ int main(int argc,char* argv[])
 		test2(argc,argv);
 	}else if(status == 3){
 		test3(argc,argv);
-	}else{
+	}else if(status == 4){
 		test4(argc,argv);
+	}else{
+		test5(argc,argv);
 	}
 	return 0;
 }

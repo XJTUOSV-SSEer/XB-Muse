@@ -28,7 +28,7 @@ public:
 public:
     vector<int> Search(string w);
 
-    DataUser(int userId,int eid,bool is_anti_replace_attack = true);
+    DataUser(int userId,int eid,bool is_anti_replace_attack = false);
 };
 
 #endif

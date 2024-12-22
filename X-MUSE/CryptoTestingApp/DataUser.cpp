@@ -23,7 +23,7 @@ DataUser::DataUser(int userId,int eid,bool is_anti_replace_attack){
 
 vector<int> DataUser::Search(string w){
     
-clock_t start1 = clock();
+// clock_t start1 = clock();
     // cout<<"DataUser::Search : 1"<<endl;
     vector<string> TList;
     vector<string> diffs = server->Addrs[userId];
@@ -93,16 +93,16 @@ clock_t start1 = clock();
     uint8_t digest[DIGEST_SIZE];
     sha256_digest((unsigned char *)w.c_str(),w.size(),digest);
     // cout<<"DataUser::Search : 2"<<endl;
-clock_t end1 = clock();
+// clock_t end1 = clock();
     unordered_map<string,int> Res = server->search(TList,remain_node,string((char*)digest,DIGEST_SIZE),D,userId);
     // cout<<"DataUser::Search : 3"<<endl;
-clock_t start2 = clock();
+// clock_t start2 = clock();
     vector<int> res;
     for(const auto &pair:Res){
         res.emplace_back(pair.second);
     }
-clock_t end2 = clock();
-double duration = static_cast<double>(end1 - start1 + end2 - start2) / 1000;
-cout<<duration<<endl;
+// clock_t end2 = clock();
+// double duration = static_cast<double>(end1 - start1 + end2 - start2) / 1000;
+// cout<<duration<<endl;
     return res;
 }

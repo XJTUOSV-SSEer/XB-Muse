@@ -33,4 +33,6 @@ void test3(int argc,char* argv[]);
 
 void test4(int argc,char* argv[]);
 
+void test5(int argc,char* argv[]);
+
 #endif

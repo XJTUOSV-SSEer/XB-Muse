@@ -182,6 +182,31 @@ void test4(int argc,char* argv[]){
 	cout<<duration<<endl;
 }
 
+//compare_search_c
+void test5(int argc,char* argv[]){
+
+    string dataSetPath = "../../DataSet/enron_processed";
+    string targetKey = "195";
+
+    SSEClientHandler client;
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+
+    for(int i = 0 ; i < 21 ; i++){
+        for(int j = 0 ; j < 20 ; j++){
+            client.update(INS,targetKey,dataSet[targetKey][i * 20 + j]);
+        }
+
+        clock_t start = clock();
+        vector<int> Res = client.search(targetKey);
+        clock_t end = clock();
+
+        double duration = static_cast<double>(end - start) / 1000;
+        cout<<duration<<endl;
+    }
+}
+
 int main(int argc,char* argv[]) {
 
     int status = atoi(argv[1]);
@@ -194,9 +219,11 @@ int main(int argc,char* argv[]) {
 		test2(argc,argv);
 	}else if(status == 3){
 		test3(argc,argv);
-	}else{
+	}else if(status == 4){
 		test4(argc,argv);
-	}
+	}else{
+        test5(argc,argv);
+    }
 
     return 0;
 }

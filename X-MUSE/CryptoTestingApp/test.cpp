@@ -255,8 +255,8 @@ void test4(int argc,char* argv[],int eid){
 	userIds.emplace_back(1);
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid);
-	dataOwner->isUserAntiReplayAttackMap[1] = true;
+	DataUser *dataUser1 = new DataUser(1,eid,false);
+	dataOwner->isUserAntiReplayAttackMap[1] = false;
 	dataOwner->server = server;
 	dataUser1->server = server;
 
@@ -317,8 +317,8 @@ void test9(int argc,char* argv[],int eid){
 	userIds.emplace_back(1);
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid,true);
-	dataOwner->isUserAntiReplayAttackMap[1] = true;
+	DataUser *dataUser1 = new DataUser(1,eid,false);
+	dataOwner->isUserAntiReplayAttackMap[1] = false;
 	dataOwner->server = server;
 	dataUser1->server = server;
 
@@ -394,7 +394,7 @@ void test11(int argc,char* argv[],int eid){
 	userIds.emplace_back(1);
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid,false);
+	DataUser *dataUser1 = new DataUser(1,eid);
 	dataOwner->isUserAntiReplayAttackMap[1] = false;
 	dataOwner->server = server;
 	dataUser1->server = server;
@@ -454,4 +454,42 @@ void test12(int argc,char* argv[],int eid){
 	clock_t end = clock();
     double duration = static_cast<double>(end - start) / 1000;
 	cout<<duration<<endl;
+}
+
+//compare_update_c
+void test13(int argc,char* argv[],int eid){
+	string dataSetPath = "../DataSet/enron_processed";
+    string targetKey = "195";
+
+	// 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+	DataOwner *dataOwner = new DataOwner();
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,false);
+	dataOwner->isUserAntiReplayAttackMap[1] = false;
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//处理数据集
+    unordered_map<string,vector<int>> dataSet;
+    unordered_map<int,vector<string>> dataSet_reverted;
+    init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	auth_all(dataOwner,dataSet,1);
+	auth_all(server,dataSet,1);
+
+	vector<string> WList = {targetKey};
+
+	for(int i = 0 ; i < 21 ; i++){
+        for(int j = 0 ; j < 20 ; j++){
+            dataOwner->update(dataSet[targetKey][20 * i + j],WList,ADD);
+        }
+
+        clock_t start = clock();
+        vector<int> Res = dataUser1->Search(targetKey);
+        clock_t end = clock();
+
+        double duration = static_cast<double>(end - start) / 1000;
+        cout<<duration<<endl;
+    }
 }

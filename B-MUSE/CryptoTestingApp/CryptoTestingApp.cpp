@@ -121,8 +121,10 @@ int main(int argc,char* argv[])
 		test10(argc,argv,eid,io_service,endpoint_iterator);
 	}else if(status == 11){
 		test11(argc,argv,eid,io_service,endpoint_iterator);
-	}else{
+	}else if(status == 12){
 		test12(argc,argv,eid,io_service,endpoint_iterator);
+	}else{
+		test13(argc,argv,eid,io_service,endpoint_iterator);
 	}
 
 	return 0;

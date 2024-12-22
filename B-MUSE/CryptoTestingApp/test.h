@@ -54,4 +54,6 @@ void test11(int argc,char* argv[],int eid,boost::asio::io_service &io_service,bo
 
 void test12(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
 
+void test13(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
+
 #endif

@@ -112,8 +112,10 @@ int main(int argc,char* argv[])
 		test10(argc,argv,eid);
 	}else if(status == 11){
 		test11(argc,argv,eid);
-	}else{
+	}else if(status == 12){
 		test12(argc,argv,eid);
+	}else{
+		test13(argc,argv,eid);
 	}
 
 	return 0;

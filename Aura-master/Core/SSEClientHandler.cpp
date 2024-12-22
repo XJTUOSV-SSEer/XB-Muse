@@ -68,7 +68,7 @@ void SSEClientHandler::update(OP op, const string& keyword, int ind) {
 vector<int> SSEClientHandler::search(const string& keyword) {
     // token
 //    cout << duration_cast<microseconds>(system_clock::now().time_since_epoch()).count() << endl;
-clock_t start = clock();
+// clock_t start = clock();
 
     uint8_t token[DIGEST_SIZE];
     hmac_digest((uint8_t*) keyword.c_str(), keyword.size(),
@@ -98,10 +98,10 @@ clock_t start = clock();
     }
     // give all results to the server for search
 //    cout << duration_cast<microseconds>(system_clock::now().time_since_epoch()).count() << endl;
-clock_t end = clock();
+// clock_t end = clock();
 
-double duration = static_cast<double>(end - start) / 1000;
-cout<<duration<<" ";
+// double duration = static_cast<double>(end - start) / 1000;
+// cout<<duration<<" ";
     vector<int> res = server->search(token, remain_node, tree->get_level());
 //    cout << duration_cast<microseconds>(system_clock::now().time_since_epoch()).count() << endl;
     return res;
