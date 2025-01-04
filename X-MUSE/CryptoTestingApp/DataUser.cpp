@@ -43,48 +43,52 @@ vector<int> DataUser::Search(string w){
         TList.emplace_back(string((char *)digest,DIGEST_SIZE));
     }
     unordered_map<string,BloomFilter<32, GGM_SIZE, HASH_SIZE>> revoketags = server->Revtag[userId];
-    vector<string> DelCnts = server->FileDelCnts[userId];
-    for(string delcnt : DelCnts){
-        uint8_t decryptdDelCnt[delcnt.size()];
-        aes_decrypt((unsigned char*)delcnt.c_str(),delcnt.size(),key,iv,decryptdDelCnt);
-        string w1 = string((char *)decryptdDelCnt,delcnt.size() - sizeof(int));
-        int cnt1 = *(int*) (decryptdDelCnt + delcnt.size() - sizeof(int));
-        FileDelCnts[w1] = cnt1;
-    }
+
     vector<GGMNode> remain_node;
-    bool flag = true;
     BloomFilter<32, GGM_SIZE, HASH_SIZE> D;
-    // cout<<"DataUser::Search : 4"<<endl;
-    for (auto &revoketag : revoketags){
-        uint8_t decryptdRevokeTagAddr[revoketag.first.size()];
-        aes_decrypt((unsigned char*)revoketag.first.c_str(),revoketag.first.size(),key,iv,decryptdRevokeTagAddr);
+    bool flag = true;
+
+    if(is_anti_replace_attack){
+        vector<string> DelCnts = server->FileDelCnts[userId];
+        for(string delcnt : DelCnts){
+            uint8_t decryptdDelCnt[delcnt.size()];
+            aes_decrypt((unsigned char*)delcnt.c_str(),delcnt.size(),key,iv,decryptdDelCnt);
+            string w1 = string((char *)decryptdDelCnt,delcnt.size() - sizeof(int));
+            int cnt1 = *(int*) (decryptdDelCnt + delcnt.size() - sizeof(int));
+            FileDelCnts[w1] = cnt1;
+        }
         
-        if(is_anti_replace_attack){
-            // cout<<"DataUser::Search : 7       "<<revoketag.addr.size()<<" "<<sizeof(int)<<endl;
+        for (auto &revoketag : revoketags){
+            uint8_t decryptdRevokeTagAddr[revoketag.first.size()];
+            aes_decrypt((unsigned char*)revoketag.first.c_str(),revoketag.first.size(),key,iv,decryptdRevokeTagAddr);
             string w1 = string((char *)decryptdRevokeTagAddr,revoketag.first.size() - sizeof(int));
             // cout<<"DataUser::Search : 10"<<endl;
             int cnt1 = *(int*) (decryptdRevokeTagAddr + revoketag.first.size() - sizeof(int));
             // cout<<"DataUser::Search : 11"<<endl;
             // cout<<"DataUser::Search : 9"<<endl;
             if( w1 == w && cnt1 == FileDelCnts[w1]){
+                // cout<<"DataUser::Search : 13"<<endl;
                 flag = false;
                 vector<long> delete_pos = revoketag.second.search();
                 D = revoketag.second;
                 ecall_SRE_cKRev(eid,(char *)key,KEY_LEN,&revoketag.second.bits,&remain_node,sizeof(revoketag.second),sizeof(remain_node));
                 break;
             }
-            // cout<<"DataUser::Search : 8"<<endl;
-        }else{
-            // cout<<"DataUser::Search : 5"<<endl;
+        }
+    }else{
+        for (auto &revoketag : revoketags){
+            uint8_t decryptdRevokeTagAddr[revoketag.first.size()];
+            aes_decrypt((unsigned char*)revoketag.first.c_str(),revoketag.first.size(),key,iv,decryptdRevokeTagAddr);
             string w1 = string((char *)decryptdRevokeTagAddr,revoketag.first.size());
+            // cout<<"w1 : "<<w1<<endl;
             if(w1 == w){
+                // cout<<"DataUser::Search : 12"<<endl;
                 flag = false;
                 vector<long> delete_pos = revoketag.second.search();
                 D = revoketag.second;
                 ecall_SRE_cKRev(eid,(char *)key,KEY_LEN,&revoketag.second.bits,&remain_node,sizeof(revoketag.second),sizeof(remain_node));
                 break;
             }
-            // cout<<"DataUser::Search : 6"<<endl;
         }
     }
     if(flag){
