@@ -118,11 +118,14 @@ void test0(int argc,char* argv[],int eid){
 
 		DataOwner *dataOwner = new DataOwner();
 		Server *server = new Server(userIds,eid);
-		DataUser *dataUser1 = new DataUser(1,eid,true);
-		dataOwner->isUserAntiReplayAttackMap[1] = true;
+		DataUser *dataUser1 = new DataUser(1,eid,false);
+		dataOwner->isUserAntiReplayAttackMap[1] = false;
 
-		DataUser *dataUser2 = new DataUser(2,eid);
+		DataUser *dataUser2 = new DataUser(2,eid,true);
 		dataOwner->isUserAntiReplayAttackMap[2] = true;
+
+		cout<<"User1.is_anti_replace_attack: "<<dataUser1->is_anti_replace_attack<<endl;
+		cout<<"User2.is_anti_replace_attack: "<<dataUser2->is_anti_replace_attack<<endl;
 
 		dataOwner->server = server;
 		dataUser1->server = server;
@@ -229,12 +232,108 @@ void test0(int argc,char* argv[],int eid){
 
 //search - a
 void test1(int argc,char* argv[],int eid){
-    
+    vector<int> args = prase_argv_to_int(argc,argv);
+	string dataSetPath = "../DataSet/Lab1DataSet"+to_string(args[1] + args[2]);
+    string targetKey = target_keys[args[1] + args[2] - 1];
+
+
+    // 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+	DataOwner *dataOwner = new DataOwner();
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,false);
+	dataOwner->isUserAntiReplayAttackMap[1] = false;
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//初始化数据集
+	unordered_map<string,vector<int>> dataSet;
+	unordered_map<int,vector<string>> dataSet_reverted;
+	// cout << "test4:2" <<endl;
+	init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	// cout << "test4:3" <<endl;
+	auth_all(dataOwner,dataSet,1);
+	// cout << "test4:4" <<endl;
+	auth_all(server,dataSet,1);
+	// cout << "test4:5" <<endl;
+	update_all(dataOwner,dataSet_reverted);
+
+	// cout << "test4:7" <<endl;
+	clock_t start = clock();
+	vector<int> Res = dataUser1->Search(targetKey);
+	// cout << "test4:8" <<endl;
+	clock_t end = clock();
+    double duration = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	cout<<duration<<endl;
 }
 
 //search - b
 void test2(int argc,char* argv[],int eid){
-    
+
+    vector<int> args = prase_argv_to_int(argc,argv);
+	string dataSetPath = "../DataSet/Lab1DataSet14";
+    string targetKey = target_keys[14 - 1];
+
+    // 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+	DataOwner *dataOwner = new DataOwner();
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,false);
+	dataOwner->isUserAntiReplayAttackMap[1] = false;
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//初始化数据集
+	unordered_map<string,vector<int>> dataSet;
+	unordered_map<int,vector<string>> dataSet_reverted;
+	// cout << "test4:2" <<endl;
+	std::ifstream file(dataSetPath);
+
+	if (file.is_open()) {
+		std::string line;
+		while (std::getline(file, line)) {
+			vector<string> vc = split_string(line);
+			dataSet[vc[0]] = vector<int>();
+			int size = vc.size();
+			if(vc[0] != targetKey){
+				for(int i = 1 ; i < size ; i++){
+					dataSet[vc[0]].emplace_back(stoi(vc[i]));
+				}
+			}else{
+				for(int i = 1 ; i < 1000 * args[2] ; i++){
+					dataSet[vc[0]].emplace_back(stoi(vc[i]));
+				}
+			}
+		}
+		file.close();
+	} else {
+		std::cout << "Unable to open file" << std::endl;
+	}
+
+	for (const auto& pair : dataSet) {
+		for (size_t i = 0; i < pair.second.size(); ++i) {
+			dataSet_reverted[pair.second[i]].emplace_back(pair.first);
+		}
+	}
+	// cout << "test4:3" <<endl;
+	auth_all(dataOwner,dataSet,1);
+	// cout << "test4:4" <<endl;
+	auth_all(server,dataSet,1);
+	// cout << "test4:5" <<endl;
+	update_all(dataOwner,dataSet_reverted);
+
+	for(int i = 0 ; i < args[1] ; i++){
+		dataOwner -> update(dataSet[targetKey][i],{targetKey},DEL);
+	}
+	// cout << "test4:7" <<endl;
+	clock_t start = clock();
+	vector<int> Res = dataUser1->Search(targetKey);
+	// cout << "test4:8" <<endl;
+	clock_t end = clock();
+    double duration = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	cout<<duration<<endl;
 }
 
 //search - c

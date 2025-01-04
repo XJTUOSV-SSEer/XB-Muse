@@ -1,0 +1,9 @@
+/home/node10/yangxu/chensifan/XB-Muse/build/CMakeFiles/gen-cpp-thrift.dir
+/home/node10/yangxu/chensifan/XB-Muse/build/CMakeFiles/AESTest.dir
+/home/node10/yangxu/chensifan/XB-Muse/build/CMakeFiles/BloomFilterTest.dir
+/home/node10/yangxu/chensifan/XB-Muse/build/CMakeFiles/GGMTest.dir
+/home/node10/yangxu/chensifan/XB-Muse/build/CMakeFiles/SSETest.dir
+/home/node10/yangxu/chensifan/XB-Muse/build/CMakeFiles/AuraServer.dir
+/home/node10/yangxu/chensifan/XB-Muse/build/CMakeFiles/AuraClient.dir
+/home/node10/yangxu/chensifan/XB-Muse/build/CMakeFiles/edit_cache.dir
+/home/node10/yangxu/chensifan/XB-Muse/build/CMakeFiles/rebuild_cache.dir

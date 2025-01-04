@@ -5,9 +5,9 @@
 #define DIGEST_SIZE 32
 
 //这里要求 GGM_SIZE <= 2 ^ GGM_LEVEL
-#define GGM_SIZE 1918
-#define GGM_LEVEL 11
-#define HASH_SIZE 13
+#define GGM_SIZE 1024
+#define GGM_LEVEL 10
+#define HASH_SIZE 5
 
 #define SHA256_DIGEST_LENGTH 32
 #define SGXSSL_CTR_BITS 128

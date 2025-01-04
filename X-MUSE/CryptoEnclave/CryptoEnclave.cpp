@@ -148,4 +148,3 @@ void ecall_check_doc(const void *remain_node,const void *D,char *val_tag,char *v
     }
     (*flag_ptr)[index - 1] = true;
 }
-

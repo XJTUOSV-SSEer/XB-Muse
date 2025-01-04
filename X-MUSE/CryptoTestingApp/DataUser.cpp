@@ -58,6 +58,7 @@ vector<int> DataUser::Search(string w){
     for (auto &revoketag : revoketags){
         uint8_t decryptdRevokeTagAddr[revoketag.first.size()];
         aes_decrypt((unsigned char*)revoketag.first.c_str(),revoketag.first.size(),key,iv,decryptdRevokeTagAddr);
+        
         if(is_anti_replace_attack){
             // cout<<"DataUser::Search : 7       "<<revoketag.addr.size()<<" "<<sizeof(int)<<endl;
             string w1 = string((char *)decryptdRevokeTagAddr,revoketag.first.size() - sizeof(int));

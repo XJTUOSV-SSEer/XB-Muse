@@ -1,0 +1,114 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Aura",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "AESTest::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-AESTest-Debug-45861ffb8276d9bbc527.json",
+					"name" : "AESTest",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "AuraClient::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-AuraClient-Debug-29bb133d3dd156e93036.json",
+					"name" : "AuraClient",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "AuraServer::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-AuraServer-Debug-03f65f4cf7f6bcb458ea.json",
+					"name" : "AuraServer",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "BloomFilterTest::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-BloomFilterTest-Debug-95655c46eb2fcf45dc41.json",
+					"name" : "BloomFilterTest",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "GGMTest::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-GGMTest-Debug-504b5e5351826ba7cdcc.json",
+					"name" : "GGMTest",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "SSETest::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SSETest-Debug-1645067e9c76bb8a9a76.json",
+					"name" : "SSETest",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "gen-cpp-thrift::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-gen-cpp-thrift-Debug-363c34c20a7b11dce634.json",
+					"name" : "gen-cpp-thrift",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/node10/yangxu/chensifan/XB-Muse/build",
+		"source" : "/home/node10/yangxu/chensifan/XB-Muse/Aura-master"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}
