@@ -62,8 +62,10 @@ unordered_map<string,int> Server::search(vector<string> Tlist,vector<GGMNode> re
                 isInD = false;
             }
         }
-
-        if(!flag[i - 1] ||isInD){
+        if(isInD){
+            DelInd.emplace(val.tag);
+        }
+        if(!isInD && !flag[i - 1]){
             int indi;
             char val_tag[DIGEST_SIZE];
             memcpy(val_tag,val.tag.c_str(),DIGEST_SIZE);
