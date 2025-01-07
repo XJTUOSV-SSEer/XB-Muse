@@ -45,8 +45,8 @@ vector<int> DataUser::Search(string w){
     unordered_map<string,BloomFilter<32, GGM_SIZE, HASH_SIZE>> revoketags = server->Revtag[userId];
 
     vector<GGMNode> remain_node;
-    BloomFilter<32, GGM_SIZE, HASH_SIZE> D;
     bool flag = true;
+    BloomFilter<32, GGM_SIZE, HASH_SIZE> D;
 
     if(is_anti_replace_attack){
         vector<string> DelCnts = server->FileDelCnts[userId];
@@ -57,17 +57,16 @@ vector<int> DataUser::Search(string w){
             int cnt1 = *(int*) (decryptdDelCnt + delcnt.size() - sizeof(int));
             FileDelCnts[w1] = cnt1;
         }
-        
         for (auto &revoketag : revoketags){
             uint8_t decryptdRevokeTagAddr[revoketag.first.size()];
             aes_decrypt((unsigned char*)revoketag.first.c_str(),revoketag.first.size(),key,iv,decryptdRevokeTagAddr);
+            // cout<<"DataUser::Search : 7       "<<revoketag.addr.size()<<" "<<sizeof(int)<<endl;
             string w1 = string((char *)decryptdRevokeTagAddr,revoketag.first.size() - sizeof(int));
             // cout<<"DataUser::Search : 10"<<endl;
             int cnt1 = *(int*) (decryptdRevokeTagAddr + revoketag.first.size() - sizeof(int));
             // cout<<"DataUser::Search : 11"<<endl;
             // cout<<"DataUser::Search : 9"<<endl;
             if( w1 == w && cnt1 == FileDelCnts[w1]){
-                // cout<<"DataUser::Search : 13"<<endl;
                 flag = false;
                 vector<long> delete_pos = revoketag.second.search();
                 D = revoketag.second;
@@ -79,16 +78,16 @@ vector<int> DataUser::Search(string w){
         for (auto &revoketag : revoketags){
             uint8_t decryptdRevokeTagAddr[revoketag.first.size()];
             aes_decrypt((unsigned char*)revoketag.first.c_str(),revoketag.first.size(),key,iv,decryptdRevokeTagAddr);
+            // cout<<"DataUser::Search : 5"<<endl;
             string w1 = string((char *)decryptdRevokeTagAddr,revoketag.first.size());
-            // cout<<"w1 : "<<w1<<endl;
             if(w1 == w){
-                // cout<<"DataUser::Search : 12"<<endl;
                 flag = false;
                 vector<long> delete_pos = revoketag.second.search();
                 D = revoketag.second;
                 ecall_SRE_cKRev(eid,(char *)key,KEY_LEN,&revoketag.second.bits,&remain_node,sizeof(revoketag.second),sizeof(remain_node));
                 break;
             }
+            // cout<<"DataUser::Search : 6"<<endl;
         }
     }
     if(flag){

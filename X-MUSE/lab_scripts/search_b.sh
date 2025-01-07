@@ -2,17 +2,17 @@ cd ..
 make clean
 make SGX_MODE=HW SGX_DEBUG=1
 
-for i in 4000
+for i in 50 100 200
 do
   result_line=""
-  for j in 6
+  for j in {1..5}
   do
       sum=0
 
       # 取10次的平均值
       echo ""
       echo "入参 ：  2 $i $j"
-      for k in {1}
+      for k in {1..5}
       do
         # 执行程序并获取返回值
         # 入参： 测试数 数据集 撤销数
@@ -24,10 +24,10 @@ do
       done
 
       # 计算平均值
-      average=$(echo "$sum / 1" | bc -l)
+      average=$(echo "$sum / 5" | bc -l)
       echo "平均值为: $average"
 
-      result_line+="$(echo "scale=5; $sum / 10" | bc), "
+      result_line+="$(echo "scale=5; $sum / 5" | bc), "
   done
 
   echo $result_line >> ./lab_scripts/result/search_b.csv

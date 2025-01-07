@@ -302,11 +302,11 @@ void test2(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boo
 	update_all(dataOwner,dataSet_reverted);
 
 	int toRevokeBatchNum = args[1];
+	vector<int> toRevokeIndList;
 	for(int i = 0 ; i < toRevokeBatchNum ; i++){
-		vector<int> toRevokeIndList;
-		toRevokeIndList.insert(toRevokeIndList.end(),dataSet[targetKey].begin() + i * 300,dataSet[targetKey].begin() + (i + 1) * 300);
-		dataOwner->revoke(targetKey,toRevokeIndList);
+		toRevokeIndList.emplace_back(dataSet[targetKey][i]);
 	}
+	dataOwner->revoke(targetKey,toRevokeIndList);
 	clock_t start = clock();
 	vector<int> Res = dataUser1->Search_batch(targetKey);
 	clock_t end = clock();

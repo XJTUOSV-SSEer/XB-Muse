@@ -135,6 +135,10 @@ void DataOwner::update(int ind,vector<string> WList,OP op){
 };
 
 void DataOwner::delete_batch(vector<int> IdList,string w,int userId){
+
+    if(AccessList.find(userId) == AccessList.end()){
+        return ;
+    }
     vector<string> keyValues;
     vector<string> DelCntDiffs;
     unordered_map<string,BloomFilter<32, GGM_SIZE, HASH_SIZE>> Revoketags;

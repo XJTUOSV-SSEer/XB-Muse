@@ -118,8 +118,8 @@ void test0(int argc,char* argv[],int eid){
 
 		DataOwner *dataOwner = new DataOwner();
 		Server *server = new Server(userIds,eid);
-		DataUser *dataUser1 = new DataUser(1,eid,false);
-		dataOwner->isUserAntiReplayAttackMap[1] = false;
+		DataUser *dataUser1 = new DataUser(1,eid,true);
+		dataOwner->isUserAntiReplayAttackMap[1] = true;
 
 		DataUser *dataUser2 = new DataUser(2,eid,true);
 		dataOwner->isUserAntiReplayAttackMap[2] = true;
@@ -280,8 +280,8 @@ void test2(int argc,char* argv[],int eid){
 	userIds.emplace_back(1);
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid,false);
-	dataOwner->isUserAntiReplayAttackMap[1] = false;
+	DataUser *dataUser1 = new DataUser(1,eid,true);
+	dataOwner->isUserAntiReplayAttackMap[1] = true;
 	dataOwner->server = server;
 	dataUser1->server = server;
 
