@@ -468,7 +468,41 @@ void test5(int argc,char* argv[],int eid){
 
 //update - b
 void test6(int argc,char* argv[],int eid){
-    
+    vector<int> args = prase_argv_to_int(argc,argv);
+	string dataSetPath = "../DataSet/Lab1DataSet"+to_string(args[2]);
+	string targetKey = target_keys[args[2] - 1];
+
+    // 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+	DataOwner *dataOwner = new DataOwner();
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,false);
+	dataOwner->isUserAntiReplayAttackMap[1] = false;
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//初始化数据集
+	unordered_map<string,vector<int>> dataSet;
+	unordered_map<int,vector<string>> dataSet_reverted;
+	// cout << "test4:2" <<endl;
+	init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	// cout << "test4:3" <<endl;
+	auth_all(dataOwner,dataSet,1);
+	// cout << "test4:4" <<endl;
+	auth_all(server,dataSet,1);
+	// cout << "test4:5" <<endl;
+	update_all(dataOwner,dataSet_reverted);
+	// cout << "test4:6" <<endl;
+	
+	clock_t start = clock();
+	for(int i = 0 ; i < args[1] ; i++){
+		dataOwner->update(dataSet[targetKey][i],{targetKey},DEL);
+	}
+	// cout << "test4:8" <<endl;
+	clock_t end = clock();
+    double duration = static_cast<double>(end - start);
+	cout<<duration<<endl;
 }
 
 //update - c

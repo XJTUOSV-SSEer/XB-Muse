@@ -436,8 +436,8 @@ void test5(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boo
 void test6(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
 	
 	vector<int> args = prase_argv_to_int(argc,argv);
-    string dataSetPath = "../DataSet/Lab1DataSet"+to_string(args[1]);
-    string targetKey = target_keys[args[1] - 1];
+    string dataSetPath = "../DataSet/Lab1DataSet"+to_string(args[2]);
+    string targetKey = target_keys[args[2] - 1];
 
 	
 	// 初始化server、dataowner和datauser
@@ -457,24 +457,18 @@ void test6(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boo
 	auth_all(server,dataSet,1);
 	update_all(dataOwner,dataSet_reverted);
 
-
-	string toRevokeWord = "AAAAAAAAAAA";
-	vector<string> WList = {toRevokeWord};
-	for(int ind = 1 ; ind <= 1000 ; ind++){
-		dataOwner->insert(ind,WList);
-	}
 	vector<vector<int>> IDLists;
-	for(int i = 0 ; i < args[2] ; i++){
+	for(int i = 0 ; i < args[1] ; i += 50){
 		vector<int> IDList;
-		for(int j = 50 * i + 1; j <= 50 * (i + 1) + 1 ; j++){
-			IDList.emplace_back(j);
+		for(int j = i; j < i + 50 ; j++){
+			IDList.emplace_back(dataSet[targetKey][j]);
 		}
 		IDLists.emplace_back(IDList);
 	}
 
 	clock_t start = clock();
 	for(vector<int> IDList : IDLists){
-		dataOwner->revoke(toRevokeWord,IDList);
+		dataOwner->revoke(targetKey,IDList);
 	}
 	clock_t end = clock();
 	double duration = static_cast<double>(end - start);
