@@ -317,7 +317,46 @@ void test2(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boo
 
 //search - c
 void test3(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
-    
+    vector<int> args = prase_argv_to_int(argc,argv);
+    string dataSetPath = "../DataSet/Lab1DataSet8";
+    string targetKey = target_keys[8 - 1];
+	
+	// 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//处理数据集
+	unordered_map<string,vector<int>> dataSet;
+	unordered_map<int,vector<string>> dataSet_reverted;
+	init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	auth_all(dataOwner,dataSet,1);
+	auth_all(server,dataSet,1);
+	update_all(dataOwner,dataSet_reverted);
+
+	vector<int> toRevokeList;
+	for(int i = 0 ; i < 150 ; i++){
+		toRevokeList.emplace_back(dataSet[targetKey][i]);
+	}
+	dataOwner->revoke(targetKey,toRevokeList);
+
+	double duration = 0;
+	for(int i = 0 ; i < args[1] ; i++){
+		// cout << "test4:7" <<endl;
+		clock_t start = clock();
+		vector<int> Res = dataUser1->Search_batch(targetKey);
+		// cout << "test4:8" <<endl;
+		clock_t end = clock();
+		double time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+		if(time > duration){
+			duration = time;
+		}
+	}
+	cout<<duration<<endl;
 }
 
 //search - d
@@ -346,7 +385,7 @@ void test4(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boo
 	update_all(dataOwner,dataSet_reverted);
 
 	
-	int toRevokeBatchNum = args[2];
+	int toRevokeBatchNum = args[2]/300 - 1;
 	for(int i = 0 ; i < toRevokeBatchNum ; i++){
 		vector<int> toRevokeIndList;
 		toRevokeIndList.insert(toRevokeIndList.end(),dataSet[targetKey].begin() + i * 300,dataSet[targetKey].begin() + (i + 1) * 300);
@@ -362,7 +401,34 @@ void test4(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boo
 
 //update - a
 void test5(int argc,char* argv[],int eid,boost::asio::io_service &io_service,boost::asio::ip::tcp::resolver::iterator endpoint_iterator){
-    
+    vector<int> args = prase_argv_to_int(argc,argv);
+	string dataSetPath = "../DataSet/Lab1DataSet"+to_string(args[2]);
+
+	// 初始化server、dataowner和datauser
+	vector<int> userIds;
+	userIds.emplace_back(1);
+	DataOwner *dataOwner = new DataOwner(&io_service,endpoint_iterator);
+	Server *server = new Server(userIds,eid);
+	DataUser *dataUser1 = new DataUser(1,eid,&io_service,endpoint_iterator);
+	dataOwner->server = server;
+	dataUser1->server = server;
+
+	//处理数据集
+	unordered_map<string,vector<int>> dataSet;
+	unordered_map<int,vector<string>> dataSet_reverted;
+	init_data_set(dataSetPath,dataSet,dataSet_reverted);
+	auth_all(dataOwner,dataSet,1);
+	auth_all(server,dataSet,1);
+	update_all(dataOwner,dataSet_reverted);
+
+	clock_t start = clock();
+	for(int i = 0 ; i < args[1] ; i++){
+		dataOwner->insert(i,{"new_word"});
+	}
+	// cout << "test4:8" <<endl;
+	clock_t end = clock();
+    double duration = static_cast<double>(end - start);
+	cout<<duration<<endl;
 }
 
 //update - b
