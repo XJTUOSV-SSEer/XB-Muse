@@ -47,7 +47,6 @@ vector<int> DataUser::Search(string w){
     vector<GGMNode> remain_node;
     bool flag = true;
     BloomFilter<32, GGM_SIZE, HASH_SIZE> D;
-
     if(is_anti_replace_attack){
         vector<string> DelCnts = server->FileDelCnts[userId];
         for(string delcnt : DelCnts){

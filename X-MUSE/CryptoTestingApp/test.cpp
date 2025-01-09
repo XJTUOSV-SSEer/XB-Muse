@@ -280,8 +280,8 @@ void test2(int argc,char* argv[],int eid){
 	userIds.emplace_back(1);
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid,true);
-	dataOwner->isUserAntiReplayAttackMap[1] = true;
+	DataUser *dataUser1 = new DataUser(1,eid,false);
+	dataOwner->isUserAntiReplayAttackMap[1] = false;
 	dataOwner->server = server;
 	dataUser1->server = server;
 
@@ -324,12 +324,14 @@ void test2(int argc,char* argv[],int eid){
 	// cout << "test4:5" <<endl;
 	update_all(dataOwner,dataSet_reverted);
 
+
 	for(int i = 0 ; i < args[1] ; i++){
 		dataOwner -> update(dataSet[targetKey][i],{targetKey},DEL);
 	}
 	// cout << "test4:7" <<endl;
 	clock_t start = clock();
 	vector<int> Res = dataUser1->Search(targetKey);
+	// cout<<"4"<<endl;
 	// cout << "test4:8" <<endl;
 	clock_t end = clock();
     double duration = static_cast<double>(end - start) / CLOCKS_PER_SEC;
@@ -348,8 +350,8 @@ void test3(int argc,char* argv[],int eid){
 	userIds.emplace_back(1);
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid,false);
-	dataOwner->isUserAntiReplayAttackMap[1] = false;
+	DataUser *dataUser1 = new DataUser(1,eid,true);
+	dataOwner->isUserAntiReplayAttackMap[1] = true;
 	dataOwner->server = server;
 	dataUser1->server = server;
 
@@ -397,8 +399,8 @@ void test4(int argc,char* argv[],int eid){
 	userIds.emplace_back(1);
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid,false);
-	dataOwner->isUserAntiReplayAttackMap[1] = false;
+	DataUser *dataUser1 = new DataUser(1,eid,true);
+	dataOwner->isUserAntiReplayAttackMap[1] = true;
 	dataOwner->server = server;
 	dataUser1->server = server;
 
@@ -437,8 +439,8 @@ void test5(int argc,char* argv[],int eid){
 	userIds.emplace_back(1);
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid,false);
-	dataOwner->isUserAntiReplayAttackMap[1] = false;
+	DataUser *dataUser1 = new DataUser(1,eid,true);
+	dataOwner->isUserAntiReplayAttackMap[1] = true;
 	dataOwner->server = server;
 	dataUser1->server = server;
 
@@ -477,8 +479,8 @@ void test6(int argc,char* argv[],int eid){
 	userIds.emplace_back(1);
 	DataOwner *dataOwner = new DataOwner();
 	Server *server = new Server(userIds,eid);
-	DataUser *dataUser1 = new DataUser(1,eid,false);
-	dataOwner->isUserAntiReplayAttackMap[1] = false;
+	DataUser *dataUser1 = new DataUser(1,eid,true);
+	dataOwner->isUserAntiReplayAttackMap[1] = true;
 	dataOwner->server = server;
 	dataUser1->server = server;
 
@@ -494,7 +496,7 @@ void test6(int argc,char* argv[],int eid){
 	// cout << "test4:5" <<endl;
 	update_all(dataOwner,dataSet_reverted);
 	// cout << "test4:6" <<endl;
-	
+
 	clock_t start = clock();
 	for(int i = 0 ; i < args[1] ; i++){
 		dataOwner->update(dataSet[targetKey][i],{targetKey},DEL);
@@ -666,7 +668,7 @@ void test12(int argc,char* argv[],int eid){
 	cout<<duration<<endl;
 }
 
-//compare_update_c
+//compare_search_c
 void test13(int argc,char* argv[],int eid){
 	string dataSetPath = "../DataSet/enron_processed";
     string targetKey = "195";

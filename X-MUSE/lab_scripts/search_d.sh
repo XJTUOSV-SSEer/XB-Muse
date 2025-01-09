@@ -30,6 +30,6 @@ do
       result_line+="$(echo "scale=5; $sum / 10" | bc), "
   done
 
-  echo $result_line >> ./lab_scripts/result/result_search_d.csv
+  echo $result_line >> ./lab_scripts/result/search_d.csv
 
 done
